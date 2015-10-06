@@ -1,16 +1,18 @@
 @TestOn("browser")
 library html_browser_test;
 
-import 'package:test/test.dart';
+import 'package:dev_test/test.dart';
 import 'dart:html';
 //import 'package:html5lib/dom.dart';
 //import 'package:tekartik_common/test_utils.dart';
 
 main() {
-  group('dart_html', () {
+  group('browser', () {
     test('current document', () {
+      /*
       print(document.nodes[0].toString());
       print(document.documentElement.outerHtml);
+      */
     });
 
     test('node', () {
@@ -38,8 +40,10 @@ main() {
       Element element = new DivElement();
       expect(element.attributes['class'], isNull);
       element.attributes['class'] = 'test';
+      // This fails on firefox: https://github.com/dart-lang/sdk/issues/23604
       expect(element.outerHtml, '<div class="test"></div>');
     });
+
     test('document', () {
       //new HtmlHtmlElement();
       HtmlDocument doc = document.implementation.createHtmlDocument('');
