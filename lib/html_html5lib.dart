@@ -242,11 +242,13 @@ abstract class _ElementImpl {
   }
 
   // Support for equals
+  @override
   int get hashCode {
     return _element.hashCode;
   }
 
   // You should generally implement operator== if you override hashCode.
+  @override
   bool operator ==(other) {
     if (other is _Element) {
       return _element == other._element;
@@ -297,6 +299,11 @@ abstract class _ElementImpl {
     //_element.children
     //_element.insertBefore(node, refNode)
     _element.nextElementSibling;
+  }
+
+  @override
+  String toString() {
+    return _element.toString();
   }
 }
 
@@ -405,6 +412,13 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   }
 
   String get name => PROVIDER_HTML5LIB_NAME;
+
+  // return the html element wrapper
+  _Element wrapElement(html5lib.Element _element) =>
+      _ElementImpl.from(_element);
+
+  // return the html5lib implementation
+  html5lib.Element unwrapElement(_Element element) => element._element;
 }
 
 _HtmlProviderHtml5Lib get _html => htmlProviderHtml5Lib;

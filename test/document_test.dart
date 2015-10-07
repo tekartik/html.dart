@@ -2,7 +2,7 @@ library document_test;
 
 import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
-import 'package:test/test.dart';
+import 'package:dev_test/test.dart';
 
 main() {
   HtmlProvider html = htmlProviderHtml5Lib;

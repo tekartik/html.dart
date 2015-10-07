@@ -190,11 +190,13 @@ abstract class _ElementImpl extends Object {
   }
 
   // Support for equals
+  @override
   int get hashCode {
     return _element.hashCode;
   }
 
   // You should generally implement operator== if you override hashCode.
+  @override
   bool operator ==(other) {
     if (other is _Element) {
       return _element == other._element;
@@ -239,6 +241,11 @@ abstract class _ElementImpl extends Object {
   void insertBefore(Node node, Node refNode) {
     _element.insertBefore(
         (node as _NodeImpl)._node, (refNode as _NodeImpl)._node);
+  }
+
+  @override
+  String toString() {
+    return _element.toString();
   }
 
   void dummyTest() {
@@ -362,6 +369,13 @@ class _HtmlProviderBrowser extends HtmlProvider {
   }
 
   String get name => PROVIDER_BROWSER_NAME;
+
+  // return the html element wrapper
+  _Element wrapElement(dart_html.Element _element) =>
+      _ElementImpl.from(_element);
+
+  // return the html5lib implementation
+  dart_html.Element unwrapElement(_Element element) => element._element;
 }
 
 _HtmlProviderBrowser get _html => htmlProviderBrowser;

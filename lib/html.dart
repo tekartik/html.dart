@@ -184,4 +184,7 @@ abstract class HtmlProvider {
 
   Element createElementTag(String tag);
   Element createElementHtml(String html, {bool noValidate});
+
+  Element wrapElement(dynamic elementImpl);
+  dynamic unwrapElement(Element element);
 }

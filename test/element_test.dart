@@ -3,7 +3,7 @@ library element_test;
 import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/tag.dart';
-import 'package:test/test.dart';
+import 'package:dev_test/test.dart';
 
 main() {
   HtmlProvider html = htmlProviderHtml5Lib;
@@ -16,6 +16,39 @@ test_main(HtmlProvider html) {
       Element element = html.createElementTag(DIV);
       expect(element.tagName, DIV);
       expect(element.id, isEmpty);
+    });
+
+    test('wrap', () {
+      Element element = html.createElementTag(DIV);
+      dynamic _element = html.unwrapElement(element);
+      element = html.wrapElement(_element);
+      expect(element.tagName, DIV);
+    });
+
+    test('toString', () {
+      Element element = html.createElementTag(DIV);
+      dynamic _element = html.unwrapElement(element);
+      expect(_element.toString(), element.toString());
+    });
+
+    test('hashCode', () {
+      Element element = html.createElementTag(DIV);
+      dynamic _element = html.unwrapElement(element);
+      expect(_element.hashCode, element.hashCode);
+    });
+
+    test('equals', () {
+      Element element1 = html.createElementTag(DIV);
+      Element element2 = html.createElementTag(DIV);
+      dynamic _element1 = html.unwrapElement(element1);
+      dynamic _element1bis = html.unwrapElement(element1);
+      dynamic _element2 = html.unwrapElement(element2);
+      Element element1bis = html.wrapElement(_element1bis);
+      expect(identical(_element1, _element1bis), isTrue);
+      expect(_element1, isNot(_element2));
+      expect(element1, isNot(element2));
+      expect(element1, element1bis); // same
+      expect(identical(element1, element1bis), isFalse); // but not identical!
     });
 
     test('id', () {
