@@ -62,6 +62,11 @@ test_main(HtmlProvider html) {
       expect(element.attributes['id'], 'div1');
     });
 
+    test('text', () {
+      Element element = html.createElementTag(DIV)..text = 'content';
+      expect(element.text, 'content');
+    });
+
     test('node', () {
       Element element = html.createElementTag(DIV);
       Element child = html.createElementTag(DIV);

@@ -105,6 +105,8 @@ abstract class Element extends Node {
   String get tagName;
   String get outerHtml;
   String get innerHtml;
+  String get text;
+  set text(String text);
   void set innerHtml(String html);
   Element querySelector(String selector);
   ElementList querySelectorAll(String selector);

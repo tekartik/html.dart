@@ -111,6 +111,9 @@ abstract class _ElementImpl {
     _element.innerHtml = html;
   }
 
+  String get text => _element.text;
+  set text(String text) => _element.text = text;
+
   Element querySelector(String selector) {
     return from(_element.querySelector(selector));
   }
