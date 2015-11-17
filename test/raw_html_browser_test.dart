@@ -61,5 +61,11 @@ main() {
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
       expect(1, 1);
     });
+
+    test('html', () {
+      // not working on firefox windows
+      Element element = new Element.html('<div></div>');
+      expect(element.outerHtml, '<div></div>');
+    });
   });
 }

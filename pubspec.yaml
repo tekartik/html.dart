@@ -1,6 +1,6 @@
 name: tekartik_html
 version: 0.1.0
-description: A sample command-line application
+description: An html abstraction layer to work with both dart:html and the html package
 dependencies:
   browser: any
   html: any
