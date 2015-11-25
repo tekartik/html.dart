@@ -147,6 +147,12 @@ abstract class Document {
 
   Document(this.provider);
 
+  /// get the document title
+  String get title;
+
+  /// set the document title
+  set title(String title);
+
   void fixMissing({String title: '', String charset: CHARSET_UTF_8}) {
     int index = 0;
 
@@ -173,8 +179,8 @@ abstract class Document {
   }
 }
 
-const String PROVIDER_BROWSER_NAME = 'browser';
-const String PROVIDER_HTML5LIB_NAME = 'html5lib';
+const String providerBrowserName = 'browser';
+const String providerHtml5LibName = 'html5lib';
 
 abstract class HtmlProvider {
   String get name;
@@ -187,6 +193,15 @@ abstract class HtmlProvider {
   Element createElementTag(String tag);
   Element createElementHtml(String html, {bool noValidate});
 
+  // wrap a native document
+  Document wrapDocument(dynamic documentImpl);
+
+  // get the native native document
+  dynamic unwrapDocument(Document document);
+
+  // wrap a native element
   Element wrapElement(dynamic elementImpl);
+
+  // get the native element
   dynamic unwrapElement(Element element);
 }

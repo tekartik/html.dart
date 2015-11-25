@@ -95,7 +95,7 @@ test_main(HtmlProvider html) {
     */
 
     test('custom tag attributes bis', () {
-      if (html.name != PROVIDER_BROWSER_NAME) {
+      if (html.name != providerBrowserName) {
         Element element =
             html.createElementHtml('<include src="test"></include>');
         expect(element.tagName, 'include');
@@ -112,7 +112,7 @@ test_main(HtmlProvider html) {
     });
 
     test('dataset', () {
-      if (html.name != PROVIDER_BROWSER_NAME) {
+      if (html.name != providerBrowserName) {
         Element element = html.createElementHtml('<div data-src="test"></div>');
         DataSet dataset = element.dataset;
         //print(dataset.keys);

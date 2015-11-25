@@ -22,6 +22,22 @@ test_main(HtmlProvider html) {
       //print(document.documentElement.outerHtml);
     });
 
+    test('title', () {
+      Document doc = html.createDocument(title: 'test');
+      expect(doc.title, 'test');
+      doc.title = 'update';
+      expect(doc.title, 'update');
+    });
+
+    test('wrap', () {
+      Document document = html.createDocument(title: 'test');
+
+      dynamic _documentImpl = html.unwrapDocument(document);
+
+      document = html.wrapDocument(_documentImpl);
+      expect(document.title, 'test');
+    });
+
     test('head', () {
       Document doc = html.createDocument(title: 'test');
       expect(doc.head.innerHtml, '<meta charset="utf-8"><title>test</title>');

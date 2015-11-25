@@ -328,35 +328,75 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
   }
 }
 
-class _Document extends Document {
-  html5lib.Document _doc;
-  _Document(this._doc) : super(_html);
-  String outerHtml(int padding) {
-    return _doc.outerHtml;
+abstract class _DocumentImpl {
+  html5lib.Document get _document;
+  static Document from(html5lib.Document documentImpl) {
+    if (documentImpl == null) {
+      return null;
+    }
+
+    return new _Document(documentImpl);
   }
+}
 
-  @override
-  String toString() {
-    return _doc.outerHtml;
-  }
+class _Document extends Document with _DocumentImpl {
+  html5lib.Document _document;
+  _Document(this._document) : super(_html);
 
-  void _fixNotExistingTitle(int index, String title) {
-    //print(head.outerHtml);
-
+  Element get _titleElement {
     for (int i = 0; i < head.children.length; i++) {
       Element element = head.children[i];
       //print(element.outerHtml);
       if (element.tagName == TITLE) {
-        if (title.length > 0) {
-          if (element.innerHtml != title) {
-            element.innerHtml = title;
-          }
-        }
-        return;
+        return element;
       }
     }
-    head.children
-        .insert(index, provider.createElementTag(TITLE)..innerHtml = title);
+    return null;
+  }
+
+  @override
+  String get title {
+    Element titleElement = _titleElement;
+    if (titleElement != null) {
+      return titleElement.text;
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  set title(String title) {
+    Element titleElement = _titleElement;
+    if (titleElement != null) {
+      titleElement.text = title;
+    } else {
+      // insert at the top
+      // we should not get there that often though
+      head.children.insert(0, provider.createElementTag(TITLE)..text = title);
+    }
+  }
+
+  String outerHtml(int padding) {
+    return _document.outerHtml;
+  }
+
+  @override
+  String toString() {
+    return _document.outerHtml;
+  }
+
+  void _fixNotExistingTitle(int index, String title) {
+    //print(head.outerHtml);
+    Element titleElement = _titleElement;
+    if (titleElement != null) {
+      if (title.length > 0) {
+        if (titleElement.text != title) {
+          titleElement.text = title;
+        }
+      }
+      return;
+    }
+    head.children.insert(index, provider.createElementTag(TITLE)..text = title);
   }
 
   void fixMissing({String title: '', String charset: CHARSET_UTF_8}) {
@@ -371,19 +411,19 @@ class _Document extends Document {
   }
 
   void _fixMissingDocumentType() {
-    for (int i = 0; i < _doc.nodes.length; i++) {
-      html5lib.Node node = _doc.nodes[i];
+    for (int i = 0; i < _document.nodes.length; i++) {
+      html5lib.Node node = _document.nodes[i];
       if (node is html5lib.DocumentType) {
         return;
       }
     }
     html5lib.Node docType = new html5lib.DocumentType('html', null, null);
-    _doc.nodes.insert(0, docType);
+    _document.nodes.insert(0, docType);
   }
 
-  BodyElement get body => new _BodyElement(_doc.body);
-  HeadElement get head => new _HeadElement(_doc.head);
-  HtmlElement get html => new _HtmlElement(_doc.documentElement);
+  BodyElement get body => new _BodyElement(_document.body);
+  HeadElement get head => new _HeadElement(_document.head);
+  HtmlElement get html => new _HtmlElement(_document.documentElement);
 }
 
 class _HtmlProviderHtml5Lib extends HtmlProvider {
@@ -414,14 +454,26 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
     return _ElementImpl.from(new html5lib.Element.html(html));
   }
 
-  String get name => PROVIDER_HTML5LIB_NAME;
+  @override
+  String get name => providerHtml5LibName;
 
   // return the html element wrapper
+  @override
   _Element wrapElement(html5lib.Element _element) =>
       _ElementImpl.from(_element);
 
   // return the html5lib implementation
+  @override
   html5lib.Element unwrapElement(_Element element) => element._element;
+
+  // wrap a native document
+  @override
+  Document wrapDocument(html5lib.Document documentImpl) =>
+      _DocumentImpl.from(documentImpl);
+
+  // get the native native document
+  @override
+  html5lib.Document unwrapDocument(_Document document) => document._document;
 }
 
 _HtmlProviderHtml5Lib get _html => htmlProviderHtml5Lib;

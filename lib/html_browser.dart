@@ -282,9 +282,24 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
   }
 }
 
-class _Document extends Document {
+abstract class _DocumentImpl {
+  dart_html.HtmlDocument get _htmlDoc;
+  static Document from(dart_html.HtmlDocument htmlDoc) {
+    if (htmlDoc == null) {
+      return null;
+    }
+
+    return new _Document(htmlDoc);
+  }
+}
+
+class _Document extends Document with _DocumentImpl {
   dart_html.HtmlDocument _htmlDoc;
   _Document(this._htmlDoc) : super(_html);
+
+  String get title => _htmlDoc.title;
+  set title(String title) => _htmlDoc.title = title;
+
   String outerHtml(int padding) {
     return _htmlDoc.documentElement.outerHtml;
   }
@@ -371,7 +386,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
         .from(new dart_html.Element.html(html, treeSanitizer: sanitizer));
   }
 
-  String get name => PROVIDER_BROWSER_NAME;
+  String get name => providerBrowserName;
 
   // return the html element wrapper
   _Element wrapElement(dart_html.Element _element) =>
@@ -379,6 +394,13 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   // return the html5lib implementation
   dart_html.Element unwrapElement(_Element element) => element._element;
+
+  // return the html element wrapper
+  _Document wrapDocument(dart_html.Document _document) =>
+      _DocumentImpl.from(_document);
+
+  // return the html5lib implementation
+  dart_html.Document unwrapDocument(_Document document) => document._htmlDoc;
 }
 
 _HtmlProviderBrowser get _html => htmlProviderBrowser;
