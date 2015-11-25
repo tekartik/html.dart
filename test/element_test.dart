@@ -75,9 +75,7 @@ test_main(HtmlProvider html) {
     });
 
     test('createElementHtml', () {
-      // firefox requires noValidate
-      Element element = html.createElementHtml('<Div id="test">inner</div>',
-          noValidate: true);
+      Element element = html.createElementHtml('<Div id="test">inner</div>');
       expect(element.tagName, DIV);
       expect(element.id, 'test');
       expect(element.innerHtml, 'inner');
@@ -300,9 +298,7 @@ test_main(HtmlProvider html) {
       expect(element.classes.add('test'), isTrue);
       expect(element.classes.add('test'), isFalse);
       expect(element.outerHtml, '<div class="test"></div>');
-      // Not working without noValidate on firefox
-      element =
-          html.createElementHtml('<div class="test"></div>', noValidate: true);
+      element = html.createElementHtml('<div class="test"></div>');
       expect(element.classes.contains('test'), isTrue);
       expect(element.classes.add('test'), isFalse);
       expect(element.classes.remove('test'), isTrue);
