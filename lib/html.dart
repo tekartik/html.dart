@@ -94,7 +94,7 @@ abstract class Node {
   static const int TEXT_NODE = 3;
 
   int get nodeType;
-  //String get nodeValue;
+  String get nodeValue;
 }
 
 abstract class Element extends Node {

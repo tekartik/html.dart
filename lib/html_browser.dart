@@ -64,6 +64,7 @@ abstract class _NodeImpl extends Object {
   set _element(dart_html.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
+  String get nodeValue => _node.nodeValue;
 }
 
 Node _newNodeFrom(dart_html.Node _node) {

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tidy Html</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script defer type="application/dart" src="browser_tidy_html.dart"></script>
+    <script defer src="packages/browser/dart.js"></script>
+    <style>
+        #input {
+            width: 100%;
+            min-height: 200px;
+        }
+
+        #output {
+            background-color: #fafafa;
+            width: 100%;
+            min-height: 200px;
+            white-space: pre-wrap;
+        }
+        label {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<label for="input">Input</label>
+<textarea id="input"></textarea>
+<label for="indent">Indent</label>
+<input id="indent" placeholder="indent">
+<button id="convert">convert</button>
+<pre id="output"></pre>
+</body>
+</html>

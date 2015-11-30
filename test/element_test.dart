@@ -109,6 +109,15 @@ test_main(HtmlProvider html) {
       }
     });
 
+    test('attributes_no_content', () {
+      Element element = html.createElementHtml('<div ⚡></div>');
+      // ok on standalone not browser
+      if (element.outerHtml != '<div ⚡=""></div>') {
+        element = html.createElementHtml('<div ⚡></div>', noValidate: true);
+        expect(element.outerHtml, '<div ⚡=""></div>');
+      }
+    });
+
     test('dataset', () {
       if (html.name != providerBrowserName) {
         Element element = html.createElementHtml('<div data-src="test"></div>');
