@@ -11,6 +11,7 @@ main() {
 }
 
 test_main(HtmlProvider html) {
+  bool isBrowser = html.name == providerBrowserName;
   group('element', () {
     test('createElementTag', () {
       Element element = html.createElementTag(DIV);
@@ -74,6 +75,55 @@ test_main(HtmlProvider html) {
       //expect(element.children[0], same(element.firstChild));
     });
 
+    test('weird_tag', () {
+      try {
+        Element element = html.createElementTag('?');
+        expect(element.tagName, '?');
+      } catch (_) {
+        // fail in dom
+      }
+
+      //expect(element.children[0], same(element.firstChild));
+    });
+    test('html_weird_tag', () {
+      try {
+        html.createElementHtml('<? id="test"></?>');
+        fail('should fail');
+      } catch (_) {
+        //print(_.runtimeType);
+        //print(_);
+      }
+      //expect(element.tagName, '?');
+      //expect(element.children[0], same(element.firstChild));
+    });
+
+    test('custom', () {
+      Element element = html.createElementHtml('''
+      <div>
+      <div class="--dtk-include" title="some/path/1"></div>
+      <meta property="dtk-include" content="some/path/2" />
+      </div>
+      ''');
+      //print(element);
+      if (isBrowser) {
+        expect(element.children.length, 1);
+      } else {
+        expect(element.children.length, 2);
+      }
+    });
+    test('custom_no_validate', () {
+      Element element = html.createElementHtml(
+          '<div><div class="--dtk-include" title="some/path/1"></div><meta property="dtk-include" content="some/path/2" /></div>',
+          noValidate: true);
+      //print(element.outerHtml.toString());
+      expect(element.children.length, 2);
+    });
+
+    //solo_test('two_elements', () {
+    //  Element element = html.createElementHtml('<div></div><div></div>');
+    //  expect(element.children.length, 2);
+    //});
+
     test('createElementHtml', () {
       Element element = html.createElementHtml('<Div id="test">inner</div>');
       expect(element.tagName, DIV);
@@ -93,7 +143,7 @@ test_main(HtmlProvider html) {
     */
 
     test('custom tag attributes bis', () {
-      if (html.name != providerBrowserName) {
+      if (!isBrowser) {
         Element element =
             html.createElementHtml('<include src="test"></include>');
         expect(element.tagName, 'include');

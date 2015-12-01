@@ -1,6 +1,7 @@
 library tekartik_html.util.html_tidy;
 
 import '../html.dart';
+import 'dart:convert';
 
 List<String> _voidTags = [
   'area',
@@ -20,6 +21,8 @@ List<String> _voidTags = [
   'track',
   'wbr'
 ];
+
+List<String> _rawTags = ['script', 'style'];
 
 List<String> _inlineTags = [
   'meta', 'title', 'link', // for head
@@ -68,9 +71,6 @@ bool _inlineContentForTag(String tagName) {
 bool _doNotConvertContentForTag(String tagName) {
   switch (tagName) {
     case 'pre':
-    case 'style':
-    case 'script':
-    case 'svg':
       return true;
     default:
       return false;
@@ -126,7 +126,7 @@ List<String> convertContent(String input, HtmlTidyOption option) {
   return out;
 }
 
-_addSubs(List<String> out, List<String> subs, HtmlTidyOption option) {
+_addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption option) {
   for (String sub in subs) {
     out.add('${option.indent}${sub}');
   }
@@ -151,8 +151,30 @@ Iterable<String> _htmlTidyElement(Element element,
   element.childNodes;
 
   // do not convert content for inlined and special tags
-  bool inlineContent =
-      inline || _inlineContentForTag(tagName) || element.childNodes.isEmpty;
+  bool inlineContent = inline || _inlineContentForTag(tagName);
+  // Only so this if there is no child or
+  List<Node> childNodes = [];
+  List<Node> allChildNodes = element.childNodes;
+  List<Element> childElements = [];
+  for (Node node in allChildNodes) {
+    if (node is Element) {
+      childElements.add(node);
+      childNodes.add(node);
+    } else if (node.nodeType == Node.TEXT_NODE) {
+      childNodes.add(node);
+    }
+  }
+
+  // only do this for single child elements
+  if (childNodes.isEmpty) {
+    inlineContent = true;
+  } else if (inlineContent) {
+    if (childElements.length > 0) {
+      inlineContent = false;
+    }
+  }
+
+  //|| element.childNodes.isEmpty;
   bool _doNotConvertContent =
       inlineContent || _doNotConvertContentForTag(tagName);
 
@@ -168,9 +190,14 @@ Iterable<String> _htmlTidyElement(Element element,
         if (_doNotConvertContent) {
           out.add(node.nodeValue);
         } else {
-          List<String> subs = convertContent(node.nodeValue, option);
-          if (subs.isNotEmpty) {
-            _addSubs(out, subs, option);
+          // for style/script split & join to prevent \r \n
+          if (_rawTags.contains(tagName)) {
+            _addSubs(out, LineSplitter.split(node.nodeValue), option);
+          } else {
+            List<String> subs = convertContent(node.nodeValue, option);
+            if (subs.isNotEmpty) {
+              _addSubs(out, subs, option);
+            }
           }
         }
       }

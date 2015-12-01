@@ -19,3 +19,6 @@ pubspec.lock
 
 # dartdoc
 doc/api/
+
+# tmp
+tmp/

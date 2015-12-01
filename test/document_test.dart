@@ -67,6 +67,24 @@ test_main(HtmlProvider html) {
           '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
     });
 
+    test('custom', () {
+      Document doc = html.createDocument(
+          html: '''
+      <head>
+        <meta charset="utf-8">
+        <title>test</title>
+        <meta property="dtk-include" content="head/some/path/1" />
+        <!--<div class="--dtk-include" title="head/some/path/2"></div>-->
+      </head>
+      <body>
+        <div class="--dtk-include" title="some/path/1"></div>
+        <meta property="dtk-include" content="some/path/2" />
+      </body>
+      ''');
+      expect(doc.head.children.length, 3);
+      expect(doc.body.children.length, 2);
+    });
+
     test('createDocumentHtml no fix', () {
       Document doc = html.createDocument(
           html: '<!DOCTYPE html><html><head></head><body></body></html>',
