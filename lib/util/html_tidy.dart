@@ -148,7 +148,10 @@ List<String> convertContent(String input, HtmlTidyOption option) {
 
 _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption option) {
   for (String sub in subs) {
-    out.add('${option.indent}${sub}');
+    // remove empty lines
+    if (sub.trim().length > 0) {
+      out.add('${option.indent}${sub}');
+    }
   }
 }
 

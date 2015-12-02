@@ -164,8 +164,11 @@ test_main(HtmlProvider html) {
       // ok on standalone not browser
       if (element.outerHtml != '<div ⚡=""></div>') {
         element = html.createElementHtml('<div ⚡></div>', noValidate: true);
-        expect(element.outerHtml, '<div ⚡=""></div>');
+        //
       }
+      expect(element.outerHtml, '<div ⚡=""></div>');
+      expect(element.attributes['⚡'], '');
+      expect(element.attributes.length, 1);
     });
 
     test('dataset', () {

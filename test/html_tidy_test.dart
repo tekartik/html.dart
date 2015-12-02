@@ -11,24 +11,7 @@ main() {
 }
 
 test_main(HtmlProvider html) {
-  group('tidy', () {
-    group('document', () {
-      test('html_attributes', () {
-        Document doc = html.createDocument(title: 'test');
-        doc.html.attributes['⚡'] = '';
-        expect(htmlTidyDocument(doc), [
-          '<!DOCTYPE html>',
-          '<html ⚡>',
-          '<head>',
-          '\t<meta charset="utf-8">',
-          '\t<title>test</title>',
-          '</head>',
-          '<body></body>',
-          '</html>'
-        ]);
-      });
-    });
-
+  group('tidy_element', () {
     group('indent', () {
       test('sub_div_element', () {
         Element element =
@@ -54,6 +37,13 @@ test_main(HtmlProvider html) {
             html.createElementHtml("<style>body {opacity: 0}</style>");
         //print(element.outerHtml);
         expect(htmlTidyElement(element), ['<style>body {opacity: 0}</style>']);
+      });
+
+      test('style_element_one_line feed', () {
+        // from amp
+        Element element = html.createElementHtml("<style>\n</style>");
+        //print(element.outerHtml);
+        expect(htmlTidyElement(element), ['<style>', '</style>']);
       });
       test('title_element', () {
         Element element = html.createElementHtml("<title>some  text</title>");

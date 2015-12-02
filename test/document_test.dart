@@ -85,6 +85,18 @@ test_main(HtmlProvider html) {
       expect(doc.body.children.length, 2);
     });
 
+    test('html_attributes', () {
+      // html is a special element that we cannot parse without parsing a document
+      Document doc = html.createDocument(
+          html:
+              '<!DOCTYPE html><html ⚡ lang="en"><head><meta charset="utf-8"><title></title></head><body></body></html>');
+      expect(doc.html.attributes.length, 2);
+      expect(doc.html.attributes['⚡'], '');
+      expect(doc.html.attributes['lang'], 'en');
+
+      //expect(doc.toString(), '<!DOCTYPE html><html ⚡="" lang="en"><head><meta charset="utf-8"><title></title></head><body></body></html>');
+    });
+
     test('createDocumentHtml no fix', () {
       Document doc = html.createDocument(
           html: '<!DOCTYPE html><html><head></head><body></body></html>',
