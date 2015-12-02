@@ -48,6 +48,13 @@ test_main(HtmlProvider html) {
         expect(htmlTidyElement(element),
             ['<style>', '\tbody {', '\t\tmargin: 0;', '\t}', '</style>']);
       });
+      test('style_element_single_line', () {
+        // from amp
+        Element element =
+            html.createElementHtml("<style>body {opacity: 0}</style>");
+        //print(element.outerHtml);
+        expect(htmlTidyElement(element), ['<style>body {opacity: 0}</style>']);
+      });
       test('title_element', () {
         Element element = html.createElementHtml("<title>some  text</title>");
         expect(htmlTidyElement(element), ['<title>some  text</title>']);
@@ -66,7 +73,7 @@ test_main(HtmlProvider html) {
 
       test('paragraph_long', () {
         Element element = html.createElementHtml(
-            '<p>0123456789 012345678 012345678910 0123456 789 12345</p>');
+            '<p>0123456789 012345678 012345678910 0123456 789 12345\n</p>');
         //expect(htmlTidyElement(element), ['<input>']);
         //print(element.outerHtml);
         expect(
@@ -88,7 +95,7 @@ test_main(HtmlProvider html) {
       });
 
       test('div_element', () {
-        Element element = html.createElementHtml("<div>some  text</div>");
+        Element element = html.createElementHtml("<div>some  text\r</div>");
         expect(htmlTidyElement(element), ['<div>', '\tsome text', '</div>']);
       });
 
@@ -106,7 +113,7 @@ test_main(HtmlProvider html) {
 
       test('text_node', () {
         Element element = html.createElementHtml("<div>some text</div>");
-        expect(htmlTidyElement(element), ['<div>', '\tsome text', '</div>']);
+        expect(htmlTidyElement(element), ['<div>some text</div>']);
         element = html.createElementHtml("<div>some\ntext</div>");
         expect(htmlTidyElement(element), ['<div>', '\tsome text', '</div>']);
       });

@@ -60,6 +60,26 @@ class HtmlTidyOption {
   int contentLength = 80;
 }
 
+// Character constants.
+const int _LF = 10;
+const int _CR = 13;
+
+// <h1>test</h1>
+// <style>body {opacity: 0}</style>
+bool _hasSingleTextNodeLine(Element element) {
+  List<Node> childNodes = element.childNodes;
+  if (childNodes.length == 1) {
+    Node node = childNodes.first;
+    if (node.nodeType == Node.TEXT_NODE) {
+      String value = node.nodeValue;
+      if (!(value.codeUnits.contains(_CR) || value.codeUnits.contains(_LF))) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 bool _inlineContentForTag(String tagName) {
   if (_inlineTags.contains(tagName)) {
     return true;
@@ -151,7 +171,9 @@ Iterable<String> _htmlTidyElement(Element element,
   element.childNodes;
 
   // do not convert content for inlined and special tags
-  bool inlineContent = inline || _inlineContentForTag(tagName);
+  bool inlineContent = inline ||
+      _inlineContentForTag(tagName) ||
+      _hasSingleTextNodeLine(element);
   // Only so this if there is no child or
   List<Node> childNodes = [];
   List<Node> allChildNodes = element.childNodes;
