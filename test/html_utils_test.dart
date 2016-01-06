@@ -25,5 +25,20 @@ test_main(HtmlProvider html) {
       expect(findFirstAncestorWithId(subInnerElement, "div3", true),
           subInnerElement);
     });
+
+    test('findFirstAncestorWithClass', () {
+      Element element = html.createElementTag(DIV)..classes.add("class1");
+      Element innerElement = html.createElementTag(DIV)..classes.add("class2");
+      Element subInnerElement = html.createElementTag(DIV)
+        ..classes.add("class3");
+      innerElement.append(subInnerElement);
+      element.append(innerElement);
+      expect(
+          findFirstAncestorWithClass(subInnerElement, "class2"), innerElement);
+      expect(findFirstAncestorWithClass(subInnerElement, "class1"), element);
+      expect(findFirstAncestorWithClass(subInnerElement, "class3"), isNull);
+      expect(findFirstAncestorWithClass(subInnerElement, "class3", true),
+          subInnerElement);
+    });
   });
 }
