@@ -71,6 +71,11 @@ class _ElementList extends ElementList {
   int indexOf(Element element_) {
     return _list.indexOf((element_ as _ElementImpl)._element);
   }
+
+  @override
+  void clear() {
+    _list.clear();
+  }
 }
 
 class _Element extends Element with _ElementImpl, _NodeImpl {

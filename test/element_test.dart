@@ -192,7 +192,7 @@ test_main(HtmlProvider html) {
       //      expect(element.outerHtml, '<div id="test">inner</div>');
     });
 
-    test('children', () {
+    solo_test('children', () {
       Element element = html.createElementTag(DIV);
       Element child = html.createElementTag(SPAN);
       element.children.add(child);
@@ -224,6 +224,10 @@ test_main(HtmlProvider html) {
       }
 
       expect(count, 2);
+
+      expect(element.children.length, 2);
+      element.children.clear();
+      expect(element.children.length, 0);
     });
 
     test('querySelector', () {

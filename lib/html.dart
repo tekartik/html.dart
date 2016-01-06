@@ -41,6 +41,9 @@ abstract class ElementList extends Object with IterableMixin<Element> {
   int indexOf(Element element);
 
   Iterator<Element> get iterator => new ElementListIterator(this);
+
+  /// remove all element
+  void clear();
 }
 
 abstract class CssClassSet {
