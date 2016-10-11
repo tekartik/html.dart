@@ -1,6 +1,7 @@
 name: tekartik_html
 version: 0.1.1
 description: An html abstraction layer to work with both dart:html and the html package
+homepage: https://github.com/tekartik/tekartik_html.dart
 dependencies:
 #  tekartik_common:
 #    path: ../../common

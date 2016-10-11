@@ -2,7 +2,7 @@
 
 An html abstraction layer to work with both dart:html and the html package
 
-[![Build Status](https://travis-ci.org/alextekartik/tekartik_html.dart.svg?branch=master)](https://travis-ci.org/alextekartik/tekartik_html.dart)
+[![Build Status](https://travis-ci.org/tekartik/tekartik_html.dart.svg?branch=master)](https://travis-ci.org/tekartik/tekartik_html.dart)
 
 ## General
 
@@ -45,4 +45,4 @@ The api is then ready to use
 
 ## Build status
 
-Travis: [![Build Status](https://travis-ci.org/alextekartik/tekartik_html.dart.svg?branch=master)](https://travis-ci.org/alextekartik/tekartik_html.dart)
+Travis: [![Build Status](https://travis-ci.org/tekartik/tekartik_html.dart.svg?branch=master)](https://travis-ci.org/tekartik/tekartik_html.dart)
