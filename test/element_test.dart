@@ -192,7 +192,7 @@ test_main(HtmlProvider html) {
       //      expect(element.outerHtml, '<div id="test">inner</div>');
     });
 
-    solo_test('children', () {
+    test('children', () {
       Element element = html.createElementTag(DIV);
       Element child = html.createElementTag(SPAN);
       element.children.add(child);

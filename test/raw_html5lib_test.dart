@@ -57,6 +57,7 @@ main() {
         dumpNode(_node);
       });
     }
+
     test('document.html title', () {
       Document doc =
           new Document.html('<html><head><title>title</title></head></html>');

@@ -395,18 +395,20 @@ class _HtmlProviderBrowser extends HtmlProvider {
   String get name => providerBrowserName;
 
   // return the html element wrapper
-  _Element wrapElement(dart_html.Element _element) =>
+  Element wrapElement(/*dart_html.Element */ _element) =>
       _ElementImpl.from(_element);
 
   // return the html5lib implementation
-  dart_html.Element unwrapElement(_Element element) => element._element;
+  dart_html.Element unwrapElement(Element element) =>
+      (element as _Element)._element;
 
   // return the html element wrapper
-  _Document wrapDocument(dart_html.Document _document) =>
+  Document wrapDocument(/*dart_html.Document*/ _document) =>
       _DocumentImpl.from(_document);
 
   // return the html5lib implementation
-  dart_html.Document unwrapDocument(_Document document) => document._htmlDoc;
+  dart_html.Document unwrapDocument(/*_Document*/ document) =>
+      (document as _Document)._htmlDoc;
 }
 
 _HtmlProviderBrowser get _html => htmlProviderBrowser;

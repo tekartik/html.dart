@@ -107,6 +107,7 @@ List<String> _wordSplit(String input) {
       sb = new StringBuffer();
     }
   }
+
   for (int rune in input.runes) {
     if (_isWhitespace(rune)) {
       _addCurrent();
@@ -130,6 +131,7 @@ List<String> convertContent(String input, HtmlTidyOption option) {
       sb = new StringBuffer();
     }
   }
+
   for (int i = 0; i < words.length; i++) {
     String word = words[i];
     if (sb.length == 0) {

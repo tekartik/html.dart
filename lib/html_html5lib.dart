@@ -464,21 +464,23 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  _Element wrapElement(html5lib.Element _element) =>
+  _Element wrapElement(/*html5lib.Element*/ _element) =>
       _ElementImpl.from(_element);
 
   // return the html5lib implementation
   @override
-  html5lib.Element unwrapElement(_Element element) => element._element;
+  html5lib.Element unwrapElement(Element element) =>
+      (element as _Element)._element;
 
   // wrap a native document
   @override
-  Document wrapDocument(html5lib.Document documentImpl) =>
+  Document wrapDocument(/*html5lib.Document*/ documentImpl) =>
       _DocumentImpl.from(documentImpl);
 
   // get the native native document
   @override
-  html5lib.Document unwrapDocument(_Document document) => document._document;
+  html5lib.Document unwrapDocument(Document document) =>
+      (document as _Document)._document;
 }
 
 _HtmlProviderHtml5Lib get _html => htmlProviderHtml5Lib;

@@ -69,14 +69,14 @@ test_main(HtmlProvider html) {
         expect(
             htmlTidyElement(element, new HtmlTidyOption()..contentLength = 10),
             [
-          '<p>',
-          '\t0123456789',
-          '\t012345678',
-          '\t012345678910',
-          '\t0123456',
-          '\t789 12345',
-          '</p>'
-        ]);
+              '<p>',
+              '\t0123456789',
+              '\t012345678',
+              '\t012345678910',
+              '\t0123456',
+              '\t789 12345',
+              '</p>'
+            ]);
       });
 
       test('paragraph', () {

@@ -199,7 +199,7 @@ abstract class HtmlProvider {
   // wrap a native document
   Document wrapDocument(dynamic documentImpl);
 
-  // get the native native document
+  // get the native document
   dynamic unwrapDocument(Document document);
 
   // wrap a native element
