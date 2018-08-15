@@ -65,7 +65,7 @@ class _Node extends Node with _NodeImpl {
 
 abstract class _NodeImpl extends Object {
   dart_html.Node _node;
-  dart_html.Element get _element => _node; // only work if element
+  dart_html.Element get _element => _node as dart_html.Element; // only work if element
   set _element(dart_html.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
@@ -352,7 +352,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
     dart_html.HtmlDocument htmlDoc;
     if (html.length > 0) {
       dart_html.DomParser domParser = new dart_html.DomParser();
-      htmlDoc = domParser.parseFromString(html, "text/html");
+      htmlDoc = domParser.parseFromString(html, "text/html") as dart_html.HtmlDocument;
     } else {
       htmlDoc = dart_html.document.implementation.createHtmlDocument(title);
     }
@@ -396,7 +396,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   // return the html element wrapper
   Element wrapElement(/*dart_html.Element */ _element) =>
-      _ElementImpl.from(_element);
+      _ElementImpl.from(_element as dart_html.Element);
 
   // return the html5lib implementation
   dart_html.Element unwrapElement(Element element) =>
@@ -404,14 +404,14 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   // return the html element wrapper
   Document wrapDocument(/*dart_html.Document*/ _document) =>
-      _DocumentImpl.from(_document);
+      _DocumentImpl.from(_document as dart_html.HtmlDocument);
 
   // return the html5lib implementation
   dart_html.Document unwrapDocument(/*_Document*/ document) =>
       (document as _Document)._htmlDoc;
 }
 
-_HtmlProviderBrowser get _html => htmlProviderBrowser;
+_HtmlProviderBrowser get _html => htmlProviderBrowser as _HtmlProviderBrowser;
 
 @deprecated
 HtmlProvider initHtmlProvider() {

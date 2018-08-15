@@ -16,7 +16,7 @@ class _Node extends Node with _NodeImpl {
 
 abstract class _NodeImpl extends Object {
   html5lib.Node _node;
-  html5lib.Element get _element => _node; // only work if element
+  html5lib.Element get _element => _node as html5lib.Element; // only work if element
   set _element(html5lib.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
@@ -464,8 +464,8 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  _Element wrapElement(/*html5lib.Element*/ _element) =>
-      _ElementImpl.from(_element);
+  Element wrapElement(/*html5lib.Element*/ _element) =>
+      _ElementImpl.from(_element as html5lib.Element);
 
   // return the html5lib implementation
   @override
@@ -475,7 +475,7 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   // wrap a native document
   @override
   Document wrapDocument(/*html5lib.Document*/ documentImpl) =>
-      _DocumentImpl.from(documentImpl);
+      _DocumentImpl.from(documentImpl as html5lib.Document);
 
   // get the native native document
   @override
@@ -483,7 +483,7 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
       (document as _Document)._document;
 }
 
-_HtmlProviderHtml5Lib get _html => htmlProviderHtml5Lib;
+_HtmlProviderHtml5Lib get _html => htmlProviderHtml5Lib as _HtmlProviderHtml5Lib;
 
 /**
  * Safe to be called multiple times
