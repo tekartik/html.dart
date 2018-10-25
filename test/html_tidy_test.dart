@@ -16,7 +16,7 @@ test_main(HtmlProvider html) {
       test('sub_div_element', () {
         Element element =
             html.createElementHtml("<div><div><div></div></div></div>");
-        expect(htmlTidyElement(element, new HtmlTidyOption()..indent = ' '),
+        expect(htmlTidyElement(element, HtmlTidyOption()..indent = ' '),
             ['<div>', ' <div>', '  <div></div>', ' </div>', '</div>']);
       });
     });
@@ -66,17 +66,15 @@ test_main(HtmlProvider html) {
             '<p>0123456789 012345678 012345678910 0123456 789 12345\n</p>');
         //expect(htmlTidyElement(element), ['<input>']);
         //print(element.outerHtml);
-        expect(
-            htmlTidyElement(element, new HtmlTidyOption()..contentLength = 10),
-            [
-              '<p>',
-              '\t0123456789',
-              '\t012345678',
-              '\t012345678910',
-              '\t0123456',
-              '\t789 12345',
-              '</p>'
-            ]);
+        expect(htmlTidyElement(element, HtmlTidyOption()..contentLength = 10), [
+          '<p>',
+          '\t0123456789',
+          '\t012345678',
+          '\t012345678910',
+          '\t0123456',
+          '\t789 12345',
+          '</p>'
+        ]);
       });
 
       test('paragraph', () {

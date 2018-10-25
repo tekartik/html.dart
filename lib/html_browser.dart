@@ -15,7 +15,7 @@ class _ElementList extends ElementList {
   _ElementList(this._list);
   @override
   Element operator [](int index) {
-    return new _Element._(_list[index]);
+    return _Element._(_list[index]);
   }
 
   @override
@@ -65,7 +65,8 @@ class _Node extends Node with _NodeImpl {
 
 abstract class _NodeImpl extends Object {
   dart_html.Node _node;
-  dart_html.Element get _element => _node as dart_html.Element; // only work if element
+  dart_html.Element get _element =>
+      _node as dart_html.Element; // only work if element
   set _element(dart_html.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
@@ -74,9 +75,9 @@ abstract class _NodeImpl extends Object {
 
 Node _newNodeFrom(dart_html.Node _node) {
   if (_node is dart_html.Element) {
-    return new _Element._(_node);
+    return _Element._(_node);
   } else {
-    return new _Node._(_node);
+    return _Node._(_node);
   }
 }
 
@@ -85,14 +86,14 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
     _element = element;
   }
   _Element.tag(String tag) {
-    _element = new dart_html.Element.tag(tag);
+    _element = dart_html.Element.tag(tag);
   }
 }
 
 abstract class _ElementImpl extends Object {
   set _element(dart_html.Element element);
   dart_html.Element get _element;
-  ElementList get children => new _ElementList(_element.children);
+  ElementList get children => _ElementList(_element.children);
   Element getElementById(String id) {
     return from(_element.querySelector('#$id'));
   }
@@ -108,7 +109,7 @@ abstract class _ElementImpl extends Object {
     if (element_ == null) {
       return null;
     }
-    return new _Element._(element_);
+    return _Element._(element_);
   }
 
   String get outerHtml => _element.outerHtml;
@@ -125,12 +126,12 @@ abstract class _ElementImpl extends Object {
   }
 
   ElementList querySelectorAll(String selector) {
-    return new _ElementList(_element.querySelectorAll(selector));
+    return _ElementList(_element.querySelectorAll(selector));
   }
 
   static String _buildSelector(
       {String byTag, String byId, String byClass, String byAttributes}) {
-    StringBuffer sb = new StringBuffer();
+    StringBuffer sb = StringBuffer();
     if (byTag != null) {
       sb.write(byTag);
     }
@@ -149,7 +150,7 @@ abstract class _ElementImpl extends Object {
   }
 
   static String _buildCriteriaSelector(QueryCriteria criteria) {
-    StringBuffer sb = new StringBuffer();
+    StringBuffer sb = StringBuffer();
     if (criteria.recursive == false) {
       sb.write(':scope > ');
     }
@@ -214,7 +215,7 @@ abstract class _ElementImpl extends Object {
   }
 
   //TODO optimize
-  CssClassSet get classes => new CssClassSetBrowser(_element.classes);
+  CssClassSet get classes => CssClassSetBrowser(_element.classes);
 
   //@override
   void remove() {
@@ -228,7 +229,7 @@ abstract class _ElementImpl extends Object {
   Element get parent => from(_element.parent);
 
   //@override
-  DataSet get dataset => new DataSetBrowser(_element.dataset);
+  DataSet get dataset => DataSetBrowser(_element.dataset);
 
   //@override
   List<Node> get childNodes {
@@ -295,7 +296,7 @@ abstract class _DocumentImpl {
       return null;
     }
 
-    return new _Document(htmlDoc);
+    return _Document(htmlDoc);
   }
 }
 
@@ -310,7 +311,7 @@ class _Document extends Document with _DocumentImpl {
     return _htmlDoc.documentElement.outerHtml;
   }
 
-  void fixMissing({String title: '', String charset: CHARSET_UTF_8}) {
+  void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
     // fixing title fail using the default way
     int index = 0;
 
@@ -337,27 +338,28 @@ class _Document extends Document with _DocumentImpl {
     return '<!DOCTYPE html>${_htmlDoc.documentElement.outerHtml}';
   }
 
-  BodyElement get body => new _BodyElement(_htmlDoc.body);
-  HeadElement get head => new _HeadElement(_htmlDoc.head);
+  BodyElement get body => _BodyElement(_htmlDoc.body);
+  HeadElement get head => _HeadElement(_htmlDoc.head);
   HtmlElement get html =>
-      new _HtmlElement(_htmlDoc.documentElement as dart_html.HtmlElement);
+      _HtmlElement(_htmlDoc.documentElement as dart_html.HtmlElement);
 }
 
 class _HtmlProviderBrowser extends HtmlProvider {
   Document createDocument(
-      {String html: '',
-      String title: '',
-      String charset: CHARSET_UTF_8,
-      bool noCharsetTitleFix: false}) {
+      {String html = '',
+      String title = '',
+      String charset = CHARSET_UTF_8,
+      bool noCharsetTitleFix = false}) {
     dart_html.HtmlDocument htmlDoc;
     if (html.length > 0) {
-      dart_html.DomParser domParser = new dart_html.DomParser();
-      htmlDoc = domParser.parseFromString(html, "text/html") as dart_html.HtmlDocument;
+      dart_html.DomParser domParser = dart_html.DomParser();
+      htmlDoc = domParser.parseFromString(html, "text/html")
+          as dart_html.HtmlDocument;
     } else {
       htmlDoc = dart_html.document.implementation.createHtmlDocument(title);
     }
 
-    _Document doc = new _Document(htmlDoc);
+    _Document doc = _Document(htmlDoc);
     //print(doc);
     //   _Document doc = new _Document(
     //        dart_html.document.implementation.createHtmlDocument(title));
@@ -377,10 +379,10 @@ class _HtmlProviderBrowser extends HtmlProvider {
   }
 
   Element createElementTag(String tag) {
-    return _ElementImpl.from(new dart_html.Element.tag(tag));
+    return _ElementImpl.from(dart_html.Element.tag(tag));
   }
 
-  static _NullTreeSanitizer nullTreeSanitizer = new _NullTreeSanitizer();
+  static _NullTreeSanitizer nullTreeSanitizer = _NullTreeSanitizer();
 
   @override
   Element createElementHtml(String html, {bool noValidate}) {
@@ -388,8 +390,8 @@ class _HtmlProviderBrowser extends HtmlProvider {
     if (noValidate == true) {
       sanitizer = nullTreeSanitizer;
     }
-    return _ElementImpl
-        .from(new dart_html.Element.html(html, treeSanitizer: sanitizer));
+    return _ElementImpl.from(
+        dart_html.Element.html(html, treeSanitizer: sanitizer));
   }
 
   String get name => providerBrowserName;
@@ -418,4 +420,4 @@ HtmlProvider initHtmlProvider() {
   return _html;
 }
 
-HtmlProvider htmlProviderBrowser = new _HtmlProviderBrowser();
+HtmlProvider htmlProviderBrowser = _HtmlProviderBrowser();

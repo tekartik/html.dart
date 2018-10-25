@@ -16,7 +16,8 @@ class _Node extends Node with _NodeImpl {
 
 abstract class _NodeImpl extends Object {
   html5lib.Node _node;
-  html5lib.Element get _element => _node as html5lib.Element; // only work if element
+  html5lib.Element get _element =>
+      _node as html5lib.Element; // only work if element
   set _element(html5lib.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
@@ -25,9 +26,9 @@ abstract class _NodeImpl extends Object {
 
 Node _newNodeFrom(html5lib.Node _node) {
   if (_node is html5lib.Element) {
-    return new _Element.impl(_node);
+    return _Element.impl(_node);
   } else {
-    return new _Node.impl(_node);
+    return _Node.impl(_node);
   }
 }
 
@@ -36,7 +37,7 @@ class _ElementList extends ElementList {
   _ElementList(this._list);
   @override
   Element operator [](int index) {
-    return new _Element.impl(_list[index]);
+    return _Element.impl(_list[index]);
   }
 
   @override
@@ -86,7 +87,7 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
 
 abstract class _ElementImpl {
   html5lib.Element get _element;
-  ElementList get children => new _ElementList(_element.children);
+  ElementList get children => _ElementList(_element.children);
   String get id => _element.id;
   void set id(String id_) {
     _element.id = id_;
@@ -107,7 +108,7 @@ abstract class _ElementImpl {
       return null;
     }
 
-    return new _Element.impl(element_);
+    return _Element.impl(element_);
   }
 
   String get outerHtml => _element.outerHtml;
@@ -124,7 +125,7 @@ abstract class _ElementImpl {
   }
 
   ElementList querySelectorAll(String selector) {
-    return new _ElementList(_element.querySelectorAll(selector));
+    return _ElementList(_element.querySelectorAll(selector));
   }
 
   static bool tagsEquals(String tag1, String tag2) {
@@ -204,7 +205,7 @@ abstract class _ElementImpl {
 
   static List<html5lib.Element> _queryChildren(
       html5lib.Element parent, QueryCriteria criteria) {
-    List<html5lib.Element> list = new List();
+    List<html5lib.Element> list = List();
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
         if (_matches(node, criteria)) {
@@ -228,12 +229,12 @@ abstract class _ElementImpl {
 
   //@override
   ElementList queryCriteriaAll(QueryCriteria criteria) {
-    return new _ElementList(_queryChildren(_element, criteria));
+    return _ElementList(_queryChildren(_element, criteria));
   }
 
   Element query(
       {String byTag, String byId, String byClass, String byAttributes}) {
-    return queryCriteria(new QueryCriteria(
+    return queryCriteria(QueryCriteria(
         byTag: byTag,
         byId: byId,
         byClass: byClass,
@@ -242,7 +243,7 @@ abstract class _ElementImpl {
 
   ElementList queryAll(
       {String byTag, String byId, String byClass, String byAttributes}) {
-    return queryCriteriaAll(new QueryCriteria(
+    return queryCriteriaAll(QueryCriteria(
         byTag: byTag,
         byId: byId,
         byClass: byClass,
@@ -264,7 +265,7 @@ abstract class _ElementImpl {
     return false;
   }
 
-  CssClassSet get classes => new CssClassSetImpl(_element.attributes);
+  CssClassSet get classes => CssClassSetImpl(_element.attributes);
 
   //@override
   Map<dynamic, String> get attributes => _element.attributes;
@@ -278,7 +279,7 @@ abstract class _ElementImpl {
   Element get parent => from(_element.parent);
 
   //@override
-  DataSet get dataset => new DataSetHtml5lib(_element.attributes);
+  DataSet get dataset => DataSetHtml5lib(_element.attributes);
 
 //@override
   List<Node> get childNodes {
@@ -340,7 +341,7 @@ abstract class _DocumentImpl {
       return null;
     }
 
-    return new _Document(documentImpl);
+    return _Document(documentImpl);
   }
 }
 
@@ -404,7 +405,7 @@ class _Document extends Document with _DocumentImpl {
     head.children.insert(index, provider.createElementTag(TITLE)..text = title);
   }
 
-  void fixMissing({String title: '', String charset: CHARSET_UTF_8}) {
+  void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
     int index = 0;
 
     if (charset != null) {
@@ -422,25 +423,25 @@ class _Document extends Document with _DocumentImpl {
         return;
       }
     }
-    html5lib.Node docType = new html5lib.DocumentType('html', null, null);
+    html5lib.Node docType = html5lib.DocumentType('html', null, null);
     _document.nodes.insert(0, docType);
   }
 
-  BodyElement get body => new _BodyElement(_document.body);
-  HeadElement get head => new _HeadElement(_document.head);
-  HtmlElement get html => new _HtmlElement(_document.documentElement);
+  BodyElement get body => _BodyElement(_document.body);
+  HeadElement get head => _HeadElement(_document.head);
+  HtmlElement get html => _HtmlElement(_document.documentElement);
 }
 
 class _HtmlProviderHtml5Lib extends HtmlProvider {
   Document createDocument(
-      {String html: '',
-      String title: '',
-      String charset: CHARSET_UTF_8,
-      bool noCharsetTitleFix: false}) {
+      {String html = '',
+      String title = '',
+      String charset = CHARSET_UTF_8,
+      bool noCharsetTitleFix = false}) {
     html5lib.Document doc;
-    doc = new html5lib.Document.html(html);
+    doc = html5lib.Document.html(html);
 
-    _Document _doc = new _Document(doc);
+    _Document _doc = _Document(doc);
 
     if (!noCharsetTitleFix) {
       _doc.fixMissing(title: title, charset: charset);
@@ -451,12 +452,12 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   }
 
   Element createElementTag(String tag) {
-    return _ElementImpl.from(new html5lib.Element.tag(tag));
+    return _ElementImpl.from(html5lib.Element.tag(tag));
   }
 
   Element createElementHtml(String html, {bool noValidate}) {
     // noValidate is implicit when using html5 lib
-    return _ElementImpl.from(new html5lib.Element.html(html));
+    return _ElementImpl.from(html5lib.Element.html(html));
   }
 
   @override
@@ -483,14 +484,13 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
       (document as _Document)._document;
 }
 
-_HtmlProviderHtml5Lib get _html => htmlProviderHtml5Lib as _HtmlProviderHtml5Lib;
+_HtmlProviderHtml5Lib get _html =>
+    htmlProviderHtml5Lib as _HtmlProviderHtml5Lib;
 
-/**
- * Safe to be called multiple times
- */
+/// Safe to be called multiple times
 @deprecated
 HtmlProvider initHtmlProvider() {
   return _html;
 }
 
-HtmlProvider htmlProviderHtml5Lib = new _HtmlProviderHtml5Lib();
+HtmlProvider htmlProviderHtml5Lib = _HtmlProviderHtml5Lib();

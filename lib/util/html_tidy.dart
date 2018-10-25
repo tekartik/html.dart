@@ -99,12 +99,12 @@ bool _doNotConvertContentForTag(String tagName) {
 
 List<String> _wordSplit(String input) {
   List<String> out = [];
-  StringBuffer sb = new StringBuffer();
+  StringBuffer sb = StringBuffer();
 
   _addCurrent() {
     if (sb.length > 0) {
       out.add(sb.toString());
-      sb = new StringBuffer();
+      sb = StringBuffer();
     }
   }
 
@@ -123,12 +123,12 @@ List<String> convertContent(String input, HtmlTidyOption option) {
   List<String> words = _wordSplit(input);
   List<String> out = [];
 
-  StringBuffer sb = new StringBuffer();
+  StringBuffer sb = StringBuffer();
 
   _addCurrent() {
     if (sb.length > 0) {
       out.add(sb.toString());
-      sb = new StringBuffer();
+      sb = StringBuffer();
     }
   }
 
@@ -170,7 +170,7 @@ Iterable<String> _htmlTidyElement(Element element,
   String tagName = element.tagName;
   // default option
   if (option == null) {
-    option = new HtmlTidyOption();
+    option = HtmlTidyOption();
   }
   List<String> out = [];
   element.childNodes;
@@ -205,7 +205,7 @@ Iterable<String> _htmlTidyElement(Element element,
   bool _doNotConvertContent =
       inlineContent || _doNotConvertContentForTag(tagName);
 
-  StringBuffer sb = new StringBuffer();
+  StringBuffer sb = StringBuffer();
 
   _addNode(Node node) {
     if (node is Element) {
@@ -255,7 +255,7 @@ Iterable<String> _htmlTidyElement(Element element,
 }
 
 String _beginTag(Element element) {
-  StringBuffer sb = new StringBuffer();
+  StringBuffer sb = StringBuffer();
   sb.write('<${element.tagName}');
   element.attributes.forEach((key, value) {
     sb.write(' $key');

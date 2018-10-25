@@ -27,8 +27,7 @@ test_main(HtmlProvider html) {
       ]);
     });
     test('amp_basic', () {
-      Document doc = html.createDocument(
-          html: '''
+      Document doc = html.createDocument(html: '''
 <!doctype html>
 <html ⚡ lang="en">
 <head>
@@ -45,9 +44,7 @@ test_main(HtmlProvider html) {
 </head>
 <body>Hello World!</body>
 </html>''');
-      expect(
-          htmlTidyDocument(doc).join('\n'),
-          '''
+      expect(htmlTidyDocument(doc).join('\n'), '''
 <!DOCTYPE html>
 <html ⚡ lang="en">
 <head>

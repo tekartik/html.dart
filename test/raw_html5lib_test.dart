@@ -6,35 +6,35 @@ import 'package:test/test.dart';
 main() {
   group('html5lib sdk', () {
     test('document', () {
-      Document doc = new Document();
+      Document doc = Document();
       expect(doc.outerHtml, '');
-      Node docType = new DocumentType('html', null, null);
+      Node docType = DocumentType('html', null, null);
       doc.nodes.add(docType);
       expect(doc.outerHtml, '<!DOCTYPE html>');
     });
 
     test('document', () {
-      /*Document doc = */ new Document();
+      /*Document doc = */ Document();
     });
 
     test('document.html', () {
-      Document doc = new Document.html('');
+      Document doc = Document.html('');
       expect(doc.outerHtml, '<html><head></head><body></body></html>');
-      Node docType = new DocumentType('html', null, null);
+      Node docType = DocumentType('html', null, null);
       doc.nodes.insert(0, docType);
       expect(doc.outerHtml,
           '<!DOCTYPE html><html><head></head><body></body></html>');
     });
 
     test('node', () {
-      Element element = new Element.tag('div');
-      Element child = new Element.tag('div');
+      Element element = Element.tag('div');
+      Element child = Element.tag('div');
       element.append(child);
       expect(element.children[0], same(element.firstChild));
     });
 
     test('element', () {
-      Element element = new Element.tag('div');
+      Element element = Element.tag('div');
       expect('div', element.localName);
       element.id = 'test';
       //element.title = 'title';
@@ -45,7 +45,7 @@ main() {
       //print(element.outerHtml);
     });
     test('classes', () {
-      Element element = new Element.tag('div');
+      Element element = Element.tag('div');
       expect(element.attributes['class'], isNull);
 //          element.attributes['class'] = 'test';
 //          expect(element.outerHtml, '<div class="test"></div>');
@@ -60,7 +60,7 @@ main() {
 
     test('document.html title', () {
       Document doc =
-          new Document.html('<html><head><title>title</title></head></html>');
+          Document.html('<html><head><title>title</title></head></html>');
       expect(doc.querySelector('head'), isNotNull);
       dumpNode(doc);
 

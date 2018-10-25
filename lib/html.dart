@@ -22,16 +22,12 @@ class ElementListIterator extends Iterator<Element> {
 
 abstract class ElementList extends Object with IterableMixin<Element> {
   int get length;
-  /**
-   * Returns the object at the given [index] in the list
-   * or throws a [RangeError] if [index] is out of bounds.
-   */
+  /// Returns the object at the given [index] in the list
+  /// or throws a [RangeError] if [index] is out of bounds.
   Element operator [](int index);
 
-  /**
-   * Sets the value at the given [index] in the list to [value]
-   * or throws a [RangeError] if [index] is out of bounds.
-   */
+  /// Sets the value at the given [index] in the list to [value]
+  /// or throws a [RangeError] if [index] is out of bounds.
   void operator []=(int index, Element value);
 
   void add(Element element);
@@ -40,7 +36,7 @@ abstract class ElementList extends Object with IterableMixin<Element> {
   void insert(int index, Element element);
   int indexOf(Element element);
 
-  Iterator<Element> get iterator => new ElementListIterator(this);
+  Iterator<Element> get iterator => ElementListIterator(this);
 
   /// remove all element
   void clear();
@@ -58,7 +54,7 @@ abstract class DataSet {
   Iterable<String> get keys;
 
   String toString() {
-    return new Map.fromIterable(keys).toString();
+    return Map.fromIterable(keys).toString();
   }
 
   bool remove(String key);
@@ -76,7 +72,7 @@ class QueryCriteria {
       this.byId,
       this.byClass,
       this.byAttributes,
-      this.recursive: true});
+      this.recursive = true});
 }
 
 abstract class Node {
@@ -156,7 +152,7 @@ abstract class Document {
   /// set the document title
   set title(String title);
 
-  void fixMissing({String title: '', String charset: CHARSET_UTF_8}) {
+  void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
     int index = 0;
 
     if (charset != null) {
@@ -188,10 +184,10 @@ const String providerHtml5LibName = 'html5lib';
 abstract class HtmlProvider {
   String get name;
   Document createDocument(
-      {String html: '',
-      String title: '',
-      String charset: CHARSET_UTF_8,
-      bool noCharsetTitleFix: false});
+      {String html = '',
+      String title = '',
+      String charset = CHARSET_UTF_8,
+      bool noCharsetTitleFix = false});
 
   Element createElementTag(String tag);
   Element createElementHtml(String html, {bool noValidate});
