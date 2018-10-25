@@ -2,7 +2,7 @@ part of html_html5lib;
 
 class CssClassSetImpl extends CssClassSet {
   Map _attributes;
-  Set<String> _classSet = new Set();
+  Set<String> _classSet = Set();
   CssClassSetImpl(this._attributes) {
     String classesStr = _attributes[CLASS];
     if ((classesStr != null) && (classesStr.length > 0)) {

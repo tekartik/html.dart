@@ -24,7 +24,7 @@ main() {
     }
     var doc = _html.createDocument(html: input);
     outputElement.text =
-        htmlTidyDocument(doc, new HtmlTidyOption()..indent = indent).join('\n');
+        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent).join('\n');
   }
 
   // reload last if any
@@ -33,7 +33,7 @@ main() {
 
   if (indent == null) {
     // get the default indent
-    indent = new HtmlTidyOption().indent;
+    indent = HtmlTidyOption().indent;
   }
   if (indent != null) {
     indentElement.value = indent;

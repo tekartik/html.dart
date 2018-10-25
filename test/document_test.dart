@@ -68,8 +68,7 @@ test_main(HtmlProvider html) {
     });
 
     test('custom', () {
-      Document doc = html.createDocument(
-          html: '''
+      Document doc = html.createDocument(html: '''
       <head>
         <meta charset="utf-8">
         <title>test</title>

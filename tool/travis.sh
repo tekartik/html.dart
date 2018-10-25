@@ -3,15 +3,7 @@
 # Fast fail the script on failures.
 set -e
 
-dartanalyzer --fatal-warnings \
-  lib/attr.dart \
-  lib/html.dart \
-  lib/html_browser.dart \
-  lib/html_html5lib.dart \
-  lib/html_utils.dart \
-  lib/tag.dart \
-  lib/util/html_tidy.dart \
-
+dartanalyzer --fatal-warnings example lib test
 pub run test -p vm
 pub run test -p chrome,firefox
 # pub run test -p content-shell -j 1

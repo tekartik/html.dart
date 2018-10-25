@@ -16,14 +16,14 @@ main() {
     });
 
     test('node', () {
-      Element element = new Element.tag('div');
-      Element child = new Element.tag('div');
+      Element element = Element.tag('div');
+      Element child = Element.tag('div');
       element.append(child);
       expect(element.children[0], same(element.firstChild));
     });
 
     test('element', () {
-      Element element = new DivElement();
+      Element element = DivElement();
       expect('DIV', element.tagName);
       element.id = 'test';
       element.title = 'title';
@@ -37,7 +37,7 @@ main() {
     });
 
     test('classes', () {
-      Element element = new DivElement();
+      Element element = DivElement();
       expect(element.attributes['class'], isNull);
       element.attributes['class'] = 'test';
       // This fails on firefox: https://github.com/dart-lang/sdk/issues/23604
@@ -64,7 +64,7 @@ main() {
 
     test('html', () {
       // not working on firefox windows
-      Element element = new Element.html('<div></div>');
+      Element element = Element.html('<div></div>');
       expect(element.outerHtml, '<div></div>');
     });
   });
