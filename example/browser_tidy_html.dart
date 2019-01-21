@@ -1,19 +1,21 @@
-import 'package:tekartik_html/html.dart';
-import 'package:tekartik_html/util/html_tidy.dart';
-import 'package:tekartik_html/html_browser.dart';
 import 'dart:html';
+
+import 'package:tekartik_html/html.dart';
+import 'package:tekartik_html/html_browser.dart';
+import 'package:tekartik_html/util/html_tidy.dart';
 
 String keyPrefix = 'tekartik_html.tidy_example.';
 String inputKey = '${keyPrefix}.input';
 String indentKey = '${keyPrefix}.indent';
-main() {
+
+void main() {
   HtmlProvider _html = htmlProviderBrowser;
 
   TextAreaElement inputElement = document.body.querySelector("#input");
   PreElement outputElement = document.body.querySelector("#output");
   InputElement indentElement = document.body.querySelector("#indent");
 
-  convert([_]) {
+  void convert([_]) {
     String indent = indentElement.value;
     String input = inputElement.value;
     try {

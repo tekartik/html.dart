@@ -1,12 +1,12 @@
 #!/usr/bin/env dart
-import 'package:args/args.dart';
-
-import 'package:tekartik_html/html.dart';
-import 'package:tekartik_html/util/html_tidy.dart';
-import 'package:tekartik_html/html_html5lib.dart';
 import 'dart:io';
 
-main(List<String> arguments) {
+import 'package:args/args.dart';
+import 'package:tekartik_html/html.dart';
+import 'package:tekartik_html/html_html5lib.dart';
+import 'package:tekartik_html/util/html_tidy.dart';
+
+void main(List<String> arguments) {
   ArgParser parser = ArgParser(allowTrailingOptions: true);
   parser.addOption('indent',
       abbr: 'i',

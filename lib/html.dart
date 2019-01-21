@@ -21,7 +21,9 @@ class ElementListIterator extends Iterator<Element> {
 }
 
 abstract class ElementList extends Object with IterableMixin<Element> {
+  @override
   int get length;
+
   /// Returns the object at the given [index] in the list
   /// or throws a [RangeError] if [index] is out of bounds.
   Element operator [](int index);
@@ -36,6 +38,7 @@ abstract class ElementList extends Object with IterableMixin<Element> {
   void insert(int index, Element element);
   int indexOf(Element element);
 
+  @override
   Iterator<Element> get iterator => ElementListIterator(this);
 
   /// remove all element
@@ -53,6 +56,7 @@ abstract class DataSet {
   void operator []=(String name, String value);
   Iterable<String> get keys;
 
+  @override
   String toString() {
     return Map.fromIterable(keys).toString();
   }
@@ -100,13 +104,13 @@ abstract class Element extends Node {
   ElementList get children;
   Element getElementById(String id);
   String get id;
-  void set id(String id_);
+  set id(String id);
   String get tagName;
   String get outerHtml;
   String get innerHtml;
   String get text;
   set text(String text);
-  void set innerHtml(String html);
+  set innerHtml(String html);
   Element querySelector(String selector);
   ElementList querySelectorAll(String selector);
   Element queryCriteria(QueryCriteria criteria);

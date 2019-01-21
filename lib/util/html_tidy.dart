@@ -1,7 +1,8 @@
 library tekartik_html.util.html_tidy;
 
-import '../html.dart';
 import 'dart:convert';
+
+import 'package:tekartik_html/html.dart';
 
 List<String> _voidTags = [
   'area',
@@ -101,7 +102,7 @@ List<String> _wordSplit(String input) {
   List<String> out = [];
   StringBuffer sb = StringBuffer();
 
-  _addCurrent() {
+  void _addCurrent() {
     if (sb.length > 0) {
       out.add(sb.toString());
       sb = StringBuffer();
@@ -125,7 +126,7 @@ List<String> convertContent(String input, HtmlTidyOption option) {
 
   StringBuffer sb = StringBuffer();
 
-  _addCurrent() {
+  void _addCurrent() {
     if (sb.length > 0) {
       out.add(sb.toString());
       sb = StringBuffer();
@@ -148,10 +149,10 @@ List<String> convertContent(String input, HtmlTidyOption option) {
   return out;
 }
 
-_addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption option) {
+void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption option) {
   for (String sub in subs) {
     // remove empty lines
-    if (sub.trim().length > 0) {
+    if (sub.trim().isNotEmpty) {
       out.add('${option.indent}${sub}');
     }
   }
@@ -196,7 +197,7 @@ Iterable<String> _htmlTidyElement(Element element,
   if (childNodes.isEmpty) {
     inlineContent = true;
   } else if (inlineContent) {
-    if (childElements.length > 0) {
+    if (childElements.isNotEmpty) {
       inlineContent = false;
     }
   }
@@ -207,7 +208,7 @@ Iterable<String> _htmlTidyElement(Element element,
 
   StringBuffer sb = StringBuffer();
 
-  _addNode(Node node) {
+  void _addNode(Node node) {
     if (node is Element) {
       _addSubs(out, _htmlTidyElement(node, option, false), option);
     } else if (node.nodeType == Node.TEXT_NODE) {
@@ -259,7 +260,7 @@ String _beginTag(Element element) {
   sb.write('<${element.tagName}');
   element.attributes.forEach((key, value) {
     sb.write(' $key');
-    if (value.length > 0) {
+    if (value.isNotEmpty) {
       sb.write('="$value"');
     }
   });

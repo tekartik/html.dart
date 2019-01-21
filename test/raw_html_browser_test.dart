@@ -1,12 +1,14 @@
 @TestOn("browser")
 library html_browser_test;
 
-import 'package:dev_test/test.dart';
 import 'dart:html';
+
+import 'package:dev_test/test.dart';
+
 //import 'package:html5lib/dom.dart';
 //import 'package:tekartik_common/test_utils.dart';
 
-main() {
+void main() {
   group('browser', () {
     test('current document', () {
       /*

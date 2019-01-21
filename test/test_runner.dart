@@ -6,8 +6,8 @@ import 'document_test.dart' as document_test;
 import 'element_test.dart' as element_test;
 import 'html_utils_test.dart' as html_utils_test;
 
-void test_main(HtmlProvider provider) {
-  document_test.test_main(provider);
-  element_test.test_main(provider);
-  html_utils_test.test_main(provider);
+void testMain(HtmlProvider provider) {
+  document_test.testMain(provider);
+  element_test.testMain(provider);
+  html_utils_test.testMain(provider);
 }

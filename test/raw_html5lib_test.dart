@@ -3,7 +3,7 @@ library html5lib_test;
 import 'package:html/dom.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('html5lib sdk', () {
     test('document', () {
       Document doc = Document();

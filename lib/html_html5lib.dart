@@ -1,11 +1,13 @@
 library html_html5lib;
 
 import 'package:html/dom.dart' as html5lib;
-import 'html.dart';
+
 import 'attr.dart';
+import 'html.dart';
 import 'tag.dart';
 
 part 'src/html5lib/css_class_set.dart';
+
 part 'src/html5lib/data_set.dart';
 
 class _Node extends Node with _NodeImpl {
@@ -16,11 +18,13 @@ class _Node extends Node with _NodeImpl {
 
 abstract class _NodeImpl extends Object {
   html5lib.Node _node;
+
   html5lib.Element get _element =>
       _node as html5lib.Element; // only work if element
   set _element(html5lib.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
+
   String get nodeValue => _node.text;
 }
 
@@ -34,7 +38,9 @@ Node _newNodeFrom(html5lib.Node _node) {
 
 class _ElementList extends ElementList {
   List<html5lib.Element> _list;
+
   _ElementList(this._list);
+
   @override
   Element operator [](int index) {
     return _Element.impl(_list[index]);
@@ -49,13 +55,13 @@ class _ElementList extends ElementList {
   int get length => _list.length;
 
   @override
-  void add(Element element_) {
-    _list.add((element_ as _ElementImpl)._element);
+  void add(Element element) {
+    _list.add((element as _ElementImpl)._element);
   }
 
   @override
-  void insert(int index, Element element_) {
-    _list.insert(index, (element_ as _ElementImpl)._element);
+  void insert(int index, Element element) {
+    _list.insert(index, (element as _ElementImpl)._element);
   }
 
   @override
@@ -64,13 +70,13 @@ class _ElementList extends ElementList {
   }
 
   @override
-  bool remove(Element element_) {
-    return _list.remove((element_ as _ElementImpl)._element);
+  bool remove(Element element) {
+    return _list.remove((element as _ElementImpl)._element);
   }
 
   @override
-  int indexOf(Element element_) {
-    return _list.indexOf((element_ as _ElementImpl)._element);
+  int indexOf(Element element) {
+    return _list.indexOf((element as _ElementImpl)._element);
   }
 
   @override
@@ -87,13 +93,17 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
 
 abstract class _ElementImpl {
   html5lib.Element get _element;
+
   ElementList get children => _ElementList(_element.children);
+
   String get id => _element.id;
-  void set id(String id_) {
-    _element.id = id_;
+
+  set id(String id) {
+    _element.id = id;
   }
 
   String get tagName => _element.localName;
+
   Element getElementById(String id) {
     for (Element child in children) {
       if (child.id == id) {
@@ -103,21 +113,24 @@ abstract class _ElementImpl {
     return null;
   }
 
-  static Element from(html5lib.Element element_) {
-    if (element_ == null) {
+  static Element from(html5lib.Element element) {
+    if (element == null) {
       return null;
     }
 
-    return _Element.impl(element_);
+    return _Element.impl(element);
   }
 
   String get outerHtml => _element.outerHtml;
+
   String get innerHtml => _element.innerHtml;
-  void set innerHtml(String html) {
+
+  set innerHtml(String html) {
     _element.innerHtml = html;
   }
 
   String get text => _element.text;
+
   set text(String text) => _element.text = text;
 
   Element querySelector(String selector) {
@@ -205,7 +218,7 @@ abstract class _ElementImpl {
 
   static List<html5lib.Element> _queryChildren(
       html5lib.Element parent, QueryCriteria criteria) {
-    List<html5lib.Element> list = List();
+    List<html5lib.Element> list = [];
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
         if (_matches(node, criteria)) {
@@ -336,6 +349,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
 
 abstract class _DocumentImpl {
   html5lib.Document get _document;
+
   static Document from(html5lib.Document documentImpl) {
     if (documentImpl == null) {
       return null;
@@ -346,7 +360,9 @@ abstract class _DocumentImpl {
 }
 
 class _Document extends Document with _DocumentImpl {
+  @override
   html5lib.Document _document;
+
   _Document(this._document) : super(_html);
 
   Element get _titleElement {
@@ -395,7 +411,7 @@ class _Document extends Document with _DocumentImpl {
     //print(head.outerHtml);
     Element titleElement = _titleElement;
     if (titleElement != null) {
-      if (title.length > 0) {
+      if (title.isNotEmpty) {
         if (titleElement.text != title) {
           titleElement.text = title;
         }
@@ -405,6 +421,7 @@ class _Document extends Document with _DocumentImpl {
     head.children.insert(index, provider.createElementTag(TITLE)..text = title);
   }
 
+  @override
   void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
     int index = 0;
 
@@ -427,12 +444,18 @@ class _Document extends Document with _DocumentImpl {
     _document.nodes.insert(0, docType);
   }
 
+  @override
   BodyElement get body => _BodyElement(_document.body);
+
+  @override
   HeadElement get head => _HeadElement(_document.head);
+
+  @override
   HtmlElement get html => _HtmlElement(_document.documentElement);
 }
 
 class _HtmlProviderHtml5Lib extends HtmlProvider {
+  @override
   Document createDocument(
       {String html = '',
       String title = '',
@@ -451,10 +474,12 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
     return _doc;
   }
 
+  @override
   Element createElementTag(String tag) {
     return _ElementImpl.from(html5lib.Element.tag(tag));
   }
 
+  @override
   Element createElementHtml(String html, {bool noValidate}) {
     // noValidate is implicit when using html5 lib
     return _ElementImpl.from(html5lib.Element.html(html));
