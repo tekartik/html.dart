@@ -4,12 +4,12 @@ import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:dev_test/test.dart';
 
-main() {
+void main() {
   HtmlProvider html = htmlProviderHtml5Lib;
-  test_main(html);
+  testMain(html);
 }
 
-test_main(HtmlProvider html) {
+void testMain(HtmlProvider html) {
   group('node', () {
     test('text', () {
       Element element = html.createElementHtml('<p>hello</p>');

@@ -1,7 +1,7 @@
 import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 
-main() {
+void main() {
   HtmlProvider html = htmlProviderHtml5Lib;
 
   Document doc = html.createDocument(title: 'test');

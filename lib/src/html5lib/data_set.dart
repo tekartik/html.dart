@@ -21,7 +21,7 @@ class DataSetHtml5lib extends DataSet {
 
   @override
   Iterable<String> get keys {
-    List<String> keys = List();
+    List<String> keys = [];
     for (dynamic key in _attributes.keys) {
       if (key is String) {
         if (key.startsWith(DATA_PREFIX)) {

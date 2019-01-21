@@ -1,18 +1,24 @@
 library html_browser;
 
 import 'dart:html' as dart_html;
-import 'html.dart';
+
 import 'attr.dart';
-part 'src/browser/css_class_set.dart';
-part 'src/browser/data_set.dart';
+import 'html.dart';
+
+part 'package:tekartik_html/src/browser/css_class_set.dart';
+
+part 'package:tekartik_html/src/browser/data_set.dart';
 
 class _NullTreeSanitizer implements dart_html.NodeTreeSanitizer {
+  @override
   void sanitizeTree(node) {}
 }
 
 class _ElementList extends ElementList {
   List<dart_html.Element> _list;
+
   _ElementList(this._list);
+
   @override
   Element operator [](int index) {
     return _Element._(_list[index]);
@@ -27,13 +33,13 @@ class _ElementList extends ElementList {
   int get length => _list.length;
 
   @override
-  void add(Element element_) {
-    _list.add((element_ as _ElementImpl)._element);
+  void add(Element element) {
+    _list.add((element as _ElementImpl)._element);
   }
 
   @override
-  void insert(int index, Element element_) {
-    _list.insert(index, (element_ as _ElementImpl)._element);
+  void insert(int index, Element element) {
+    _list.insert(index, (element as _ElementImpl)._element);
   }
 
   @override
@@ -42,13 +48,13 @@ class _ElementList extends ElementList {
   }
 
   @override
-  bool remove(Element element_) {
-    return _list.remove((element_ as _ElementImpl)._element);
+  bool remove(Element element) {
+    return _list.remove((element as _ElementImpl)._element);
   }
 
   @override
-  int indexOf(Element element_) {
-    return _list.indexOf((element_ as _ElementImpl)._element);
+  int indexOf(Element element) {
+    return _list.indexOf((element as _ElementImpl)._element);
   }
 
   @override
@@ -65,11 +71,13 @@ class _Node extends Node with _NodeImpl {
 
 abstract class _NodeImpl extends Object {
   dart_html.Node _node;
+
   dart_html.Element get _element =>
       _node as dart_html.Element; // only work if element
   set _element(dart_html.Element element) => _node = element;
 
   int get nodeType => _node.nodeType;
+
   String get nodeValue => _node.nodeValue;
 }
 
@@ -85,6 +93,7 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
   _Element._(dart_html.Element element) {
     _element = element;
   }
+
   _Element.tag(String tag) {
     _element = dart_html.Element.tag(tag);
   }
@@ -92,33 +101,40 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
 
 abstract class _ElementImpl extends Object {
   set _element(dart_html.Element element);
+
   dart_html.Element get _element;
+
   ElementList get children => _ElementList(_element.children);
+
   Element getElementById(String id) {
     return from(_element.querySelector('#$id'));
   }
 
   String get id => _element.id;
-  void set id(String id_) {
-    _element.id = id_;
+
+  set id(String id) {
+    _element.id = id;
   }
 
   String get tagName => _element.tagName.toLowerCase();
 
-  static Element from(dart_html.Element element_) {
-    if (element_ == null) {
+  static Element from(dart_html.Element element) {
+    if (element == null) {
       return null;
     }
-    return _Element._(element_);
+    return _Element._(element);
   }
 
   String get outerHtml => _element.outerHtml;
+
   String get innerHtml => _element.innerHtml;
-  void set innerHtml(String html) {
+
+  set innerHtml(String html) {
     _element.innerHtml = html;
   }
 
   String get text => _element.text;
+
   set text(String text) => _element.text = text;
 
   Element querySelector(String selector) {
@@ -270,6 +286,7 @@ abstract class _ElementImpl extends Object {
 
 class _BodyElement extends BodyElement with _ElementImpl, _NodeImpl {
   dart_html.BodyElement get bodyElement => _element as dart_html.BodyElement;
+
   _BodyElement(dart_html.BodyElement body) {
     _element = body;
   }
@@ -277,6 +294,7 @@ class _BodyElement extends BodyElement with _ElementImpl, _NodeImpl {
 
 class _HeadElement extends HeadElement with _ElementImpl, _NodeImpl {
   dart_html.HeadElement get headElement => _element as dart_html.HeadElement;
+
   _HeadElement(dart_html.HeadElement head) {
     _element = head;
   }
@@ -284,6 +302,7 @@ class _HeadElement extends HeadElement with _ElementImpl, _NodeImpl {
 
 class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
   dart_html.HtmlElement get htmlElement => _element as dart_html.HtmlElement;
+
   _HtmlElement(dart_html.HtmlElement html) {
     _element = html;
   }
@@ -291,6 +310,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
 
 abstract class _DocumentImpl {
   dart_html.HtmlDocument get _htmlDoc;
+
   static Document from(dart_html.HtmlDocument htmlDoc) {
     if (htmlDoc == null) {
       return null;
@@ -301,16 +321,22 @@ abstract class _DocumentImpl {
 }
 
 class _Document extends Document with _DocumentImpl {
+  @override
   dart_html.HtmlDocument _htmlDoc;
+
   _Document(this._htmlDoc) : super(_html);
 
+  @override
   String get title => _htmlDoc.title;
+
+  @override
   set title(String title) => _htmlDoc.title = title;
 
   String outerHtml(int padding) {
     return _htmlDoc.documentElement.outerHtml;
   }
 
+  @override
   void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
     // fixing title fail using the default way
     int index = 0;
@@ -321,7 +347,7 @@ class _Document extends Document with _DocumentImpl {
     }
 
     //print('title : ${_htmlDoc.title}');
-    if (title.length > 0) {
+    if (title.isNotEmpty) {
       _htmlDoc.title = title;
     } else {
       if (_htmlDoc.title == null) {
@@ -338,20 +364,26 @@ class _Document extends Document with _DocumentImpl {
     return '<!DOCTYPE html>${_htmlDoc.documentElement.outerHtml}';
   }
 
+  @override
   BodyElement get body => _BodyElement(_htmlDoc.body);
+
+  @override
   HeadElement get head => _HeadElement(_htmlDoc.head);
+
+  @override
   HtmlElement get html =>
       _HtmlElement(_htmlDoc.documentElement as dart_html.HtmlElement);
 }
 
 class _HtmlProviderBrowser extends HtmlProvider {
+  @override
   Document createDocument(
       {String html = '',
       String title = '',
       String charset = CHARSET_UTF_8,
       bool noCharsetTitleFix = false}) {
     dart_html.HtmlDocument htmlDoc;
-    if (html.length > 0) {
+    if (html.isNotEmpty) {
       dart_html.DomParser domParser = dart_html.DomParser();
       htmlDoc = domParser.parseFromString(html, "text/html")
           as dart_html.HtmlDocument;
@@ -378,6 +410,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
     return doc;
   }
 
+  @override
   Element createElementTag(String tag) {
     return _ElementImpl.from(dart_html.Element.tag(tag));
   }
@@ -394,21 +427,26 @@ class _HtmlProviderBrowser extends HtmlProvider {
         dart_html.Element.html(html, treeSanitizer: sanitizer));
   }
 
+  @override
   String get name => providerBrowserName;
 
   // return the html element wrapper
+  @override
   Element wrapElement(/*dart_html.Element */ _element) =>
       _ElementImpl.from(_element as dart_html.Element);
 
   // return the html5lib implementation
+  @override
   dart_html.Element unwrapElement(Element element) =>
       (element as _Element)._element;
 
   // return the html element wrapper
+  @override
   Document wrapDocument(/*dart_html.Document*/ _document) =>
       _DocumentImpl.from(_document as dart_html.HtmlDocument);
 
   // return the html5lib implementation
+  @override
   dart_html.Document unwrapDocument(/*_Document*/ document) =>
       (document as _Document)._htmlDoc;
 }

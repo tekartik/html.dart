@@ -5,12 +5,12 @@ import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/util/html_tidy.dart';
 import 'package:dev_test/test.dart';
 
-main() {
+void main() {
   HtmlProvider html = htmlProviderHtml5Lib;
-  test_main(html);
+  testMain(html);
 }
 
-test_main(HtmlProvider html) {
+void testMain(HtmlProvider html) {
   group('tidy_document', () {
     test('html_attributes', () {
       Document doc = html.createDocument(title: 'test');

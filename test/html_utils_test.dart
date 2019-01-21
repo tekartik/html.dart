@@ -6,12 +6,12 @@ import 'package:tekartik_html/html_utils.dart';
 import 'package:tekartik_html/tag.dart';
 import 'package:dev_test/test.dart';
 
-main() {
+void main() {
   HtmlProvider html = htmlProviderHtml5Lib;
-  test_main(html);
+  testMain(html);
 }
 
-test_main(HtmlProvider html) {
+void testMain(HtmlProvider html) {
   group('html_utils', () {
     test('findFirstAncestorWithId', () {
       Element element = html.createElementTag(DIV)..id = "div1";

@@ -1,8 +1,9 @@
-import 'package:tekartik_html/html.dart';
-import 'package:tekartik_html/html_browser.dart';
 import 'dart:html' as _html;
 
-main() {
+import 'package:tekartik_html/html.dart';
+import 'package:tekartik_html/html_browser.dart';
+
+void main() {
   HtmlProvider html = htmlProviderBrowser;
 
   Document doc = html.wrapDocument(_html.document);

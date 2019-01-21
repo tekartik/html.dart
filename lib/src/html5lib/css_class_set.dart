@@ -5,7 +5,7 @@ class CssClassSetImpl extends CssClassSet {
   Set<String> _classSet = Set();
   CssClassSetImpl(this._attributes) {
     String classesStr = _attributes[CLASS];
-    if ((classesStr != null) && (classesStr.length > 0)) {
+    if ((classesStr != null) && (classesStr.isNotEmpty)) {
       _classSet.addAll(classesStr.split(' '));
     }
   }

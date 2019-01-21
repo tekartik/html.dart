@@ -5,12 +5,12 @@ import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/tag.dart';
 import 'package:dev_test/test.dart';
 
-main() {
+void main() {
   HtmlProvider html = htmlProviderHtml5Lib;
-  test_main(html);
+  testMain(html);
 }
 
-test_main(HtmlProvider html) {
+void testMain(HtmlProvider html) {
   bool isBrowser = html.name == providerBrowserName;
   group('element', () {
     test('createElementTag', () {
