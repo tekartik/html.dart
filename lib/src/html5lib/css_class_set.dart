@@ -4,7 +4,7 @@ class CssClassSetImpl extends CssClassSet {
   Map _attributes;
   Set<String> _classSet = Set();
   CssClassSetImpl(this._attributes) {
-    String classesStr = _attributes[CLASS];
+    String classesStr = _attributes[CLASS]?.toString();
     if ((classesStr != null) && (classesStr.isNotEmpty)) {
       _classSet.addAll(classesStr.split(' '));
     }

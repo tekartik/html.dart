@@ -15,13 +15,13 @@ void main(List<String> arguments) {
   ArgResults results = parser.parse(arguments);
 
   HtmlProvider html = htmlProviderHtml5Lib;
-  String indent = results['indent'];
+  String indent = results['indent']?.toString();
   for (String inputFile in results.rest) {
     print(inputFile);
     String input = File(inputFile).readAsStringSync();
     var doc = html.createDocument(html: input);
     List<String> list =
-        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent);
+        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent)?.toList();
     for (String line in list) {
       stdout.writeln(line);
     }
