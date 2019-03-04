@@ -11,9 +11,12 @@ String indentKey = '${keyPrefix}.indent';
 void main() {
   HtmlProvider _html = htmlProviderBrowser;
 
-  TextAreaElement inputElement = document.body.querySelector("#input");
-  PreElement outputElement = document.body.querySelector("#output");
-  InputElement indentElement = document.body.querySelector("#indent");
+  TextAreaElement inputElement =
+      document.body.querySelector("#input") as TextAreaElement;
+  PreElement outputElement =
+      document.body.querySelector("#output") as PreElement;
+  InputElement indentElement =
+      document.body.querySelector("#indent") as InputElement;
 
   void convert([_]) {
     String indent = indentElement.value;

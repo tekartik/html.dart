@@ -8,6 +8,17 @@ An html abstraction layer to work with both dart:html and the html package
 
 Opiniated generic API
 
+Setup in `pubspec.yaml`
+
+```yaml
+dependencies:
+  tekartik_html:
+    git:
+      url: git://github.com/tekartik/html.dart
+      ref: dart2
+    version: '>=0.1.1'
+```
+
 ## Usage
 
 
