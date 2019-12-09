@@ -1,4 +1,4 @@
-@TestOn("browser")
+@TestOn('browser')
 library all_tests_browser.dart;
 
 import 'package:dev_test/test.dart';

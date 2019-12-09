@@ -1,10 +1,10 @@
 part of html_html5lib;
 
 class CssClassSetImpl extends CssClassSet {
-  Map _attributes;
-  Set<String> _classSet = Set();
+  final Map _attributes;
+  final _classSet = <String>{};
   CssClassSetImpl(this._attributes) {
-    String classesStr = _attributes[CLASS]?.toString();
+    final classesStr = _attributes[attrClass]?.toString();
     if ((classesStr != null) && (classesStr.isNotEmpty)) {
       _classSet.addAll(classesStr.split(' '));
     }
@@ -13,15 +13,15 @@ class CssClassSetImpl extends CssClassSet {
   void _write() {
     if (_classSet.isEmpty) {
       //_attributes.remove(CLASS);
-      _attributes[CLASS] = ''; // mimic dart_html where class is left empty
+      _attributes[attrClass] = ''; // mimic dart_html where class is left empty
     } else {
-      _attributes[CLASS] = _classSet.join(' ');
+      _attributes[attrClass] = _classSet.join(' ');
     }
   }
 
   @override
   bool add(String value) {
-    bool added = _classSet.add(value);
+    final added = _classSet.add(value);
     if (added) {
       _write();
     }
@@ -30,7 +30,7 @@ class CssClassSetImpl extends CssClassSet {
 
   @override
   bool remove(Object value) {
-    bool removed = _classSet.remove(value);
+    final removed = _classSet.remove(value);
     if (removed) {
       _write();
     }

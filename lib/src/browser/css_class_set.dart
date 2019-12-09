@@ -1,7 +1,7 @@
 part of html_browser;
 
 class CssClassSetBrowser extends CssClassSet {
-  dart_html.CssClassSet _cssClassSet;
+  final dart_html.CssClassSet _cssClassSet;
   CssClassSetBrowser(this._cssClassSet);
 
   @override

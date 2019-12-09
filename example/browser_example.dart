@@ -1,18 +1,17 @@
 import 'dart:html' as _html;
 
-import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_browser.dart';
 
 void main() {
-  HtmlProvider html = htmlProviderBrowser;
+  final html = htmlProviderBrowser;
 
-  Document doc = html.wrapDocument(_html.document);
+  final doc = html.wrapDocument(_html.document);
 
-  Element div = html.createElementTag('div')..text = 'Some text';
+  final div = html.createElementTag('div')..text = 'Some text';
   doc.body.append(div);
 
-  doc.title = "updated title";
+  doc.title = 'updated title';
 
-  Element pre = html.createElementTag('pre')..text = doc.toString();
+  final pre = html.createElementTag('pre')..text = doc.toString();
   doc.body.append(pre);
 }

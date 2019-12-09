@@ -6,14 +6,14 @@ import 'package:tekartik_html/util/html_tidy.dart';
 import 'package:dev_test/test.dart';
 
 void main() {
-  HtmlProvider html = htmlProviderHtml5Lib;
+  final html = htmlProviderHtml5Lib;
   testMain(html);
 }
 
 void testMain(HtmlProvider html) {
   group('tidy_document', () {
     test('html_attributes', () {
-      Document doc = html.createDocument(title: 'test');
+      final doc = html.createDocument(title: 'test');
       doc.html.attributes['⚡'] = '';
       expect(htmlTidyDocument(doc), [
         '<!DOCTYPE html>',
@@ -27,7 +27,7 @@ void testMain(HtmlProvider html) {
       ]);
     });
     test('amp_basic', () {
-      Document doc = html.createDocument(html: '''
+      final doc = html.createDocument(html: '''
 <!doctype html>
 <html ⚡ lang="en">
 <head>

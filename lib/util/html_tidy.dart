@@ -27,7 +27,7 @@ List<String> _rawTags = ['script', 'style'];
 
 List<String> _inlineTags = [
   'meta', 'title', 'link', // for head
-  "h1", "h2", "h3", "h4", "h5", "h6", "span", "a"
+  'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'a'
 ];
 
 ///
@@ -62,18 +62,18 @@ class HtmlTidyOption {
 }
 
 // Character constants.
-const int _LF = 10;
-const int _CR = 13;
+const int _lf = 10;
+const int _cr = 13;
 
 // <h1>test</h1>
 // <style>body {opacity: 0}</style>
 bool _hasSingleTextNodeLine(Element element) {
-  List<Node> childNodes = element.childNodes;
+  final childNodes = element.childNodes;
   if (childNodes.length == 1) {
-    Node node = childNodes.first;
-    if (node.nodeType == Node.TEXT_NODE) {
-      String value = node.nodeValue;
-      if (!(value.codeUnits.contains(_CR) || value.codeUnits.contains(_LF))) {
+    final node = childNodes.first;
+    if (node.nodeType == Node.testNode) {
+      final value = node.nodeValue;
+      if (!(value.codeUnits.contains(_cr) || value.codeUnits.contains(_lf))) {
         return true;
       }
     }
@@ -99,8 +99,8 @@ bool _doNotConvertContentForTag(String tagName) {
 }
 
 List<String> _wordSplit(String input) {
-  List<String> out = [];
-  StringBuffer sb = StringBuffer();
+  final out = <String>[];
+  var sb = StringBuffer();
 
   void _addCurrent() {
     if (sb.length > 0) {
@@ -109,7 +109,7 @@ List<String> _wordSplit(String input) {
     }
   }
 
-  for (int rune in input.runes) {
+  for (final rune in input.runes) {
     if (_isWhitespace(rune)) {
       _addCurrent();
     } else {
@@ -121,10 +121,10 @@ List<String> _wordSplit(String input) {
 }
 
 List<String> convertContent(String input, HtmlTidyOption option) {
-  List<String> words = _wordSplit(input);
-  List<String> out = [];
+  final words = _wordSplit(input);
+  final out = <String>[];
 
-  StringBuffer sb = StringBuffer();
+  var sb = StringBuffer();
 
   void _addCurrent() {
     if (sb.length > 0) {
@@ -133,8 +133,8 @@ List<String> convertContent(String input, HtmlTidyOption option) {
     }
   }
 
-  for (int i = 0; i < words.length; i++) {
-    String word = words[i];
+  for (var i = 0; i < words.length; i++) {
+    final word = words[i];
     if (sb.length == 0) {
       // if empty never create a new line
     } else if (sb.length + word.length + 1 > option.contentLength) {
@@ -150,7 +150,7 @@ List<String> convertContent(String input, HtmlTidyOption option) {
 }
 
 void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption option) {
-  for (String sub in subs) {
+  for (final sub in subs) {
     // remove empty lines
     if (sub.trim().isNotEmpty) {
       out.add('${option.indent}${sub}');
@@ -168,27 +168,26 @@ Iterable<String> _htmlTidyElement(Element element,
     return null;
   }
 
-  String tagName = element.tagName;
+  final tagName = element.tagName;
   // default option
-  if (option == null) {
-    option = HtmlTidyOption();
-  }
-  List<String> out = [];
+  option ??= HtmlTidyOption();
+
+  final out = <String>[];
   element.childNodes;
 
   // do not convert content for inlined and special tags
-  bool inlineContent = inline ||
+  var inlineContent = inline ||
       _inlineContentForTag(tagName) ||
       _hasSingleTextNodeLine(element);
   // Only so this if there is no child or
-  List<Node> childNodes = [];
-  List<Node> allChildNodes = element.childNodes;
-  List<Element> childElements = [];
-  for (Node node in allChildNodes) {
+  final childNodes = <Node>[];
+  final allChildNodes = element.childNodes;
+  final childElements = <Element>[];
+  for (final node in allChildNodes) {
     if (node is Element) {
       childElements.add(node);
       childNodes.add(node);
-    } else if (node.nodeType == Node.TEXT_NODE) {
+    } else if (node.nodeType == Node.testNode) {
       childNodes.add(node);
     }
   }
@@ -203,15 +202,15 @@ Iterable<String> _htmlTidyElement(Element element,
   }
 
   //|| element.childNodes.isEmpty;
-  bool _doNotConvertContent =
+  final _doNotConvertContent =
       inlineContent || _doNotConvertContentForTag(tagName);
 
-  StringBuffer sb = StringBuffer();
+  final sb = StringBuffer();
 
   void _addNode(Node node) {
     if (node is Element) {
       _addSubs(out, _htmlTidyElement(node, option, false), option);
-    } else if (node.nodeType == Node.TEXT_NODE) {
+    } else if (node.nodeType == Node.testNode) {
       if (inlineContent) {
         sb.write(node.nodeValue);
       } else {
@@ -222,7 +221,7 @@ Iterable<String> _htmlTidyElement(Element element,
           if (_rawTags.contains(tagName)) {
             _addSubs(out, LineSplitter.split(node.nodeValue), option);
           } else {
-            List<String> subs = convertContent(node.nodeValue, option);
+            final subs = convertContent(node.nodeValue, option);
             if (subs.isNotEmpty) {
               _addSubs(out, subs, option);
             }
@@ -237,10 +236,10 @@ Iterable<String> _htmlTidyElement(Element element,
   } else {
     out.add(_beginTag(element));
   }
-  for (Node node in element.childNodes) {
+  for (final node in element.childNodes) {
     _addNode(node);
   }
-  String endTag = _endTag(element);
+  final endTag = _endTag(element);
   if (endTag != null) {
     if (inlineContent) {
       sb.write(endTag);
@@ -256,7 +255,7 @@ Iterable<String> _htmlTidyElement(Element element,
 }
 
 String _beginTag(Element element) {
-  StringBuffer sb = StringBuffer();
+  final sb = StringBuffer();
   sb.write('<${element.tagName}');
   element.attributes.forEach((key, value) {
     sb.write(' $key');
@@ -280,7 +279,7 @@ Iterable<String> htmlTidyDocument(Document document, [HtmlTidyOption option]) {
   if (document == null) {
     return null;
   }
-  List<String> out = [];
+  final out = <String>[];
   out.add('<!DOCTYPE html>');
   out.add(_beginTag(document.html));
   out.addAll(htmlTidyElement(document.head, option));

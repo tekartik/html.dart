@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('html5lib sdk', () {
     test('document', () {
-      Document doc = Document();
+      final doc = Document();
       expect(doc.outerHtml, '');
       Node docType = DocumentType('html', null, null);
       doc.nodes.add(docType);
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('document.html', () {
-      Document doc = Document.html('');
+      final doc = Document.html('');
       expect(doc.outerHtml, '<html><head></head><body></body></html>');
       Node docType = DocumentType('html', null, null);
       doc.nodes.insert(0, docType);
@@ -27,14 +27,14 @@ void main() {
     });
 
     test('node', () {
-      Element element = Element.tag('div');
-      Element child = Element.tag('div');
+      final element = Element.tag('div');
+      final child = Element.tag('div');
       element.append(child);
       expect(element.children[0], same(element.firstChild));
     });
 
     test('element', () {
-      Element element = Element.tag('div');
+      final element = Element.tag('div');
       expect('div', element.localName);
       element.id = 'test';
       //element.title = 'title';
@@ -45,7 +45,7 @@ void main() {
       //print(element.outerHtml);
     });
     test('classes', () {
-      Element element = Element.tag('div');
+      final element = Element.tag('div');
       expect(element.attributes['class'], isNull);
 //          element.attributes['class'] = 'test';
 //          expect(element.outerHtml, '<div class="test"></div>');
@@ -59,7 +59,7 @@ void main() {
     }
 
     test('document.html title', () {
-      Document doc =
+      final doc =
           Document.html('<html><head><title>title</title></head></html>');
       expect(doc.querySelector('head'), isNotNull);
       dumpNode(doc);

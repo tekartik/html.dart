@@ -37,7 +37,7 @@ Node _newNodeFrom(html5lib.Node _node) {
 }
 
 class _ElementList extends ElementList {
-  List<html5lib.Element> _list;
+  final List<html5lib.Element> _list;
 
   _ElementList(this._list);
 
@@ -105,7 +105,7 @@ abstract class _ElementImpl {
   String get tagName => _element.localName;
 
   Element getElementById(String id) {
-    for (Element child in children) {
+    for (final child in children) {
       if (child.id == id) {
         return child;
       }
@@ -166,7 +166,7 @@ abstract class _ElementImpl {
     }
 
     if (criteria.byClass != null) {
-      String classes = element.attributes[CLASS];
+      final classes = element.attributes[attrClass];
 
       if (classes == null) {
         return false;
@@ -178,7 +178,7 @@ abstract class _ElementImpl {
     }
 
     if (criteria.byAttributes != null) {
-      bool found = false;
+      var found = false;
       for (var key in element.attributes.keys) {
         if (key is String) {
           if (key == criteria.byAttributes) {
@@ -205,7 +205,7 @@ abstract class _ElementImpl {
 
         // Go deeper
         if (criteria.recursive != false) {
-          html5lib.Element found = _queryChild(node, criteria);
+          final found = _queryChild(node, criteria);
           if (found != null) {
             return found;
           }
@@ -218,7 +218,7 @@ abstract class _ElementImpl {
 
   static List<html5lib.Element> _queryChildren(
       html5lib.Element parent, QueryCriteria criteria) {
-    List<html5lib.Element> list = [];
+    final list = <html5lib.Element>[];
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
         if (_matches(node, criteria)) {
@@ -296,8 +296,8 @@ abstract class _ElementImpl {
 
 //@override
   List<Node> get childNodes {
-    List<Node> children = [];
-    for (html5lib.Node node in _element.nodes) {
+    final children = <Node>[];
+    for (final node in _element.nodes) {
       children.add(_newNodeFrom(node));
     }
     return children;
@@ -348,7 +348,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
 }
 
 abstract class _DocumentImpl {
-  html5lib.Document get _document;
+  // html5lib.Document get _document;
 
   static Document from(html5lib.Document documentImpl) {
     if (documentImpl == null) {
@@ -360,16 +360,15 @@ abstract class _DocumentImpl {
 }
 
 class _Document extends Document with _DocumentImpl {
-  @override
-  html5lib.Document _document;
+  final html5lib.Document _document;
 
   _Document(this._document) : super(_html);
 
   Element get _titleElement {
-    for (int i = 0; i < head.children.length; i++) {
-      Element element = head.children[i];
+    for (var i = 0; i < head.children.length; i++) {
+      final element = head.children[i];
       //print(element.outerHtml);
-      if (element.tagName == TITLE) {
+      if (element.tagName == tagTitle) {
         return element;
       }
     }
@@ -378,7 +377,7 @@ class _Document extends Document with _DocumentImpl {
 
   @override
   String get title {
-    Element titleElement = _titleElement;
+    final titleElement = _titleElement;
     if (titleElement != null) {
       return titleElement.text;
     } else {
@@ -388,13 +387,14 @@ class _Document extends Document with _DocumentImpl {
 
   @override
   set title(String title) {
-    Element titleElement = _titleElement;
+    final titleElement = _titleElement;
     if (titleElement != null) {
       titleElement.text = title;
     } else {
       // insert at the top
       // we should not get there that often though
-      head.children.insert(0, provider.createElementTag(TITLE)..text = title);
+      head.children
+          .insert(0, provider.createElementTag(tagTitle)..text = title);
     }
   }
 
@@ -409,7 +409,7 @@ class _Document extends Document with _DocumentImpl {
 
   void _fixNotExistingTitle(int index, String title) {
     //print(head.outerHtml);
-    Element titleElement = _titleElement;
+    final titleElement = _titleElement;
     if (titleElement != null) {
       if (title.isNotEmpty) {
         if (titleElement.text != title) {
@@ -418,12 +418,13 @@ class _Document extends Document with _DocumentImpl {
       }
       return;
     }
-    head.children.insert(index, provider.createElementTag(TITLE)..text = title);
+    head.children
+        .insert(index, provider.createElementTag(tagTitle)..text = title);
   }
 
   @override
-  void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
-    int index = 0;
+  void fixMissing({String title = '', String charset = attrCharsetUtf8}) {
+    var index = 0;
 
     if (charset != null) {
       fixNotExistingCharset(index, charset);
@@ -434,8 +435,8 @@ class _Document extends Document with _DocumentImpl {
   }
 
   void _fixMissingDocumentType() {
-    for (int i = 0; i < _document.nodes.length; i++) {
-      html5lib.Node node = _document.nodes[i];
+    for (var i = 0; i < _document.nodes.length; i++) {
+      final node = _document.nodes[i];
       if (node is html5lib.DocumentType) {
         return;
       }
@@ -459,12 +460,12 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   Document createDocument(
       {String html = '',
       String title = '',
-      String charset = CHARSET_UTF_8,
+      String charset = attrCharsetUtf8,
       bool noCharsetTitleFix = false}) {
     html5lib.Document doc;
     doc = html5lib.Document.html(html);
 
-    _Document _doc = _Document(doc);
+    final _doc = _Document(doc);
 
     if (!noCharsetTitleFix) {
       _doc.fixMissing(title: title, charset: charset);
