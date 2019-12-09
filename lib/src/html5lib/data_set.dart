@@ -1,12 +1,12 @@
 part of html_html5lib;
 
 class DataSetHtml5lib extends DataSet {
-  Map<dynamic, String> _attributes;
+  final Map<dynamic, String> _attributes;
 
   DataSetHtml5lib(this._attributes);
 
   String _nameToAttrKey(String name) {
-    return '${DATA_PREFIX}$name';
+    return '${attrDataPrefix}$name';
   }
 
   @override
@@ -16,16 +16,16 @@ class DataSetHtml5lib extends DataSet {
 
   @override
   void operator []=(String name, String value) {
-    _attributes['${DATA_PREFIX}$name'] = value;
+    _attributes['${attrDataPrefix}$name'] = value;
   }
 
   @override
   Iterable<String> get keys {
-    List<String> keys = [];
+    final keys = <String>[];
     for (dynamic key in _attributes.keys) {
       if (key is String) {
-        if (key.startsWith(DATA_PREFIX)) {
-          keys.add(key.substring(DATA_PREFIX.length));
+        if (key.startsWith(attrDataPrefix)) {
+          keys.add(key.substring(attrDataPrefix.length));
         }
       }
     }

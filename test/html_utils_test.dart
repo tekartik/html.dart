@@ -7,37 +7,37 @@ import 'package:tekartik_html/tag.dart';
 import 'package:dev_test/test.dart';
 
 void main() {
-  HtmlProvider html = htmlProviderHtml5Lib;
+  final html = htmlProviderHtml5Lib;
   testMain(html);
 }
 
 void testMain(HtmlProvider html) {
   group('html_utils', () {
     test('findFirstAncestorWithId', () {
-      Element element = html.createElementTag(DIV)..id = "div1";
-      Element innerElement = html.createElementTag(DIV)..id = "div2";
-      Element subInnerElement = html.createElementTag(DIV)..id = "div3";
+      final element = html.createElementTag(tagDiv)..id = 'div1';
+      final innerElement = html.createElementTag(tagDiv)..id = 'div2';
+      final subInnerElement = html.createElementTag(tagDiv)..id = 'div3';
       innerElement.append(subInnerElement);
       element.append(innerElement);
-      expect(findFirstAncestorWithId(subInnerElement, "div2"), innerElement);
-      expect(findFirstAncestorWithId(subInnerElement, "div1"), element);
-      expect(findFirstAncestorWithId(subInnerElement, "div3"), isNull);
-      expect(findFirstAncestorWithId(subInnerElement, "div3", true),
+      expect(findFirstAncestorWithId(subInnerElement, 'div2'), innerElement);
+      expect(findFirstAncestorWithId(subInnerElement, 'div1'), element);
+      expect(findFirstAncestorWithId(subInnerElement, 'div3'), isNull);
+      expect(findFirstAncestorWithId(subInnerElement, 'div3', true),
           subInnerElement);
     });
 
     test('findFirstAncestorWithClass', () {
-      Element element = html.createElementTag(DIV)..classes.add("class1");
-      Element innerElement = html.createElementTag(DIV)..classes.add("class2");
-      Element subInnerElement = html.createElementTag(DIV)
-        ..classes.add("class3");
+      final element = html.createElementTag(tagDiv)..classes.add('class1');
+      final innerElement = html.createElementTag(tagDiv)..classes.add('class2');
+      final subInnerElement = html.createElementTag(tagDiv)
+        ..classes.add('class3');
       innerElement.append(subInnerElement);
       element.append(innerElement);
       expect(
-          findFirstAncestorWithClass(subInnerElement, "class2"), innerElement);
-      expect(findFirstAncestorWithClass(subInnerElement, "class1"), element);
-      expect(findFirstAncestorWithClass(subInnerElement, "class3"), isNull);
-      expect(findFirstAncestorWithClass(subInnerElement, "class3", true),
+          findFirstAncestorWithClass(subInnerElement, 'class2'), innerElement);
+      expect(findFirstAncestorWithClass(subInnerElement, 'class1'), element);
+      expect(findFirstAncestorWithClass(subInnerElement, 'class3'), isNull);
+      expect(findFirstAncestorWithClass(subInnerElement, 'class3', true),
           subInnerElement);
     });
   });

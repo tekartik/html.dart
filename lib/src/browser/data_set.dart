@@ -1,7 +1,7 @@
 part of html_browser;
 
 class DataSetBrowser extends DataSet {
-  Map<String, String> _dataset;
+  final Map<String, String> _dataset;
 
   DataSetBrowser(this._dataset);
 

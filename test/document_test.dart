@@ -5,14 +5,14 @@ import 'package:tekartik_html/html_html5lib.dart';
 import 'package:dev_test/test.dart';
 
 void main() {
-  HtmlProvider html = htmlProviderHtml5Lib;
+  final html = htmlProviderHtml5Lib;
   testMain(html);
 }
 
 void testMain(HtmlProvider html) {
   group('document', () {
     test('simple', () {
-      Document doc = html.createDocument(title: 'test');
+      final doc = html.createDocument(title: 'test');
       expect(doc.toString(),
           '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>');
       //print(doc.head.children);
@@ -23,14 +23,14 @@ void testMain(HtmlProvider html) {
     });
 
     test('title', () {
-      Document doc = html.createDocument(title: 'test');
+      final doc = html.createDocument(title: 'test');
       expect(doc.title, 'test');
       doc.title = 'update';
       expect(doc.title, 'update');
     });
 
     test('wrap', () {
-      Document document = html.createDocument(title: 'test');
+      var document = html.createDocument(title: 'test');
 
       dynamic _documentImpl = html.unwrapDocument(document);
 
@@ -39,7 +39,7 @@ void testMain(HtmlProvider html) {
     });
 
     test('head', () {
-      Document doc = html.createDocument(title: 'test');
+      var doc = html.createDocument(title: 'test');
       expect(doc.head.innerHtml, '<meta charset="utf-8"><title>test</title>');
 
       doc = html.createDocument(title: 'test', charset: null);
@@ -47,13 +47,13 @@ void testMain(HtmlProvider html) {
     });
 
     test('html', () {
-      Document doc = html.createDocument(title: 'test');
+      final doc = html.createDocument(title: 'test');
       expect(doc.html.innerHtml,
           '<head><meta charset="utf-8"><title>test</title></head><body></body>');
     });
 
     test('createDocumentHtml', () {
-      Document doc = html.createDocument(
+      var doc = html.createDocument(
           html: '<head><title>test</title></head><body></body>');
       expect(doc.toString(),
           '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>');
@@ -68,7 +68,7 @@ void testMain(HtmlProvider html) {
     });
 
     test('custom', () {
-      Document doc = html.createDocument(html: '''
+      final doc = html.createDocument(html: '''
       <head>
         <meta charset="utf-8">
         <title>test</title>
@@ -86,7 +86,7 @@ void testMain(HtmlProvider html) {
 
     test('html_attributes', () {
       // html is a special element that we cannot parse without parsing a document
-      Document doc = html.createDocument(
+      final doc = html.createDocument(
           html:
               '<!DOCTYPE html><html ⚡ lang="en"><head><meta charset="utf-8"><title></title></head><body></body></html>');
       expect(doc.html.attributes.length, 2);
@@ -97,7 +97,7 @@ void testMain(HtmlProvider html) {
     });
 
     test('createDocumentHtml no fix', () {
-      Document doc = html.createDocument(
+      final doc = html.createDocument(
           html: '<!DOCTYPE html><html><head></head><body></body></html>',
           noCharsetTitleFix: true);
 
@@ -106,14 +106,14 @@ void testMain(HtmlProvider html) {
     });
 
     test('createDocumentHtml empty', () {
-      Document doc = html.createDocument(html: '', noCharsetTitleFix: true);
+      final doc = html.createDocument(html: '', noCharsetTitleFix: true);
       doc.fixMissing();
       expect(doc.toString(),
           '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
     });
 
     test('fix charset and title', () {
-      Document doc = html.createDocument(html: '<!DOCTYPE html>');
+      final doc = html.createDocument(html: '<!DOCTYPE html>');
       expect(doc.toString(),
           '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
       doc.fixMissing();

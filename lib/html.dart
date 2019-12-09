@@ -62,7 +62,7 @@ abstract class DataSet {
   }
 
   bool remove(String key);
-  static String attributePrefix = "data-";
+  static String attributePrefix = 'data-';
 }
 
 class QueryCriteria {
@@ -80,20 +80,56 @@ class QueryCriteria {
 }
 
 abstract class Node {
+  static const int attributeNode = 2;
+  static const int cdataSectionNode = 4;
+  static const int commentNode = 8;
+  static const int documentFragmentNode = 11;
+  static const int documentNode = 9;
+  static const int documentTypeNode = 10;
+  static const int elementNode = 1;
+  static const int entityNode = 6;
+
+  static const int entityReferenceNode = 5;
+
+  static const int notationNode = 12;
+
+  static const int processInstructionNode = 7;
+  static const int testNode = 3;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int ATTRIBUTE_NODE = 2;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int CDATA_SECTION_NODE = 4;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int COMMENT_NODE = 8;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int DOCUMENT_FRAGMENT_NODE = 11;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int DOCUMENT_NODE = 9;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int DOCUMENT_TYPE_NODE = 10;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int ELEMENT_NODE = 1;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int ENTITY_NODE = 6;
-
+  @deprecated
+  // ignore: constant_identifier_names
   static const int ENTITY_REFERENCE_NODE = 5;
-
+  @deprecated
+  // ignore: constant_identifier_names
   static const int NOTATION_NODE = 12;
-
+  @deprecated
+  // ignore: constant_identifier_names
   static const int PROCESSING_INSTRUCTION_NODE = 7;
+  @deprecated
+  // ignore: constant_identifier_names
   static const int TEXT_NODE = 3;
 
   int get nodeType;
@@ -156,8 +192,8 @@ abstract class Document {
   /// set the document title
   set title(String title);
 
-  void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
-    int index = 0;
+  void fixMissing({String title = '', String charset = attrCharsetUtf8}) {
+    var index = 0;
 
     if (charset != null) {
       fixNotExistingCharset(index, charset);
@@ -169,15 +205,17 @@ abstract class Document {
 
   void fixNotExistingCharset(int index, String charset) {
     if (charset != null) {
-      for (Element element in head.children) {
-        if (element.tagName == META) {
-          if (element.attributes[CHARSET] != null) {
+      for (final element in head.children) {
+        if (element.tagName == tagMeta) {
+          if (element.attributes[attrCharset] != null) {
             return;
           }
         }
       }
-      head.children.insert(index,
-          provider.createElementTag(META)..attributes[CHARSET] = charset);
+      head.children.insert(
+          index,
+          provider.createElementTag(tagMeta)
+            ..attributes[attrCharset] = charset);
     }
   }
 }
@@ -190,7 +228,7 @@ abstract class HtmlProvider {
   Document createDocument(
       {String html = '',
       String title = '',
-      String charset = CHARSET_UTF_8,
+      String charset = attrCharsetUtf8,
       bool noCharsetTitleFix = false});
 
   Element createElementTag(String tag);

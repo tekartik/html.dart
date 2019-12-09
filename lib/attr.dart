@@ -1,9 +1,24 @@
 library html_attr;
 
-const String CLASS = 'class';
+const attrClass = 'class';
 
 // In head <meta> tags
-const String CHARSET = 'charset';
-const String CHARSET_UTF_8 = 'utf-8';
+const attrCharset = 'charset';
+const attrCharsetUtf8 = 'utf-8';
 
-const String DATA_PREFIX = 'data-';
+const attrDataPrefix = 'data-';
+
+@deprecated
+// ignore: constant_identifier_names
+const String CLASS = attrClass;
+
+// In head <meta> tags
+@deprecated
+// ignore: constant_identifier_names
+const String CHARSET = attrCharset;
+@deprecated
+// ignore: constant_identifier_names
+const String CHARSET_UTF_8 = attrCharsetUtf8;
+@deprecated
+// ignore: constant_identifier_names
+const String DATA_PREFIX = attrDataPrefix;

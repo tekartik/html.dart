@@ -1,4 +1,4 @@
-@TestOn("browser")
+@TestOn('browser')
 library html_browser_test;
 
 import 'dart:html';
@@ -18,8 +18,8 @@ void main() {
     });
 
     test('node', () {
-      Element element = Element.tag('div');
-      Element child = Element.tag('div');
+      final element = Element.tag('div');
+      final child = Element.tag('div');
       element.append(child);
       expect(element.children[0], same(element.firstChild));
     });
@@ -48,7 +48,7 @@ void main() {
 
     test('document', () {
       //new HtmlHtmlElement();
-      HtmlDocument doc = document.implementation.createHtmlDocument('');
+      final doc = document.implementation.createHtmlDocument('');
       expect('<html><head><title></title></head><body></body></html>',
           doc.documentElement.outerHtml);
       expect(doc.querySelector('head'), isNotNull);
@@ -56,7 +56,7 @@ void main() {
     });
     test('document title', () {
       //new HtmlHtmlElement();
-      HtmlDocument doc = document.implementation.createHtmlDocument('title');
+      final doc = document.implementation.createHtmlDocument('title');
       expect(doc.title, 'title');
       expect('<html><head><title>title</title></head><body></body></html>',
           doc.documentElement.outerHtml);
@@ -66,7 +66,7 @@ void main() {
 
     test('html', () {
       // not working on firefox windows
-      Element element = Element.html('<div></div>');
+      final element = Element.html('<div></div>');
       expect(element.outerHtml, '<div></div>');
     });
   });

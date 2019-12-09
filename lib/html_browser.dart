@@ -15,7 +15,7 @@ class _NullTreeSanitizer implements dart_html.NodeTreeSanitizer {
 }
 
 class _ElementList extends ElementList {
-  List<dart_html.Element> _list;
+  final List<dart_html.Element> _list;
 
   _ElementList(this._list);
 
@@ -100,7 +100,7 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
 }
 
 abstract class _ElementImpl extends Object {
-  set _element(dart_html.Element element);
+  //set _element(dart_html.Element element);
 
   dart_html.Element get _element;
 
@@ -147,7 +147,7 @@ abstract class _ElementImpl extends Object {
 
   static String _buildSelector(
       {String byTag, String byId, String byClass, String byAttributes}) {
-    StringBuffer sb = StringBuffer();
+    final sb = StringBuffer();
     if (byTag != null) {
       sb.write(byTag);
     }
@@ -166,7 +166,7 @@ abstract class _ElementImpl extends Object {
   }
 
   static String _buildCriteriaSelector(QueryCriteria criteria) {
-    StringBuffer sb = StringBuffer();
+    final sb = StringBuffer();
     if (criteria.recursive == false) {
       sb.write(':scope > ');
     }
@@ -249,8 +249,8 @@ abstract class _ElementImpl extends Object {
 
   //@override
   List<Node> get childNodes {
-    List<Node> children = [];
-    for (dart_html.Node node in _element.childNodes) {
+    final children = <Node>[];
+    for (final node in _element.childNodes) {
       if (node is dart_html.Element) {}
       children.add(_newNodeFrom(node));
     }
@@ -309,7 +309,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
 }
 
 abstract class _DocumentImpl {
-  dart_html.HtmlDocument get _htmlDoc;
+  //dart_html.HtmlDocument get _htmlDoc;
 
   static Document from(dart_html.HtmlDocument htmlDoc) {
     if (htmlDoc == null) {
@@ -321,8 +321,7 @@ abstract class _DocumentImpl {
 }
 
 class _Document extends Document with _DocumentImpl {
-  @override
-  dart_html.HtmlDocument _htmlDoc;
+  final dart_html.HtmlDocument _htmlDoc;
 
   _Document(this._htmlDoc) : super(_html);
 
@@ -337,9 +336,9 @@ class _Document extends Document with _DocumentImpl {
   }
 
   @override
-  void fixMissing({String title = '', String charset = CHARSET_UTF_8}) {
+  void fixMissing({String title = '', String charset = attrCharsetUtf8}) {
     // fixing title fail using the default way
-    int index = 0;
+    var index = 0;
 
     if (charset != null) {
       fixNotExistingCharset(index, charset);
@@ -380,18 +379,18 @@ class _HtmlProviderBrowser extends HtmlProvider {
   Document createDocument(
       {String html = '',
       String title = '',
-      String charset = CHARSET_UTF_8,
+      String charset = attrCharsetUtf8,
       bool noCharsetTitleFix = false}) {
     dart_html.HtmlDocument htmlDoc;
     if (html.isNotEmpty) {
-      dart_html.DomParser domParser = dart_html.DomParser();
-      htmlDoc = domParser.parseFromString(html, "text/html")
+      final domParser = dart_html.DomParser();
+      htmlDoc = domParser.parseFromString(html, 'text/html')
           as dart_html.HtmlDocument;
     } else {
       htmlDoc = dart_html.document.implementation.createHtmlDocument(title);
     }
 
-    _Document doc = _Document(htmlDoc);
+    final doc = _Document(htmlDoc);
     //print(doc);
     //   _Document doc = new _Document(
     //        dart_html.document.implementation.createHtmlDocument(title));

@@ -6,45 +6,45 @@ import 'package:tekartik_html/tag.dart';
 import 'package:dev_test/test.dart';
 
 void main() {
-  HtmlProvider html = htmlProviderHtml5Lib;
+  final html = htmlProviderHtml5Lib;
   testMain(html);
 }
 
 void testMain(HtmlProvider html) {
-  bool isBrowser = html.name == providerBrowserName;
+  final isBrowser = html.name == providerBrowserName;
   group('element', () {
     test('createElementTag', () {
-      Element element = html.createElementTag(DIV);
-      expect(element.tagName, DIV);
+      final element = html.createElementTag(tagDiv);
+      expect(element.tagName, tagDiv);
       expect(element.id, isEmpty);
     });
 
     test('wrap', () {
-      Element element = html.createElementTag(DIV);
+      var element = html.createElementTag(tagDiv);
       dynamic _element = html.unwrapElement(element);
       element = html.wrapElement(_element);
-      expect(element.tagName, DIV);
+      expect(element.tagName, tagDiv);
     });
 
     test('toString', () {
-      Element element = html.createElementTag(DIV);
+      final element = html.createElementTag(tagDiv);
       dynamic _element = html.unwrapElement(element);
       expect(_element.toString(), element.toString());
     });
 
     test('hashCode', () {
-      Element element = html.createElementTag(DIV);
+      final element = html.createElementTag(tagDiv);
       dynamic _element = html.unwrapElement(element);
       expect(_element.hashCode, element.hashCode);
     });
 
     test('equals', () {
-      Element element1 = html.createElementTag(DIV);
-      Element element2 = html.createElementTag(DIV);
+      final element1 = html.createElementTag(tagDiv);
+      final element2 = html.createElementTag(tagDiv);
       dynamic _element1 = html.unwrapElement(element1);
       dynamic _element1bis = html.unwrapElement(element1);
       dynamic _element2 = html.unwrapElement(element2);
-      Element element1bis = html.wrapElement(_element1bis);
+      final element1bis = html.wrapElement(_element1bis);
       expect(identical(_element1, _element1bis), isTrue);
       expect(_element1, isNot(_element2));
       expect(element1, isNot(element2));
@@ -53,31 +53,31 @@ void testMain(HtmlProvider html) {
     });
 
     test('id', () {
-      Element element = html.createElementTag(DIV);
+      final element = html.createElementTag(tagDiv);
       element.id = 'div1';
       expect(element.id, 'div1');
     });
 
     test('attributes', () {
-      Element element = html.createElementTag(DIV)..id = 'div1';
+      final element = html.createElementTag(tagDiv)..id = 'div1';
       expect(element.attributes['id'], 'div1');
     });
 
     test('text', () {
-      Element element = html.createElementTag(DIV)..text = 'content';
+      final element = html.createElementTag(tagDiv)..text = 'content';
       expect(element.text, 'content');
     });
 
     test('node', () {
-      Element element = html.createElementTag(DIV);
-      Element child = html.createElementTag(DIV);
+      final element = html.createElementTag(tagDiv);
+      final child = html.createElementTag(tagDiv);
       element.append(child);
       //expect(element.children[0], same(element.firstChild));
     });
 
     test('weird_tag', () {
       try {
-        Element element = html.createElementTag('?');
+        final element = html.createElementTag('?');
         expect(element.tagName, '?');
       } catch (_) {
         // fail in dom
@@ -98,10 +98,10 @@ void testMain(HtmlProvider html) {
     });
 
     test('custom', () {
-      Element element = html.createElementHtml('''
+      final element = html.createElementHtml('''
       <div>
-      <div class="--dtk-include" title="some/path/1"></div>
-      <meta property="dtk-include" content="some/path/2" />
+      <div class='--dtk-include' title='some/path/1'></div>
+      <meta property='dtk-include' content='some/path/2' />
       </div>
       ''');
       //print(element);
@@ -112,7 +112,7 @@ void testMain(HtmlProvider html) {
       }
     });
     test('custom_no_validate', () {
-      Element element = html.createElementHtml(
+      final element = html.createElementHtml(
           '<div><div class="--dtk-include" title="some/path/1"></div><meta property="dtk-include" content="some/path/2" /></div>',
           noValidate: true);
       //print(element.outerHtml.toString());
@@ -125,8 +125,8 @@ void testMain(HtmlProvider html) {
     //});
 
     test('createElementHtml', () {
-      Element element = html.createElementHtml('<Div id="test">inner</div>');
-      expect(element.tagName, DIV);
+      final element = html.createElementHtml('<Div id="test">inner</div>');
+      expect(element.tagName, tagDiv);
       expect(element.id, 'test');
       expect(element.innerHtml, 'inner');
       expect(element.outerHtml, '<div id="test">inner</div>');
@@ -144,8 +144,7 @@ void testMain(HtmlProvider html) {
 
     test('custom tag attributes bis', () {
       if (!isBrowser) {
-        Element element =
-            html.createElementHtml('<include src="test"></include>');
+        var element = html.createElementHtml('<include src="test"></include>');
         expect(element.tagName, 'include');
         expect(element.attributes['src'], 'test');
         expect(element.innerHtml, '');
@@ -160,9 +159,9 @@ void testMain(HtmlProvider html) {
     });
 
     test('attributes_no_content', () {
-      Element element = html.createElementHtml('<div ⚡></div>');
+      var element = html.createElementHtml('<div ⚡></div>');
       // ok on standalone not browser
-      if (element.outerHtml != '<div ⚡=""></div>') {
+      if (element.outerHtml != '<div ⚡=" "></div>') {
         element = html.createElementHtml('<div ⚡></div>', noValidate: true);
         //
       }
@@ -173,8 +172,8 @@ void testMain(HtmlProvider html) {
 
     test('dataset', () {
       if (html.name != providerBrowserName) {
-        Element element = html.createElementHtml('<div data-src="test"></div>');
-        DataSet dataset = element.dataset;
+        final element = html.createElementHtml('<div data-src="test"></div>');
+        final dataset = element.dataset;
         //print(dataset.keys);
         expect(dataset.keys.first, 'src');
 
@@ -189,24 +188,24 @@ void testMain(HtmlProvider html) {
       //      expect(element.tagName, DIV);
       //      expect(element.id, 'test');
       //      expect(element.innerHtml, 'inner');
-      //      expect(element.outerHtml, '<div id="test">inner</div>');
+      //      expect(element.outerHtml, '<div id='test'>inner</div>');
     });
 
     test('children', () {
-      Element element = html.createElementTag(DIV);
-      Element child = html.createElementTag(SPAN);
+      final element = html.createElementTag(tagDiv);
+      final child = html.createElementTag(tagSpan);
       element.children.add(child);
       expect(element.children.length, 1);
       expect(element.innerHtml, '<span></span>');
       expect(element.outerHtml, '<div><span></span></div>');
-      int count = 0;
-      for (Element someChild in element.children) {
+      var count = 0;
+      for (final someChild in element.children) {
         count++;
         expect(someChild.outerHtml, '<span></span>');
       }
       expect(count, 1);
 
-      Element child2 = html.createElementTag(P);
+      final child2 = html.createElementTag(tagP);
       element.children.add(child2);
       expect(element.children.length, 2);
       expect(element.innerHtml, '<span></span><p></p>');
@@ -214,7 +213,7 @@ void testMain(HtmlProvider html) {
 
       // testing iterator
       count = 0;
-      for (Element someChild in element.children) {
+      for (final someChild in element.children) {
         count++;
         if (count == 1) {
           expect(someChild.outerHtml, '<span></span>');
@@ -231,15 +230,15 @@ void testMain(HtmlProvider html) {
     });
 
     test('querySelector', () {
-      Element element = html.createElementTag(DIV)..id = 'div1';
-      Element child = html.createElementTag(SPAN)..id = 'span1';
+      final element = html.createElementTag(tagDiv)..id = 'div1';
+      final child = html.createElementTag(tagSpan)..id = 'span1';
       element.children.add(child);
 
       expect(element.querySelector('dummy'), isNull);
       expect(element.querySelectorAll('dummy').length, 0);
 
-      expect(element.querySelector(SPAN), child);
-      expect(element.querySelectorAll(SPAN).length, 1);
+      expect(element.querySelector(tagSpan), child);
+      expect(element.querySelectorAll(tagSpan).length, 1);
 
       //expect(element.querySelector('span#dummy'), isNull);
       //print(element.outerHtml);
@@ -247,8 +246,8 @@ void testMain(HtmlProvider html) {
     });
 
     test('simple query', () {
-      Element element = html.createElementTag(DIV)..id = 'div1';
-      Element child = html.createElementTag(SPAN)
+      final element = html.createElementTag(tagDiv)..id = 'div1';
+      final child = html.createElementTag(tagSpan)
         ..id = 'span1'
         ..classes.add('class1')
         ..attributes['attr1'] = 'attr_value1';
@@ -257,10 +256,10 @@ void testMain(HtmlProvider html) {
       // not supported expect(element.query(), child);
 
       expect(element.query(byTag: 'dummy'), isNull);
-      expect(element.query(byTag: SPAN), child);
-      expect(element.query(byTag: SPAN, byId: 'dummy'), isNull);
-      expect(element.query(byTag: SPAN, byClass: 'dummy'), isNull);
-      expect(element.query(byTag: SPAN, byAttributes: 'dummy'), isNull);
+      expect(element.query(byTag: tagSpan), child);
+      expect(element.query(byTag: tagSpan, byId: 'dummy'), isNull);
+      expect(element.query(byTag: tagSpan, byClass: 'dummy'), isNull);
+      expect(element.query(byTag: tagSpan, byAttributes: 'dummy'), isNull);
 
       //expect(element.querySelectorAll('dummy').length, 0);
 
@@ -270,7 +269,7 @@ void testMain(HtmlProvider html) {
       expect(element.query(byId: 'span1'), child);
       expect(element.query(byId: 'span1', byTag: 'dummy'), isNull);
       expect(element.query(byId: 'span1', byClass: 'dummy'), isNull);
-      expect(element.query(byId: 'span1', byTag: SPAN), child);
+      expect(element.query(byId: 'span1', byTag: tagSpan), child);
 
       expect(element.query(byClass: 'dummy'), isNull);
       expect(element.query(byClass: 'class1'), child);
@@ -278,58 +277,59 @@ void testMain(HtmlProvider html) {
       expect(element.query(byClass: 'class1', byId: 'dummy'), isNull);
 
       expect(element.query(byClass: 'class1', byId: 'span1'), child);
-      expect(element.query(byClass: 'class1', byTag: SPAN), child);
+      expect(element.query(byClass: 'class1', byTag: tagSpan), child);
 
-      expect(
-          element.query(byClass: 'class1', byTag: SPAN, byId: 'span1'), child);
-      expect(
-          element.query(byClass: 'class1', byTag: SPAN, byId: 'dummy'), isNull);
+      expect(element.query(byClass: 'class1', byTag: tagSpan, byId: 'span1'),
+          child);
+      expect(element.query(byClass: 'class1', byTag: tagSpan, byId: 'dummy'),
+          isNull);
       expect(element.query(byClass: 'class1', byId: 'span1', byTag: 'dummy'),
           isNull);
 
       expect(
           element.query(
               byClass: 'class1',
-              byTag: SPAN,
+              byTag: tagSpan,
               byId: 'span1',
               byAttributes: 'attr1'),
           child);
       expect(
           element.query(
               byClass: 'class1',
-              byTag: SPAN,
+              byTag: tagSpan,
               byId: 'span1',
               byAttributes: 'dummy'),
           isNull);
 
-      expect(element.queryAll(byClass: 'class1', byTag: SPAN, byId: 'span1')[0],
+      expect(
+          element.queryAll(byClass: 'class1', byTag: tagSpan, byId: 'span1')[0],
           child);
       //expect(element.queryAll()[0], child);
 
       expect(
           element
-              .queryAll(byClass: 'class1', byTag: SPAN, byId: 'dummy')
+              .queryAll(byClass: 'class1', byTag: tagSpan, byId: 'dummy')
               .length,
           0);
 
       expect(element.query(byAttributes: 'dummy'), isNull);
       expect(element.query(byAttributes: 'attr1'), child);
       expect(element.queryAll(byAttributes: 'attr1')[0], child);
-      expect(element.query(byTag: SPAN, byAttributes: 'attr1'), child);
+      expect(element.query(byTag: tagSpan, byAttributes: 'attr1'), child);
     });
 
     test('sub query', () {
-      Element element = html.createElementTag(DIV);
-      Element child = html.createElementTag(DIV)
+      final element = html.createElementTag(tagDiv);
+      final child = html.createElementTag(tagDiv)
         ..id = 'div1'
         ..classes.add('class1')
         ..attributes['attr1'] = 'attr_value_child';
-      Element child2 = html.createElementTag(DIV)
+      final child2 = html.createElementTag(tagDiv)
         ..id = 'div2'
         ..classes.add('class2')
         ..attributes['attr2'] = 'attr_value_child2';
 
-      Element subchild = html.createElementTag(SPAN)
+      final subchild = html.createElementTag(tagSpan)
         ..id = 'span1'
         ..classes.add('class1')
         ..attributes['attr1'] = 'attr_value_subchild';
@@ -347,7 +347,7 @@ void testMain(HtmlProvider html) {
       expect(element.query(byAttributes: 'attr1'), child);
       //print(element.innerHtml);
       expect(element.query(byAttributes: 'attr2'), child2);
-      ElementList list = element.queryAll(byAttributes: 'attr1');
+      final list = element.queryAll(byAttributes: 'attr1');
       expect(list.length, 2);
       expect(list[0], child);
       expect(list[1], subchild);
@@ -359,7 +359,7 @@ void testMain(HtmlProvider html) {
     });
 
     test('class', () {
-      Element element = html.createElementTag(DIV);
+      var element = html.createElementTag(tagDiv);
       expect(element.classes.contains('test'), isFalse);
       expect(element.classes.add('test'), isTrue);
       expect(element.classes.add('test'), isFalse);
@@ -381,24 +381,24 @@ void testMain(HtmlProvider html) {
     test('createElementHtmlNoValidation', () {
       /*
       String fullFlickr = '''
-<a href=\"https://www.flickr.com/photos/62771079@N04/15282515877\" title=\"keep_on_screenshot_1280x800 by alexroux77, on Flickr\"><img src=\"https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg\" width=\"75\" height=\"75\" alt=\"keep_on_screenshot_1280x800\"></a>
+<a href=\'https://www.flickr.com/photos/62771079@N04/15282515877\' title=\'keep_on_screenshot_1280x800 by alexroux77, on Flickr\'><img src=\'https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg\' width=\'75\' height=\'75\' alt=\'keep_on_screenshot_1280x800\'></a>
           ''';
           */
 
-      String img = '''
-<img src=\"https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg\" width=\"75\" height=\"75\" alt=\"keep_on_screenshot_1280x800\">
+      final img = '''
+<img src=\'https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg\' width=\'75\' height=\'75\' alt=\'keep_on_screenshot_1280x800\'>
           ''';
-      Element element = html.createElementHtml(img, noValidate: true);
+      final element = html.createElementHtml(img, noValidate: true);
 
-//<a href="https://www.flickr.com/photos/62771079@N04/15282515877" title="keep_on_screenshot_1280x800 by alexroux77, on Flickr"><img src="https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg" width="75" height="75" alt="keep_on_screenshot_1280x800"></a>');
+//<a href='https://www.flickr.com/photos/62771079@N04/15282515877' title='keep_on_screenshot_1280x800 by alexroux77, on Flickr'><img src='https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg' width='75' height='75' alt='keep_on_screenshot_1280x800'></a>');
 
-      //devPrint("${element} ${new Map.from(element.attributes)}");
+      //devPrint('${element} ${new Map.from(element.attributes)}');
       expect(element.attributes['src'],
-          "https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg");
+          'https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg');
 //         expect(element.tagName, DIV);
 //         expect(element.id, 'test');
 //         expect(element.innerHtml, 'inner');
-//         expect(element.outerHtml, '<div id="test">inner</div>');
+//         expect(element.outerHtml, '<div id='test'>inner</div>');
     });
   });
 }
