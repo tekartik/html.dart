@@ -13,7 +13,7 @@ Future main() async {
   await shell.run('''
   dartfmt -n . --set-exit-if-changed
   dartanalyzer --fatal-warnings --fatal-infos . 
-  pub run test -p vm,chrome,firefox
+  pub run test -p vm,chrome
   ''');
 
   var dartVersion = parsePlatformVersion(Platform.version);
