@@ -93,10 +93,6 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
   _Element._(dart_html.Element element) {
     _element = element;
   }
-
-  _Element.tag(String tag) {
-    _element = dart_html.Element.tag(tag);
-  }
 }
 
 abstract class _ElementImpl extends Object {
