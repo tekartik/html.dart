@@ -48,18 +48,18 @@ void main() {
 
     test('document', () {
       //new HtmlHtmlElement();
-      final doc = document.implementation.createHtmlDocument('');
+      final doc = document.implementation!.createHtmlDocument('');
       expect('<html><head><title></title></head><body></body></html>',
-          doc.documentElement.outerHtml);
+          doc.documentElement!.outerHtml);
       expect(doc.querySelector('head'), isNotNull);
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
     });
     test('document title', () {
       //new HtmlHtmlElement();
-      final doc = document.implementation.createHtmlDocument('title');
+      final doc = document.implementation!.createHtmlDocument('title');
       expect(doc.title, 'title');
       expect('<html><head><title>title</title></head><body></body></html>',
-          doc.documentElement.outerHtml);
+          doc.documentElement!.outerHtml);
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
       expect(1, 1);
     });
