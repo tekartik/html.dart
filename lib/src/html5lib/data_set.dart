@@ -6,7 +6,7 @@ class DataSetHtml5lib extends DataSet {
   DataSetHtml5lib(this._attributes);
 
   String _nameToAttrKey(String name) {
-    return '${attrDataPrefix}$name';
+    return '$attrDataPrefix$name';
   }
 
   @override
@@ -16,7 +16,7 @@ class DataSetHtml5lib extends DataSet {
 
   @override
   void operator []=(String name, String value) {
-    _attributes['${attrDataPrefix}$name'] = value;
+    _attributes['$attrDataPrefix$name'] = value;
   }
 
   @override

@@ -417,6 +417,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
       sanitizer = nullTreeSanitizer;
     }
     return _ElementImpl.from(
+        // ignore: unsafe_html
         dart_html.Element.html(html, treeSanitizer: sanitizer))!;
   }
 
