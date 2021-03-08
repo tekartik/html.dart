@@ -153,7 +153,7 @@ void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption? option) {
   for (final sub in subs) {
     // remove empty lines
     if (sub.trim().isNotEmpty) {
-      out.add('${option!.indent}${sub}');
+      out.add('${option!.indent}$sub');
     }
   }
 }

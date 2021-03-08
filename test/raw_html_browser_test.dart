@@ -66,6 +66,7 @@ void main() {
 
     test('html', () {
       // not working on firefox windows
+      // ignore: unsafe_html
       final element = Element.html('<div></div>');
       expect(element.outerHtml, '<div></div>');
     });
