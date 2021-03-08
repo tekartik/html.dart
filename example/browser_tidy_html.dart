@@ -4,8 +4,8 @@ import 'package:tekartik_html/html_browser.dart';
 import 'package:tekartik_html/util/html_tidy.dart';
 
 String keyPrefix = 'tekartik_html.tidy_example.';
-String inputKey = '${keyPrefix}.input';
-String indentKey = '${keyPrefix}.indent';
+String inputKey = '$keyPrefix.input';
+String indentKey = '$keyPrefix.indent';
 
 void main() {
   final _html = htmlProviderBrowser;
