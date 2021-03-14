@@ -6,7 +6,7 @@ class DataSetBrowser extends DataSet {
   DataSetBrowser(this._dataset);
 
   @override
-  String operator [](String name) {
+  String? operator [](String name) {
     return _dataset[name];
   }
 

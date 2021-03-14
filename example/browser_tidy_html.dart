@@ -10,13 +10,14 @@ String indentKey = '$keyPrefix.indent';
 void main() {
   final _html = htmlProviderBrowser;
 
-  final inputElement = document.body.querySelector('#input') as TextAreaElement;
-  final outputElement = document.body.querySelector('#output') as PreElement;
-  final indentElement = document.body.querySelector('#indent') as InputElement;
+  final inputElement =
+      document.body!.querySelector('#input') as TextAreaElement;
+  final outputElement = document.body!.querySelector('#output') as PreElement;
+  final indentElement = document.body!.querySelector('#indent') as InputElement;
 
   void convert([_]) {
-    final indent = indentElement.value;
-    final input = inputElement.value;
+    final indent = indentElement.value!;
+    final input = inputElement.value!;
     try {
       window.localStorage[inputKey] = input;
       window.localStorage[indentKey] = indent;
@@ -46,5 +47,5 @@ void main() {
     convert();
   }
 
-  document.body.querySelector('#convert').onClick.listen(convert);
+  document.body!.querySelector('#convert')!.onClick.listen(convert);
 }

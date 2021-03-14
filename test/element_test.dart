@@ -20,10 +20,10 @@ void testMain(HtmlProvider html) {
     });
 
     test('wrap', () {
-      var element = html.createElementTag(tagDiv);
+      Element? element = html.createElementTag(tagDiv);
       dynamic _element = html.unwrapElement(element);
       element = html.wrapElement(_element);
-      expect(element.tagName, tagDiv);
+      expect(element!.tagName, tagDiv);
     });
 
     test('toString', () {

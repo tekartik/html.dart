@@ -55,7 +55,7 @@ bool _isWhitespace(int rune) => ((rune >= 0x0009 && rune <= 0x000D) ||
     rune == 0xFEFF);
 
 class HtmlTidyOption {
-  String indent = '\t';
+  String? indent = '\t';
 
   /// Make content fit in 80 chars
   int contentLength = 80;
@@ -72,7 +72,7 @@ bool _hasSingleTextNodeLine(Element element) {
   if (childNodes.length == 1) {
     final node = childNodes.first;
     if (node.nodeType == Node.testNode) {
-      final value = node.nodeValue;
+      final value = node.nodeValue!;
       if (!(value.codeUnits.contains(_cr) || value.codeUnits.contains(_lf))) {
         return true;
       }
@@ -120,7 +120,7 @@ List<String> _wordSplit(String input) {
   return out;
 }
 
-List<String> convertContent(String input, HtmlTidyOption option) {
+List<String> convertContent(String input, HtmlTidyOption? option) {
   final words = _wordSplit(input);
   final out = <String>[];
 
@@ -137,7 +137,7 @@ List<String> convertContent(String input, HtmlTidyOption option) {
     final word = words[i];
     if (sb.length == 0) {
       // if empty never create a new line
-    } else if (sb.length + word.length + 1 > option.contentLength) {
+    } else if (sb.length + word.length + 1 > option!.contentLength) {
       _addCurrent();
     } else {
       // add a space
@@ -149,25 +149,21 @@ List<String> convertContent(String input, HtmlTidyOption option) {
   return out;
 }
 
-void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption option) {
+void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption? option) {
   for (final sub in subs) {
     // remove empty lines
     if (sub.trim().isNotEmpty) {
-      out.add('${option.indent}$sub');
+      out.add('${option!.indent}$sub');
     }
   }
 }
 
 // reference: http://www.dirtymarkup.com/
-Iterable<String> htmlTidyElement(Element element, [HtmlTidyOption option]) =>
+Iterable<String> htmlTidyElement(Element element, [HtmlTidyOption? option]) =>
     _htmlTidyElement(element, option, false);
 
 Iterable<String> _htmlTidyElement(Element element,
-    [HtmlTidyOption option, bool inline]) {
-  if (element == null) {
-    return null;
-  }
-
+    [HtmlTidyOption? option, bool? inline]) {
   final tagName = element.tagName;
   // default option
   option ??= HtmlTidyOption();
@@ -176,7 +172,7 @@ Iterable<String> _htmlTidyElement(Element element,
   element.childNodes;
 
   // do not convert content for inlined and special tags
-  var inlineContent = inline ||
+  var inlineContent = inline! ||
       _inlineContentForTag(tagName) ||
       _hasSingleTextNodeLine(element);
   // Only so this if there is no child or
@@ -215,13 +211,13 @@ Iterable<String> _htmlTidyElement(Element element,
         sb.write(node.nodeValue);
       } else {
         if (_doNotConvertContent) {
-          out.add(node.nodeValue);
+          out.add(node.nodeValue!);
         } else {
           // for style/script split & join to prevent \r \n
           if (_rawTags.contains(tagName)) {
-            _addSubs(out, LineSplitter.split(node.nodeValue), option);
+            _addSubs(out, LineSplitter.split(node.nodeValue!), option);
           } else {
-            final subs = convertContent(node.nodeValue, option);
+            final subs = convertContent(node.nodeValue!, option);
             if (subs.isNotEmpty) {
               _addSubs(out, subs, option);
             }
@@ -267,7 +263,7 @@ String _beginTag(Element element) {
   return sb.toString();
 }
 
-String _endTag(Element element) {
+String? _endTag(Element element) {
   if (_voidTags.contains(element.tagName)) {
     return null;
   } else {
@@ -275,15 +271,12 @@ String _endTag(Element element) {
   }
 }
 
-Iterable<String> htmlTidyDocument(Document document, [HtmlTidyOption option]) {
-  if (document == null) {
-    return null;
-  }
+Iterable<String> htmlTidyDocument(Document document, [HtmlTidyOption? option]) {
   final out = <String>[];
   out.add('<!DOCTYPE html>');
   out.add(_beginTag(document.html));
   out.addAll(htmlTidyElement(document.head, option));
   out.addAll(htmlTidyElement(document.body, option));
-  out.add(_endTag(document.html));
+  out.add(_endTag(document.html)!);
   return out;
 }

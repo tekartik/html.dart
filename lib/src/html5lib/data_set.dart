@@ -10,7 +10,7 @@ class DataSetHtml5lib extends DataSet {
   }
 
   @override
-  String operator [](String name) {
+  String? operator [](String name) {
     return _attributes[_nameToAttrKey(name)];
   }
 

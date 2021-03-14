@@ -17,7 +17,7 @@ class _Node extends Node with _NodeImpl {
 }
 
 abstract class _NodeImpl extends Object {
-  html5lib.Node _node;
+  late html5lib.Node _node;
 
   html5lib.Element get _element =>
       _node as html5lib.Element; // only work if element
@@ -25,7 +25,7 @@ abstract class _NodeImpl extends Object {
 
   int get nodeType => _node.nodeType;
 
-  String get nodeValue => _node.text;
+  String? get nodeValue => _node.text;
 }
 
 Node _newNodeFrom(html5lib.Node _node) {
@@ -65,7 +65,7 @@ class _ElementList extends ElementList {
   }
 
   @override
-  Element removeAt(int index) {
+  Element? removeAt(int index) {
     return _ElementImpl.from(_list.removeAt(index));
   }
 
@@ -102,9 +102,9 @@ abstract class _ElementImpl {
     _element.id = id;
   }
 
-  String get tagName => _element.localName;
+  String get tagName => _element.localName!;
 
-  Element getElementById(String id) {
+  Element? getElementById(String id) {
     for (final child in children) {
       if (child.id == id) {
         return child;
@@ -113,7 +113,7 @@ abstract class _ElementImpl {
     return null;
   }
 
-  static Element from(html5lib.Element element) {
+  static Element? from(html5lib.Element? element) {
     if (element == null) {
       return null;
     }
@@ -133,7 +133,7 @@ abstract class _ElementImpl {
 
   set text(String text) => _element.text = text;
 
-  Element querySelector(String selector) {
+  Element? querySelector(String selector) {
     return from(_element.querySelector(selector));
   }
 
@@ -141,7 +141,7 @@ abstract class _ElementImpl {
     return _ElementList(_element.querySelectorAll(selector));
   }
 
-  static bool tagsEquals(String tag1, String tag2) {
+  static bool tagsEquals(String? tag1, String? tag2) {
     if (tag1 != null) {
       if (tag2 != null) {
         return tag1.toLowerCase() == tag2.toLowerCase();
@@ -195,7 +195,7 @@ abstract class _ElementImpl {
     return true;
   }
 
-  static html5lib.Element _queryChild(
+  static html5lib.Element? _queryChild(
       html5lib.Element parent, QueryCriteria criteria) {
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
@@ -236,7 +236,7 @@ abstract class _ElementImpl {
   }
 
   //@override
-  Element queryCriteria(QueryCriteria criteria) {
+  Element? queryCriteria(QueryCriteria criteria) {
     return from(_queryChild(_element, criteria));
   }
 
@@ -245,8 +245,8 @@ abstract class _ElementImpl {
     return _ElementList(_queryChildren(_element, criteria));
   }
 
-  Element query(
-      {String byTag, String byId, String byClass, String byAttributes}) {
+  Element? query(
+      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     return queryCriteria(QueryCriteria(
         byTag: byTag,
         byId: byId,
@@ -255,7 +255,7 @@ abstract class _ElementImpl {
   }
 
   ElementList queryAll(
-      {String byTag, String byId, String byClass, String byAttributes}) {
+      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     return queryCriteriaAll(QueryCriteria(
         byTag: byTag,
         byId: byId,
@@ -289,7 +289,7 @@ abstract class _ElementImpl {
   }
 
   //@override
-  Element get parent => from(_element.parent);
+  Element? get parent => from(_element.parent);
 
   //@override
   DataSet get dataset => DataSetHtml5lib(_element.attributes);
@@ -315,7 +315,7 @@ abstract class _ElementImpl {
         (node as _NodeImpl)._node, (refNode as _NodeImpl)._node);
   }
 
-  Element get nextElementSibling => from(_element.nextElementSibling);
+  Element? get nextElementSibling => from(_element.nextElementSibling);
 
   void dummyTest() {
     //_element.children
@@ -350,7 +350,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
 abstract class _DocumentImpl {
   // html5lib.Document get _document;
 
-  static Document from(html5lib.Document documentImpl) {
+  static Document? from(html5lib.Document? documentImpl) {
     if (documentImpl == null) {
       return null;
     }
@@ -364,7 +364,7 @@ class _Document extends Document with _DocumentImpl {
 
   _Document(this._document) : super(_html);
 
-  Element get _titleElement {
+  Element? get _titleElement {
     for (var i = 0; i < head.children.length; i++) {
       final element = head.children[i];
       //print(element.outerHtml);
@@ -381,7 +381,7 @@ class _Document extends Document with _DocumentImpl {
     if (titleElement != null) {
       return titleElement.text;
     } else {
-      return null;
+      return '';
     }
   }
 
@@ -423,7 +423,7 @@ class _Document extends Document with _DocumentImpl {
   }
 
   @override
-  void fixMissing({String title = '', String charset = attrCharsetUtf8}) {
+  void fixMissing({String title = '', String? charset = attrCharsetUtf8}) {
     var index = 0;
 
     if (charset != null) {
@@ -446,13 +446,13 @@ class _Document extends Document with _DocumentImpl {
   }
 
   @override
-  BodyElement get body => _BodyElement(_document.body);
+  BodyElement get body => _BodyElement(_document.body!);
 
   @override
-  HeadElement get head => _HeadElement(_document.head);
+  HeadElement get head => _HeadElement(_document.head!);
 
   @override
-  HtmlElement get html => _HtmlElement(_document.documentElement);
+  HtmlElement get html => _HtmlElement(_document.documentElement!);
 }
 
 class _HtmlProviderHtml5Lib extends HtmlProvider {
@@ -460,7 +460,7 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   Document createDocument(
       {String html = '',
       String title = '',
-      String charset = attrCharsetUtf8,
+      String? charset = attrCharsetUtf8,
       bool noCharsetTitleFix = false}) {
     html5lib.Document doc;
     doc = html5lib.Document.html(html);
@@ -477,13 +477,13 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
 
   @override
   Element createElementTag(String tag) {
-    return _ElementImpl.from(html5lib.Element.tag(tag));
+    return _ElementImpl.from(html5lib.Element.tag(tag))!;
   }
 
   @override
-  Element createElementHtml(String html, {bool noValidate}) {
+  Element createElementHtml(String html, {bool? noValidate}) {
     // noValidate is implicit when using html5 lib
-    return _ElementImpl.from(html5lib.Element.html(html));
+    return _ElementImpl.from(html5lib.Element.html(html))!;
   }
 
   @override
@@ -491,22 +491,22 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  Element wrapElement(/*html5lib.Element*/ _element) =>
-      _ElementImpl.from(_element as html5lib.Element);
+  Element? wrapElement(/*html5lib.Element*/ _element) =>
+      _ElementImpl.from(_element as html5lib.Element?);
 
   // return the html5lib implementation
   @override
-  html5lib.Element unwrapElement(Element element) =>
+  html5lib.Element? unwrapElement(Element? element) =>
       (element as _Element)._element;
 
   // wrap a native document
   @override
   Document wrapDocument(/*html5lib.Document*/ documentImpl) =>
-      _DocumentImpl.from(documentImpl as html5lib.Document);
+      _DocumentImpl.from(documentImpl as html5lib.Document)!;
 
   // get the native native document
   @override
-  html5lib.Document unwrapDocument(Document document) =>
+  html5lib.Document unwrapDocument(Document? document) =>
       (document as _Document)._document;
 }
 

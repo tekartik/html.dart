@@ -15,7 +15,7 @@ class _NullTreeSanitizer implements dart_html.NodeTreeSanitizer {
 }
 
 class _ElementList extends ElementList {
-  final List<dart_html.Element> _list;
+  final List<dart_html.Element?> _list;
 
   _ElementList(this._list);
 
@@ -43,7 +43,7 @@ class _ElementList extends ElementList {
   }
 
   @override
-  Element removeAt(int index) {
+  Element? removeAt(int index) {
     return _ElementImpl.from(_list.removeAt(index));
   }
 
@@ -70,15 +70,15 @@ class _Node extends Node with _NodeImpl {
 }
 
 abstract class _NodeImpl extends Object {
-  dart_html.Node _node;
+  dart_html.Node? _node;
 
   dart_html.Element get _element =>
       _node as dart_html.Element; // only work if element
-  set _element(dart_html.Element element) => _node = element;
+  set _element(dart_html.Element? element) => _node = element;
 
-  int get nodeType => _node.nodeType;
+  int get nodeType => _node!.nodeType;
 
-  String get nodeValue => _node.nodeValue;
+  String? get nodeValue => _node!.nodeValue;
 }
 
 Node _newNodeFrom(dart_html.Node _node) {
@@ -90,7 +90,7 @@ Node _newNodeFrom(dart_html.Node _node) {
 }
 
 class _Element extends Element with _ElementImpl, _NodeImpl {
-  _Element._(dart_html.Element element) {
+  _Element._(dart_html.Element? element) {
     _element = element;
   }
 }
@@ -102,7 +102,7 @@ abstract class _ElementImpl extends Object {
 
   ElementList get children => _ElementList(_element.children);
 
-  Element getElementById(String id) {
+  Element? getElementById(String id) {
     return from(_element.querySelector('#$id'));
   }
 
@@ -114,26 +114,26 @@ abstract class _ElementImpl extends Object {
 
   String get tagName => _element.tagName.toLowerCase();
 
-  static Element from(dart_html.Element element) {
+  static Element? from(dart_html.Element? element) {
     if (element == null) {
       return null;
     }
     return _Element._(element);
   }
 
-  String get outerHtml => _element.outerHtml;
+  String get outerHtml => _element.outerHtml!;
 
-  String get innerHtml => _element.innerHtml;
+  String get innerHtml => _element.innerHtml!;
 
-  set innerHtml(String html) {
+  set innerHtml(String? html) {
     _element.innerHtml = html;
   }
 
-  String get text => _element.text;
+  String get text => _element.text ?? '';
 
   set text(String text) => _element.text = text;
 
-  Element querySelector(String selector) {
+  Element? querySelector(String selector) {
     return from(_element.querySelector(selector));
   }
 
@@ -142,7 +142,7 @@ abstract class _ElementImpl extends Object {
   }
 
   static String _buildSelector(
-      {String byTag, String byId, String byClass, String byAttributes}) {
+      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     final sb = StringBuffer();
     if (byTag != null) {
       sb.write(byTag);
@@ -184,7 +184,7 @@ abstract class _ElementImpl extends Object {
   }
 
   //@override
-  Element queryCriteria(QueryCriteria criteria) {
+  Element? queryCriteria(QueryCriteria criteria) {
     return querySelector(_buildCriteriaSelector(criteria));
   }
 
@@ -193,8 +193,8 @@ abstract class _ElementImpl extends Object {
     return querySelectorAll(_buildCriteriaSelector(criteria));
   }
 
-  Element query(
-      {String byTag, String byId, String byClass, String byAttributes}) {
+  Element? query(
+      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     return querySelector(_buildSelector(
         byTag: byTag,
         byId: byId,
@@ -203,7 +203,7 @@ abstract class _ElementImpl extends Object {
   }
 
   ElementList queryAll(
-      {String byTag, String byId, String byClass, String byAttributes}) {
+      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     return querySelectorAll(_buildSelector(
         byTag: byTag,
         byId: byId,
@@ -238,7 +238,7 @@ abstract class _ElementImpl extends Object {
   Map<dynamic, String> get attributes => _element.attributes;
 
   //@override
-  Element get parent => from(_element.parent);
+  Element? get parent => from(_element.parent);
 
   //@override
   DataSet get dataset => DataSetBrowser(_element.dataset);
@@ -255,14 +255,14 @@ abstract class _ElementImpl extends Object {
 
   //@override
   Node append(Node node) {
-    _element.append((node as _NodeImpl)._node);
+    _element.append((node as _NodeImpl)._node!);
     return node;
   }
 
   //@override
   void insertBefore(Node node, Node refNode) {
     _element.insertBefore(
-        (node as _NodeImpl)._node, (refNode as _NodeImpl)._node);
+        (node as _NodeImpl)._node!, (refNode as _NodeImpl)._node);
   }
 
   @override
@@ -281,25 +281,25 @@ abstract class _ElementImpl extends Object {
 }
 
 class _BodyElement extends BodyElement with _ElementImpl, _NodeImpl {
-  dart_html.BodyElement get bodyElement => _element as dart_html.BodyElement;
+  dart_html.BodyElement? get bodyElement => _element as dart_html.BodyElement?;
 
-  _BodyElement(dart_html.BodyElement body) {
+  _BodyElement(dart_html.BodyElement? body) {
     _element = body;
   }
 }
 
 class _HeadElement extends HeadElement with _ElementImpl, _NodeImpl {
-  dart_html.HeadElement get headElement => _element as dart_html.HeadElement;
+  dart_html.HeadElement? get headElement => _element as dart_html.HeadElement?;
 
-  _HeadElement(dart_html.HeadElement head) {
+  _HeadElement(dart_html.HeadElement? head) {
     _element = head;
   }
 }
 
 class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
-  dart_html.HtmlElement get htmlElement => _element as dart_html.HtmlElement;
+  dart_html.HtmlElement? get htmlElement => _element as dart_html.HtmlElement?;
 
-  _HtmlElement(dart_html.HtmlElement html) {
+  _HtmlElement(dart_html.HtmlElement? html) {
     _element = html;
   }
 }
@@ -307,7 +307,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
 abstract class _DocumentImpl {
   //dart_html.HtmlDocument get _htmlDoc;
 
-  static Document from(dart_html.HtmlDocument htmlDoc) {
+  static Document? from(dart_html.HtmlDocument? htmlDoc) {
     if (htmlDoc == null) {
       return null;
     }
@@ -327,12 +327,12 @@ class _Document extends Document with _DocumentImpl {
   @override
   set title(String title) => _htmlDoc.title = title;
 
-  String outerHtml(int padding) {
-    return _htmlDoc.documentElement.outerHtml;
+  String? outerHtml(int padding) {
+    return _htmlDoc.documentElement!.outerHtml;
   }
 
   @override
-  void fixMissing({String title = '', String charset = attrCharsetUtf8}) {
+  void fixMissing({String title = '', String? charset = attrCharsetUtf8}) {
     // fixing title fail using the default way
     var index = 0;
 
@@ -345,9 +345,7 @@ class _Document extends Document with _DocumentImpl {
     if (title.isNotEmpty) {
       _htmlDoc.title = title;
     } else {
-      if (_htmlDoc.title == null) {
-        _htmlDoc.title = title;
-      } else if (_htmlDoc.title == '') {
+      if (_htmlDoc.title == '') {
         _htmlDoc.title = title;
       }
     }
@@ -356,7 +354,7 @@ class _Document extends Document with _DocumentImpl {
 
   @override
   String toString() {
-    return '<!DOCTYPE html>${_htmlDoc.documentElement.outerHtml}';
+    return '<!DOCTYPE html>${_htmlDoc.documentElement!.outerHtml}';
   }
 
   @override
@@ -367,7 +365,7 @@ class _Document extends Document with _DocumentImpl {
 
   @override
   HtmlElement get html =>
-      _HtmlElement(_htmlDoc.documentElement as dart_html.HtmlElement);
+      _HtmlElement(_htmlDoc.documentElement as dart_html.HtmlElement?);
 }
 
 class _HtmlProviderBrowser extends HtmlProvider {
@@ -375,7 +373,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
   Document createDocument(
       {String html = '',
       String title = '',
-      String charset = attrCharsetUtf8,
+      String? charset = attrCharsetUtf8,
       bool noCharsetTitleFix = false}) {
     dart_html.HtmlDocument htmlDoc;
     if (html.isNotEmpty) {
@@ -383,7 +381,7 @@ class _HtmlProviderBrowser extends HtmlProvider {
       htmlDoc = domParser.parseFromString(html, 'text/html')
           as dart_html.HtmlDocument;
     } else {
-      htmlDoc = dart_html.document.implementation.createHtmlDocument(title);
+      htmlDoc = dart_html.document.implementation!.createHtmlDocument(title);
     }
 
     final doc = _Document(htmlDoc);
@@ -407,20 +405,20 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   @override
   Element createElementTag(String tag) {
-    return _ElementImpl.from(dart_html.Element.tag(tag));
+    return _ElementImpl.from(dart_html.Element.tag(tag))!;
   }
 
   static _NullTreeSanitizer nullTreeSanitizer = _NullTreeSanitizer();
 
   @override
-  Element createElementHtml(String html, {bool noValidate}) {
-    dart_html.NodeTreeSanitizer sanitizer;
+  Element createElementHtml(String html, {bool? noValidate}) {
+    dart_html.NodeTreeSanitizer? sanitizer;
     if (noValidate == true) {
       sanitizer = nullTreeSanitizer;
     }
     return _ElementImpl.from(
         // ignore: unsafe_html
-        dart_html.Element.html(html, treeSanitizer: sanitizer));
+        dart_html.Element.html(html, treeSanitizer: sanitizer))!;
   }
 
   @override
@@ -428,18 +426,18 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  Element wrapElement(/*dart_html.Element */ _element) =>
-      _ElementImpl.from(_element as dart_html.Element);
+  Element? wrapElement(/*dart_html.Element */ _element) =>
+      _ElementImpl.from(_element as dart_html.Element?);
 
   // return the html5lib implementation
   @override
-  dart_html.Element unwrapElement(Element element) =>
+  dart_html.Element? unwrapElement(Element? element) =>
       (element as _Element)._element;
 
   // return the html element wrapper
   @override
   Document wrapDocument(/*dart_html.Document*/ _document) =>
-      _DocumentImpl.from(_document as dart_html.HtmlDocument);
+      _DocumentImpl.from(_document as dart_html.HtmlDocument)!;
 
   // return the html5lib implementation
   @override

@@ -21,7 +21,7 @@ void main(List<String> arguments) {
     final input = File(inputFile).readAsStringSync();
     var doc = html.createDocument(html: input);
     final list =
-        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent)?.toList();
+        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent).toList();
     for (final line in list) {
       stdout.writeln(line);
     }
