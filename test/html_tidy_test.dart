@@ -1,9 +1,9 @@
 library document_test;
 
+import 'package:dev_test/test.dart';
 import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/util/html_tidy.dart';
-import 'package:dev_test/test.dart';
 
 void main() {
   final html = htmlProviderHtml5Lib;
