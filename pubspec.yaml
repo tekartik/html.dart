@@ -9,8 +9,8 @@ environment:
 dependencies:
   tekartik_common_utils:
     git:
-      url: git://github.com/tekartik/common_utils.dart
-      ref: null_safety
+      url: https://github.com/tekartik/common_utils.dart
+      ref: dart2_3
     version: '>=0.10.7'
   html: '>=0.15.0'
 
@@ -19,8 +19,8 @@ dev_dependencies:
   dev_test: '>=0.15.0'
   chrome_travis:
     git:
-      url: git://github.com/tekartik/chrome_travis.dart
-      ref: null_safety
+      url: https://github.com/tekartik/chrome_travis.dart
+      ref: dart2_3
     version: '>=0.1.4'
   process_run: '>=0.10.3'
   build_runner: '>=1.11.5'

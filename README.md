@@ -14,7 +14,7 @@ Setup in `pubspec.yaml`
 dependencies:
   tekartik_html:
     git:
-      url: git://github.com/tekartik/html.dart
+      url: https://github.com/tekartik/html.dart
       ref: dart2
     version: '>=0.1.1'
 ```
