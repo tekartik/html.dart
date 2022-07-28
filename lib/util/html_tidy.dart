@@ -198,7 +198,7 @@ Iterable<String> _htmlTidyElement(Element element,
   }
 
   //|| element.childNodes.isEmpty;
-  final _doNotConvertContent =
+  final doNotConvertContent =
       inlineContent || _doNotConvertContentForTag(tagName);
 
   final sb = StringBuffer();
@@ -210,7 +210,7 @@ Iterable<String> _htmlTidyElement(Element element,
       if (inlineContent) {
         sb.write(node.nodeValue);
       } else {
-        if (_doNotConvertContent) {
+        if (doNotConvertContent) {
           out.add(node.nodeValue!);
         } else {
           // for style/script split & join to prevent \r \n

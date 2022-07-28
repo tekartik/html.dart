@@ -1,3 +1,5 @@
+// ignore_for_file: provide_deprecation_message
+
 library html;
 
 import 'dart:collection';

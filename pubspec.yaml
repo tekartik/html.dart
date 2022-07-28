@@ -1,5 +1,5 @@
 name: tekartik_html
-version: 0.1.2
+version: 0.2.0
 description: An html abstraction layer to work with both dart:html and the html package
 homepage: https://github.com/tekartik/tekartik_html.dart
 publish_to: none
@@ -7,6 +7,7 @@ publish_to: none
 environment:
   sdk: '>=2.12.0-0 <3.0.0'
 dependencies:
+  args:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
@@ -17,11 +18,6 @@ dependencies:
 dev_dependencies:
   test: '>=1.0.0'
   dev_test: '>=0.15.0'
-  chrome_travis:
-    git:
-      url: https://github.com/tekartik/chrome_travis.dart
-      ref: dart2_3
-    version: '>=0.1.4'
   process_run: '>=0.10.3'
   build_runner: '>=1.11.5'
   build_web_compilers: '>=2.16.4'

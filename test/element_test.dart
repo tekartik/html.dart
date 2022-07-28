@@ -21,32 +21,32 @@ void testMain(HtmlProvider html) {
 
     test('wrap', () {
       Element? element = html.createElementTag(tagDiv);
-      dynamic _element = html.unwrapElement(element);
-      element = html.wrapElement(_element);
+      dynamic nativeElement = html.unwrapElement(element);
+      element = html.wrapElement(nativeElement);
       expect(element!.tagName, tagDiv);
     });
 
     test('toString', () {
       final element = html.createElementTag(tagDiv);
-      dynamic _element = html.unwrapElement(element);
-      expect(_element.toString(), element.toString());
+      dynamic nativeElement = html.unwrapElement(element);
+      expect(nativeElement.toString(), element.toString());
     });
 
     test('hashCode', () {
       final element = html.createElementTag(tagDiv);
-      dynamic _element = html.unwrapElement(element);
-      expect(_element.hashCode, element.hashCode);
+      dynamic nativeElement = html.unwrapElement(element);
+      expect(nativeElement.hashCode, element.hashCode);
     });
 
     test('equals', () {
       final element1 = html.createElementTag(tagDiv);
       final element2 = html.createElementTag(tagDiv);
-      dynamic _element1 = html.unwrapElement(element1);
-      dynamic _element1bis = html.unwrapElement(element1);
-      dynamic _element2 = html.unwrapElement(element2);
-      final element1bis = html.wrapElement(_element1bis);
-      expect(identical(_element1, _element1bis), isTrue);
-      expect(_element1, isNot(_element2));
+      dynamic nativeElement1 = html.unwrapElement(element1);
+      dynamic nativeElement1bis = html.unwrapElement(element1);
+      dynamic nativeElement2 = html.unwrapElement(element2);
+      final element1bis = html.wrapElement(nativeElement1bis);
+      expect(identical(nativeElement1, nativeElement1bis), isTrue);
+      expect(nativeElement1, isNot(nativeElement2));
       expect(element1, isNot(element2));
       expect(element1, element1bis); // same
       expect(identical(element1, element1bis), isFalse); // but not identical!
@@ -386,7 +386,7 @@ void testMain(HtmlProvider html) {
           */
 
       final img = '''
-<img src=\'https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg\' width=\'75\' height=\'75\' alt=\'keep_on_screenshot_1280x800\'>
+<img src='https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg' width='75' height='75' alt='keep_on_screenshot_1280x800'>
           ''';
       final element = html.createElementHtml(img, noValidate: true);
 

@@ -8,7 +8,7 @@ String inputKey = '$keyPrefix.input';
 String indentKey = '$keyPrefix.indent';
 
 void main() {
-  final _html = htmlProviderBrowser;
+  final htmlProvider = htmlProviderBrowser;
 
   final inputElement =
       document.body!.querySelector('#input') as TextAreaElement;
@@ -24,7 +24,7 @@ void main() {
     } catch (e) {
       print(e);
     }
-    var doc = _html.createDocument(html: input);
+    var doc = htmlProvider.createDocument(html: input);
     outputElement.text =
         htmlTidyDocument(doc, HtmlTidyOption()..indent = indent).join('\n');
   }
