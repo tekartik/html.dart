@@ -53,9 +53,9 @@ void main() {
 
     void dumpNode(Node node) {
       //print('${node.runtimeType}: ${node}');
-      node.nodes.forEach((Node _node) {
-        dumpNode(_node);
-      });
+      for (var innerNode in node.nodes) {
+        dumpNode(innerNode);
+      }
     }
 
     test('document.html title', () {

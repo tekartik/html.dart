@@ -1,3 +1,5 @@
+// ignore_for_file: provide_deprecation_message
+
 library html_html5lib;
 
 import 'package:html/dom.dart' as html5lib;
@@ -28,11 +30,11 @@ abstract class _NodeImpl extends Object {
   String? get nodeValue => _node.text;
 }
 
-Node _newNodeFrom(html5lib.Node _node) {
-  if (_node is html5lib.Element) {
-    return _Element.impl(_node);
+Node _newNodeFrom(html5lib.Node node) {
+  if (node is html5lib.Element) {
+    return _Element.impl(node);
   } else {
-    return _Node.impl(_node);
+    return _Node.impl(node);
   }
 }
 
@@ -465,14 +467,14 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
     html5lib.Document doc;
     doc = html5lib.Document.html(html);
 
-    final _doc = _Document(doc);
+    final htmlDoc = _Document(doc);
 
     if (!noCharsetTitleFix) {
-      _doc.fixMissing(title: title, charset: charset);
+      htmlDoc.fixMissing(title: title, charset: charset);
     }
-    _doc._fixMissingDocumentType();
+    htmlDoc._fixMissingDocumentType();
 
-    return _doc;
+    return htmlDoc;
   }
 
   @override
@@ -491,8 +493,8 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  Element? wrapElement(/*html5lib.Element*/ _element) =>
-      _ElementImpl.from(_element as html5lib.Element?);
+  Element? wrapElement(/*html5lib.Element*/ htmlElement) =>
+      _ElementImpl.from(htmlElement as html5lib.Element?);
 
   // return the html5lib implementation
   @override

@@ -1,3 +1,5 @@
+// ignore_for_file: provide_deprecation_message
+
 library html_browser;
 
 import 'dart:html' as dart_html;
@@ -81,11 +83,11 @@ abstract class _NodeImpl extends Object {
   String? get nodeValue => _node!.nodeValue;
 }
 
-Node _newNodeFrom(dart_html.Node _node) {
-  if (_node is dart_html.Element) {
-    return _Element._(_node);
+Node _newNodeFrom(dart_html.Node htmlNode) {
+  if (htmlNode is dart_html.Element) {
+    return _Element._(htmlNode);
   } else {
-    return _Node._(_node);
+    return _Node._(htmlNode);
   }
 }
 
@@ -426,8 +428,8 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  Element? wrapElement(/*dart_html.Element */ _element) =>
-      _ElementImpl.from(_element as dart_html.Element?);
+  Element? wrapElement(/*dart_html.Element */ htmlElement) =>
+      _ElementImpl.from(htmlElement as dart_html.Element?);
 
   // return the html5lib implementation
   @override
@@ -436,8 +438,8 @@ class _HtmlProviderBrowser extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  Document wrapDocument(/*dart_html.Document*/ _document) =>
-      _DocumentImpl.from(_document as dart_html.HtmlDocument)!;
+  Document wrapDocument(/*dart_html.Document*/ htmlDocument) =>
+      _DocumentImpl.from(htmlDocument as dart_html.HtmlDocument)!;
 
   // return the html5lib implementation
   @override

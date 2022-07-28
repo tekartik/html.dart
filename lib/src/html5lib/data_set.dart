@@ -33,8 +33,8 @@ class DataSetHtml5lib extends DataSet {
   }
 
   @override
-  bool remove(String name) {
-    return _attributes.remove(_nameToAttrKey(name)) != null;
+  bool remove(String key) {
+    return _attributes.remove(_nameToAttrKey(key)) != null;
   }
 }
 //_element.dataset.keys;}
