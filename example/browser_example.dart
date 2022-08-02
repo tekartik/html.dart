@@ -16,7 +16,7 @@ void main() {
   final pre = html.createElementTag('pre')..text = doc.toString();
   doc.body.append(pre);
 
-
-  final univsersalPre = html.createElementTag('pre')..text = 'some text added to current body';
+  final univsersalPre = html.createElementTag('pre')
+    ..text = 'some text added to current body';
   currentHtmlDocument.body.append(univsersalPre);
 }
