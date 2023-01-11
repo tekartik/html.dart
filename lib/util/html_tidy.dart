@@ -102,7 +102,7 @@ List<String> _wordSplit(String input) {
   final out = <String>[];
   var sb = StringBuffer();
 
-  void _addCurrent() {
+  void addCurrent() {
     if (sb.length > 0) {
       out.add(sb.toString());
       sb = StringBuffer();
@@ -111,12 +111,12 @@ List<String> _wordSplit(String input) {
 
   for (final rune in input.runes) {
     if (_isWhitespace(rune)) {
-      _addCurrent();
+      addCurrent();
     } else {
       sb.writeCharCode(rune);
     }
   }
-  _addCurrent();
+  addCurrent();
   return out;
 }
 
@@ -126,7 +126,7 @@ List<String> convertContent(String input, HtmlTidyOption? option) {
 
   var sb = StringBuffer();
 
-  void _addCurrent() {
+  void addCurrent() {
     if (sb.length > 0) {
       out.add(sb.toString());
       sb = StringBuffer();
@@ -138,14 +138,14 @@ List<String> convertContent(String input, HtmlTidyOption? option) {
     if (sb.length == 0) {
       // if empty never create a new line
     } else if (sb.length + word.length + 1 > option!.contentLength) {
-      _addCurrent();
+      addCurrent();
     } else {
       // add a space
       sb.write(' ');
     }
     sb.write(word);
   }
-  _addCurrent();
+  addCurrent();
   return out;
 }
 
@@ -203,7 +203,7 @@ Iterable<String> _htmlTidyElement(Element element,
 
   final sb = StringBuffer();
 
-  void _addNode(Node node) {
+  void addNode(Node node) {
     if (node is Element) {
       _addSubs(out, _htmlTidyElement(node, option, false), option);
     } else if (node.nodeType == Node.testNode) {
@@ -233,7 +233,7 @@ Iterable<String> _htmlTidyElement(Element element,
     out.add(_beginTag(element));
   }
   for (final node in element.childNodes) {
-    _addNode(node);
+    addNode(node);
   }
   final endTag = _endTag(element);
   if (endTag != null) {
