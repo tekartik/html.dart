@@ -6,7 +6,7 @@ import 'dart:collection';
 import 'attr.dart';
 import 'tag.dart';
 
-class ElementListIterator extends Iterator<Element> {
+class ElementListIterator implements Iterator<Element> {
   ElementList elementList;
 
   ElementListIterator(this.elementList);
