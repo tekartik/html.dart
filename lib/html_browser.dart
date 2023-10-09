@@ -71,7 +71,7 @@ class _Node extends Node with _NodeImpl {
   }
 }
 
-abstract class _NodeImpl extends Object {
+mixin class _NodeImpl extends Object {
   dart_html.Node? _node;
 
   dart_html.Element get _element =>
@@ -97,7 +97,7 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
   }
 }
 
-abstract class _ElementImpl extends Object {
+abstract mixin class _ElementImpl extends Object {
   //set _element(dart_html.Element element);
 
   dart_html.Element get _element;
@@ -306,7 +306,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
   }
 }
 
-abstract class _DocumentImpl {
+abstract mixin class _DocumentImpl {
   //dart_html.HtmlDocument get _htmlDoc;
 
   static Document? from(dart_html.HtmlDocument? htmlDoc) {

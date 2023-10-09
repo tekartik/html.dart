@@ -18,7 +18,7 @@ class _Node extends Node with _NodeImpl {
   }
 }
 
-abstract class _NodeImpl extends Object {
+abstract mixin class _NodeImpl extends Object {
   late html5lib.Node _node;
 
   html5lib.Element get _element =>
@@ -93,7 +93,7 @@ class _Element extends Element with _ElementImpl, _NodeImpl {
   }
 }
 
-abstract class _ElementImpl {
+abstract mixin class _ElementImpl {
   html5lib.Element get _element;
 
   ElementList get children => _ElementList(_element.children);
@@ -349,7 +349,7 @@ class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
   }
 }
 
-abstract class _DocumentImpl {
+abstract mixin class _DocumentImpl {
   // html5lib.Document get _document;
 
   static Document? from(html5lib.Document? documentImpl) {
