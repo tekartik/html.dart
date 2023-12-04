@@ -1,4 +1,5 @@
-part of html_html5lib;
+import 'package:tekartik_html/attr.dart';
+import 'package:tekartik_html/html.dart';
 
 class CssClassSetImpl extends CssClassSet {
   final Map _attributes;
