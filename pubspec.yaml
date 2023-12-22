@@ -17,7 +17,6 @@ dependencies:
 
 dev_dependencies:
   test: '>=1.0.0'
-  dev_test: '>=0.15.0'
   dev_build:
   process_run: '>=0.10.3'
   build_runner: '>=1.11.5'

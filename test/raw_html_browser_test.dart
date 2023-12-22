@@ -3,7 +3,7 @@ library html_browser_test;
 
 import 'dart:html';
 
-import 'package:dev_test/test.dart';
+import 'package:test/test.dart';
 
 //import 'package:html5lib/dom.dart';
 //import 'package:tekartik_common/test_utils.dart';
