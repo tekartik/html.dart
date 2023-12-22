@@ -1,4 +1,4 @@
-part of html_browser;
+import 'package:tekartik_html/html.dart';
 
 class DataSetBrowser extends DataSet {
   final Map<String, String> _dataset;

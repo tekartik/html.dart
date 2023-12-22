@@ -3,14 +3,12 @@
 library html_html5lib;
 
 import 'package:html/dom.dart' as html5lib;
+import 'package:tekartik_html/src/html5lib/css_class_set.dart';
+import 'package:tekartik_html/src/html5lib/data_set.dart';
 
 import 'attr.dart';
 import 'html.dart';
 import 'tag.dart';
-
-part 'src/html5lib/css_class_set.dart';
-
-part 'src/html5lib/data_set.dart';
 
 class _Node extends Node with _NodeImpl {
   _Node.impl(html5lib.Node node) {
@@ -206,7 +204,7 @@ abstract mixin class _ElementImpl {
         }
 
         // Go deeper
-        if (criteria.recursive != false) {
+        if (criteria.recursive) {
           final found = _queryChild(node, criteria);
           if (found != null) {
             return found;
@@ -228,7 +226,7 @@ abstract mixin class _ElementImpl {
         }
 
         // Go deeper
-        if (criteria.recursive != false) {
+        if (criteria.recursive) {
           list.addAll(_queryChildren(node, criteria));
         }
       }

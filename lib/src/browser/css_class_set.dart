@@ -1,4 +1,6 @@
-part of html_browser;
+import 'dart:html' as dart_html;
+
+import 'package:tekartik_html/html.dart';
 
 class CssClassSetBrowser extends CssClassSet {
   final dart_html.CssClassSet _cssClassSet;

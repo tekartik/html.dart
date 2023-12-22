@@ -4,12 +4,11 @@ library html_browser;
 
 import 'dart:html' as dart_html;
 
+import 'package:tekartik_html/src/browser/css_class_set.dart';
+import 'package:tekartik_html/src/browser/data_set.dart';
+
 import 'attr.dart';
 import 'html.dart';
-
-part 'package:tekartik_html/src/browser/css_class_set.dart';
-
-part 'package:tekartik_html/src/browser/data_set.dart';
 
 class _NullTreeSanitizer implements dart_html.NodeTreeSanitizer {
   @override
@@ -165,7 +164,7 @@ abstract mixin class _ElementImpl extends Object {
 
   static String _buildCriteriaSelector(QueryCriteria criteria) {
     final sb = StringBuffer();
-    if (criteria.recursive == false) {
+    if (!criteria.recursive) {
       sb.write(':scope > ');
     }
     if (criteria.byTag != null) {
