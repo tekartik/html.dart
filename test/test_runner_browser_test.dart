@@ -1,9 +1,9 @@
 @TestOn('browser')
 library all_tests_browser.dart;
 
-import 'package:dev_test/test.dart';
 import 'package:tekartik_html/html_browser.dart';
 import 'package:tekartik_html/html_html5lib.dart' as html5lib;
+import 'package:test/test.dart';
 
 import 'test_runner.dart' as all_tests;
 
