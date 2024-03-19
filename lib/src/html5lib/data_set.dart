@@ -2,7 +2,7 @@ import 'package:tekartik_html/attr.dart';
 import 'package:tekartik_html/html.dart';
 
 class DataSetHtml5lib extends DataSet {
-  final Map<dynamic, String> _attributes;
+  final Map<Object, String> _attributes;
 
   DataSetHtml5lib(this._attributes);
 

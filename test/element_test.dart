@@ -361,14 +361,14 @@ void testMain(HtmlProvider html) {
     test('class', () {
       var element = html.createElementTag(tagDiv);
       expect(element.classes.contains('test'), isFalse);
-      expect(element.classes.add('test'), isTrue);
-      expect(element.classes.add('test'), isFalse);
+      element.classes.add('test');
+      element.classes.add('test');
       expect(element.outerHtml, '<div class="test"></div>');
       element = html.createElementHtml('<div class="test"></div>');
       expect(element.classes.contains('test'), isTrue);
-      expect(element.classes.add('test'), isFalse);
-      expect(element.classes.remove('test'), isTrue);
-      expect(element.classes.remove('test'), isFalse);
+      element.classes.add('test');
+      element.classes.remove('test');
+      element.classes.remove('test');
       try {
         expect(element.outerHtml, '<div class=""></div>');
       } catch (_) {

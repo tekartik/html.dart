@@ -12,12 +12,12 @@ class CssClassSetBrowser extends CssClassSet {
   }
 
   @override
-  bool remove(Object value) {
+  bool remove(String value) {
     return _cssClassSet.remove(value);
   }
 
   @override
-  bool contains(Object value) {
+  bool contains(String value) {
     return _cssClassSet.contains(value);
   }
 }

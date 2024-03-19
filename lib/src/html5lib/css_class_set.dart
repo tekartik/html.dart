@@ -30,7 +30,7 @@ class CssClassSetImpl extends CssClassSet {
   }
 
   @override
-  bool remove(Object value) {
+  bool remove(String value) {
     final removed = _classSet.remove(value);
     if (removed) {
       _write();
@@ -39,7 +39,7 @@ class CssClassSetImpl extends CssClassSet {
   }
 
   @override
-  bool contains(Object value) {
+  bool contains(String value) {
     return _classSet.contains(value);
   }
 }

@@ -80,6 +80,10 @@ void testMain(HtmlProvider html) {
         <meta property="dtk-include" content="some/path/2" />
       </body>
       ''');
+      /*print(doc.html.innerHtml);
+      for (var child in doc.head.children) {
+        print(child.outerHtml);
+      }*/
       expect(doc.head.children.length, 3);
       expect(doc.body.children.length, 2);
     });
