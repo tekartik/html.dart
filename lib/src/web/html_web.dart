@@ -363,3 +363,5 @@ class _HtmlProviderWeb implements HtmlProvider {
 
 /// Web html provider (js_interop)
 HtmlProvider htmlProviderWeb = _HtmlProviderWeb();
+
+final currentHtmlDocumentWeb = htmlProviderWeb.wrapDocument(web.document);

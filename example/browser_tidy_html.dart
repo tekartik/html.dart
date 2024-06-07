@@ -1,23 +1,26 @@
-import 'dart:html';
+// ignore_for_file: avoid_print
 
-import 'package:tekartik_html/html_browser.dart';
+import 'package:tekartik_html/html_universal.dart';
 import 'package:tekartik_html/util/html_tidy.dart';
+import 'package:web/web.dart';
 
 String keyPrefix = 'tekartik_html.tidy_example.';
 String inputKey = '$keyPrefix.input';
 String indentKey = '$keyPrefix.indent';
 
 void main() {
-  final htmlProvider = htmlProviderBrowser;
+  final htmlProvider = htmlProviderUniversal;
 
   final inputElement =
-      document.body!.querySelector('#input') as TextAreaElement;
-  final outputElement = document.body!.querySelector('#output') as PreElement;
-  final indentElement = document.body!.querySelector('#indent') as InputElement;
+      document.body!.querySelector('#input') as HTMLTextAreaElement;
+  final outputElement =
+      document.body!.querySelector('#output') as HTMLPreElement;
+  final indentElement =
+      document.body!.querySelector('#indent') as HTMLInputElement;
 
   void convert([_]) {
-    final indent = indentElement.value!;
-    final input = inputElement.value!;
+    final indent = indentElement.value;
+    final input = inputElement.value;
     try {
       window.localStorage[inputKey] = input;
       window.localStorage[indentKey] = indent;

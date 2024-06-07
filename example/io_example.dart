@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:tekartik_html/html_html5lib.dart';
 
 void main() {

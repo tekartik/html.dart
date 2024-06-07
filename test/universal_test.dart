@@ -12,8 +12,9 @@ void main() {
 void testMain(HtmlProvider html) {
   group('universal', () {
     test('currentHtmlDocument', () {
-      if (isRunningAsJavascript) {
-        currentHtmlDocument.body;
+      if (kDartIsWeb) {
+        // ignore: avoid_print
+        print(currentHtmlDocument.html.innerHtml);
       }
     });
   });

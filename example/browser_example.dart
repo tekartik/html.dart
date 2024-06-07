@@ -1,12 +1,9 @@
-import 'dart:html' as dart_html;
-
-import 'package:tekartik_html/html_browser.dart';
 import 'package:tekartik_html/html_universal.dart';
 
 void main() {
-  final html = htmlProviderBrowser;
+  final html = htmlProviderUniversal;
 
-  final doc = html.wrapDocument(dart_html.document);
+  final doc = currentHtmlDocument;
 
   final div = html.createElementTag('div')..text = 'Some text';
   doc.body.append(div);

@@ -1,5 +1,9 @@
-// ignore_for_file: provide_deprecation_message
+library;
 
-library html_browser;
+import 'package:tekartik_html/html.dart';
 
-export 'src/legacy/html_browser.dart' show htmlProviderBrowser;
+import 'html_web.dart';
+
+/// Browser html provider (used to be base on dart:html but is not the same as html_web)
+@Deprecated('use htmlProviderWeb instead of htmlProviderBrowser')
+HtmlProvider get htmlProviderBrowser => htmlProviderWeb;

@@ -1,10 +1,7 @@
-import 'dart:html' as html;
-
 import 'package:tekartik_html/html.dart';
-import 'package:tekartik_html/html_browser.dart';
+import 'package:tekartik_html/src/web/html_web.dart' as web;
 
-export 'package:tekartik_html/html_browser.dart';
+@Deprecated('Use htmlProviderUniversal from html_universal instead')
+HtmlProvider htmlProviderUniversal = web.htmlProviderWeb;
 
-HtmlProvider htmlProviderUniversal = htmlProviderBrowser;
-
-final currentHtmlDocument = htmlProviderBrowser.wrapDocument(html.document);
+final currentHtmlDocument = web.currentHtmlDocumentWeb;

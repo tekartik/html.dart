@@ -17,7 +17,7 @@ void main(List<String> arguments) {
   final html = htmlProviderHtml5Lib;
   final indent = results['indent']?.toString();
   for (final inputFile in results.rest) {
-    print(inputFile);
+    stdout.writeln(inputFile);
     final input = File(inputFile).readAsStringSync();
     var doc = html.createDocument(html: input);
     final list =
