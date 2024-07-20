@@ -1,6 +1,8 @@
 @TestOn('browser')
 library html_browser_test;
 
+import 'dart:js_interop';
+
 import 'package:tekartik_common_utils/env_utils.dart';
 import 'package:test/test.dart';
 import 'package:web/web.dart';
@@ -58,14 +60,15 @@ void main() {
       element.attributes
           .setNamedItem(document.createAttribute('class')..value = 'test');
       // This fails on firefox: https://github.com/dart-lang/sdk/issues/23604
-      expect(element.outerHTML, '<div class="test"></div>');
+      expect(
+          (element.outerHTML as JSString).toDart, '<div class="test"></div>');
     });
 
     test('document', () {
       //new HtmlHtmlElement();
       final doc = document.implementation.createHTMLDocument('');
-      expect('<html><head><title></title></head><body></body></html>',
-          doc.documentElement!.outerHTML);
+      expect((doc.documentElement!.outerHTML as JSString).toDart,
+          '<html><head><title></title></head><body></body></html>');
       expect(doc.querySelector('head'), isNotNull);
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
     });
@@ -73,8 +76,8 @@ void main() {
       //new HtmlHtmlElement();
       final doc = document.implementation.createHTMLDocument('title');
       expect(doc.title, 'title');
-      expect('<html><head><title>title</title></head><body></body></html>',
-          doc.documentElement!.outerHTML);
+      expect((doc.documentElement!.outerHTML as JSString).toDart,
+          '<html><head><title>title</title></head><body></body></html>');
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
       expect(1, 1);
     });
@@ -83,7 +86,7 @@ void main() {
       // not working on firefox windows
       // ignore: unsafe_html
       final element = HTMLDivElement();
-      expect(element.outerHTML, '<div></div>');
+      expect((element.outerHTML as JSString).toDart, '<div></div>');
     });
   });
 }
