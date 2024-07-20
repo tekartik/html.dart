@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:js_interop';
 
 import 'package:tekartik_html/attr.dart';
 import 'package:tekartik_html/html.dart';
@@ -63,11 +64,11 @@ abstract mixin class _ElementImpl implements ElementWeb {
   }
 
   @override
-  String get innerHtml => webElement.innerHTML;
+  String get innerHtml => webElement.getHTML();
 
   @override
   set innerHtml(String html) {
-    webElement.innerHTML = html;
+    webElement.setHTMLUnsafe(html.toJS);
   }
 
   @override
@@ -117,7 +118,7 @@ abstract mixin class _ElementImpl implements ElementWeb {
   }
 
   @override
-  String get outerHtml => webElement.outerHTML;
+  String get outerHtml => (webElement.outerHTML as JSString).toDart;
 
   @override
   Element? get parent => _wrapWebElementOrNull(webElement.parentElement);
@@ -265,7 +266,7 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
   set title(String title) => webDoc.title = title;
 
   String? outerHtml(int padding) {
-    return webDoc.documentElement!.outerHTML;
+    return (webDoc.documentElement!.outerHTML as JSString).toDart;
   }
 
   @override
@@ -314,7 +315,7 @@ class _HtmlProviderWeb implements HtmlProvider {
     web.Document webDoc;
     if (html.isNotEmpty) {
       final domParser = web.DOMParser();
-      webDoc = domParser.parseFromString(html, 'text/html');
+      webDoc = domParser.parseFromString(html.toJS, 'text/html');
     } else {
       webDoc = web.document.implementation.createHTMLDocument(title);
     }
