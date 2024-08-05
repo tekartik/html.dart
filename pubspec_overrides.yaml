@@ -1,4 +1,0 @@
-dependency_overrides:
-  tekartik_common_utils:
-    path: ../common_utils.dart
-  web: '>=1.0.0'
