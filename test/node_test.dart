@@ -1,6 +1,5 @@
 library tekartik_html.node_test;
 
-import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:test/test.dart';
 

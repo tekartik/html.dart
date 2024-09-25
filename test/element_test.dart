@@ -1,6 +1,5 @@
 library element_test;
 
-import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/tag.dart';
 import 'package:test/test.dart';

@@ -1,4 +1,3 @@
-import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_html5lib.dart';
 
 HtmlProvider htmlProviderUniversal = htmlProviderHtml5Lib;

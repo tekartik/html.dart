@@ -1,4 +1,3 @@
-import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/html_web.dart';
 import 'package:web/web.dart' as web;
 
