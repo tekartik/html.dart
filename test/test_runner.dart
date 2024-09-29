@@ -1,4 +1,4 @@
-library all_tests;
+library;
 
 //import 'html_provider_test.dart';
 import 'package:tekartik_html/html.dart';

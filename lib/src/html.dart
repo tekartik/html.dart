@@ -1,6 +1,6 @@
 // ignore_for_file: provide_deprecation_message
 
-library html;
+library;
 
 import 'dart:collection';
 import 'attr.dart';

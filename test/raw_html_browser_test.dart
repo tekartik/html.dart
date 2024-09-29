@@ -1,5 +1,5 @@
 @TestOn('browser')
-library html_browser_test;
+library;
 
 import 'dart:js_interop';
 

@@ -1,4 +1,4 @@
-library tekartik_html.node_test;
+library;
 
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:test/test.dart';

@@ -1,4 +1,4 @@
-library universal_test;
+library;
 
 import 'package:tekartik_common_utils/env_utils.dart';
 import 'package:tekartik_html/html_universal.dart';

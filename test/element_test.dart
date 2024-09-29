@@ -1,4 +1,4 @@
-library element_test;
+library;
 
 import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/tag.dart';

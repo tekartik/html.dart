@@ -1,5 +1,5 @@
 @TestOn('browser')
-library all_tests_browser.dart;
+library;
 
 import 'package:tekartik_html/html_html5lib.dart' as html5lib;
 import 'package:tekartik_html/html_universal.dart' as universal;

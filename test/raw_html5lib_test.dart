@@ -1,4 +1,4 @@
-library html5lib_test;
+library;
 
 import 'package:html/dom.dart';
 import 'package:test/test.dart';

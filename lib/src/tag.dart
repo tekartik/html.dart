@@ -1,6 +1,6 @@
 // ignore_for_file: provide_deprecation_message
 
-library tag;
+library;
 
 const String tagMeta = 'meta';
 const String tagTitle = 'title';

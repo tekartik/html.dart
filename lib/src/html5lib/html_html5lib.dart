@@ -1,6 +1,6 @@
 // ignore_for_file: provide_deprecation_message
 
-library html_html5lib;
+library;
 
 import 'package:html/dom.dart' as html5lib;
 import 'package:tekartik_html/attr.dart';

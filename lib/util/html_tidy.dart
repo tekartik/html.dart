@@ -1,4 +1,4 @@
-library tekartik_html.util.html_tidy;
+library;
 
 import 'dart:convert';
 
