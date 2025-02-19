@@ -12,6 +12,7 @@ void testMain(HtmlProvider html) {
   group('document', () {
     test('simple', () {
       final doc = html.createDocument(title: 'test');
+      expect(doc.htmlProvider, html);
       expect(doc.toString(),
           '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>');
       //print(doc.head.children);

@@ -52,6 +52,10 @@ abstract class ElementWeb implements Element, NodeWeb {
 
 class _Element extends _NodeBase with _ElementImpl implements Element {
   _Element(web.Element super.element);
+
+  @override
+  // TODO: implement htmlProvider
+  HtmlProvider get htmlProvider => throw UnimplementedError();
 }
 
 abstract mixin class _ElementImpl implements ElementWeb {
@@ -259,6 +263,9 @@ class _ElementList extends ListBase<Element> implements ElementList {
 }
 
 mixin _NodeImpl implements Node {
+  @override
+  HtmlProvider get htmlProvider => htmlProviderWeb;
+
   /// Text content (good for text node)
   @override
   String? get textContent => webNode.textContent;

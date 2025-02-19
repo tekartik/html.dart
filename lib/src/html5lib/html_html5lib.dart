@@ -19,6 +19,7 @@ class _Node extends Node with _NodeImpl {
 }
 
 abstract mixin class _NodeImpl extends Object {
+  HtmlProvider get htmlProvider => htmlProviderHtml5Lib;
   late html5lib.Node _node;
 
   // ignore: unused_element
@@ -402,7 +403,9 @@ abstract mixin class _DocumentImpl {
 class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
   final html5lib.Document _document;
 
-  _Document(this._document) : super(_html);
+  _Document(this._document) : super(_html) {
+    htmlProvider = htmlProviderHtml5Lib;
+  }
 
   Element? get _titleElement {
     for (var i = 0; i < head.children.length; i++) {

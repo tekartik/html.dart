@@ -6,6 +6,8 @@ import 'html_base.dart';
 
 mixin DocumentMixin implements DocumentBase {
   @override
+  late HtmlProvider htmlProvider;
+  @override
   void fixMissing({String title = '', String? charset = attrCharsetUtf8}) {
     var index = 0;
 

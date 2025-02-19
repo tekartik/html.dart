@@ -16,6 +16,7 @@ void testMain(HtmlProvider html) {
       final element = html.createElementTag(tagDiv);
       expect(element.tagName, tagDiv);
       expect(element.id, isEmpty);
+      expect(element.htmlProvider, html);
     });
 
     test('wrap', () {

@@ -82,6 +82,7 @@ class QueryCriteria {
 
 /// Base node
 abstract class Node {
+  HtmlProvider get htmlProvider;
   static const int attributeNode = 2;
   static const int cdataSectionNode = 4;
   static const int commentNode = 8;
@@ -210,6 +211,7 @@ abstract class HeadElement extends Element {
 abstract class HtmlElement extends Element {}
 
 abstract class Document {
+  HtmlProvider get htmlProvider;
   BodyElement get body;
   HeadElement get head;
   HtmlElement get html;

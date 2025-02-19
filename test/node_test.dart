@@ -14,6 +14,10 @@ void nodeTestGroup(HtmlProvider html) {
       // ignore: deprecated_member_use_from_same_package
       expect(Node.testNode, Node.textNode);
     });
+    test('textNode', () {
+      final text = html.createTextNode('hello');
+      expect(text.htmlProvider, html);
+    });
     test('text', () {
       final element = html.createElementHtml('<p>hello</p>');
       expect(element.childNodes.length, 1);
