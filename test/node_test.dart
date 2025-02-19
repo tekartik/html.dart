@@ -34,6 +34,7 @@ void nodeTestGroup(HtmlProvider html) {
       expect(firstNode.nodeType, Node.textNode);
       expect(firstNode.nodeValue, ' ');
       expect(firstNode, isA<Text>());
+      expect((firstNode as Text).text, ' ');
     });
   });
 }

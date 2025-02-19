@@ -582,6 +582,9 @@ abstract class _Text implements Text {
 }
 
 class _TextImpl with _NodeImpl implements _Text {
+  /// Non nullable text
+  @override
+  String get text => _node.text!;
   _TextImpl(html5lib.Text node) {
     _node = node;
   }

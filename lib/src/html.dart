@@ -151,7 +151,10 @@ abstract class Node {
 }
 
 /// Text node
-abstract class Text extends Node {}
+abstract class Text extends Node {
+  /// Non-null text content
+  String get text;
+}
 
 abstract class Element extends Node {
   ElementList get children;

@@ -409,6 +409,9 @@ abstract class _Text implements Text {
 }
 
 class _TextImpl extends _NodeBase with _NodeImpl implements _Text {
+  /// Non nullable text content
+  @override
+  String get text => webNode.textContent!;
   _TextImpl(super.webNode);
   _TextImpl.text(String value) : super(web.Text(value));
 }
