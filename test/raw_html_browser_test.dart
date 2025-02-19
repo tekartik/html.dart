@@ -19,7 +19,7 @@ void main() {
       */
     });
 
-    test('node', () {
+    test('div node', () {
       final element = HTMLDivElement();
       final child = HTMLDivElement();
       element.append(child);
@@ -36,6 +36,32 @@ void main() {
         expect(element.children.item(0), same(element.firstChild));
         expect(element.children.item(0), same(element.children.item(0)));
       }
+    });
+
+    test('text node', () {
+      final element = HTMLDivElement();
+      element.append(Text(' '));
+      expect(element.nodeType, Node.ELEMENT_NODE);
+      expect(element.nodeValue, isNull);
+      expect(element.nodeName, 'DIV');
+      expect(element.childNodes.length, 1);
+      expect(element.children.length, 0);
+      var firstNode = element.childNodes.item(0)!;
+
+      expect(firstNode.textContent, ' ');
+      expect(firstNode.nodeType, Node.TEXT_NODE);
+      expect(firstNode.nodeValue, ' ');
+      expect(firstNode.nodeName, '#text');
+
+      /// Indeed not possible
+      expect(firstNode, isA<Text>());
+
+      /// ! So we should not relay on type
+      expect(firstNode, isA<Element>());
+
+      /// JS: JSObject
+      /// WASM: JS Value
+      // print(firstNode.runtimeType);
     });
 
     test('element', () {

@@ -26,11 +26,27 @@ void main() {
           '<!DOCTYPE html><html><head></head><body></body></html>');
     });
 
-    test('node', () {
+    test('div node', () {
       final element = Element.tag('div');
       final child = Element.tag('div');
       element.append(child);
       expect(element.children[0], same(element.firstChild));
+      expect(element.children.length, 1);
+      expect(element.hasChildNodes(), isTrue);
+      expect(element.nodes.length, 1);
+    });
+    test('text node', () {
+      final element = Element.html(' <div></div>');
+      expect(element.nodeType, Node.ELEMENT_NODE);
+      expect(element.text, '');
+      element.append(Text(' '));
+      expect(element.nodes.length, 1);
+      expect(element.children.length, 0);
+      var firstNode = element.nodes.first;
+      expect(firstNode.text, ' ');
+      expect(firstNode.nodeType, Node.TEXT_NODE);
+      expect(firstNode, isA<Text>());
+      expect(firstNode, isNot(isA<Element>()));
     });
 
     test('element', () {

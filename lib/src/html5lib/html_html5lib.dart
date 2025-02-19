@@ -4,7 +4,7 @@ library;
 
 import 'package:html/dom.dart' as html5lib;
 import 'package:tekartik_html/attr.dart';
-import 'package:tekartik_html/html.dart';
+import 'package:tekartik_html/html_html5lib.dart';
 import 'package:tekartik_html/src/html5lib/css_class_set.dart';
 import 'package:tekartik_html/src/html5lib/data_set.dart';
 import 'package:tekartik_html/src/html_base.dart';
@@ -19,6 +19,7 @@ class _Node extends Node with _NodeImpl {
 abstract mixin class _NodeImpl extends Object {
   late html5lib.Node _node;
 
+  // ignore: unused_element
   html5lib.Element get _element =>
       _node as html5lib.Element; // only work if element
   set _element(html5lib.Element element) => _node = element;
@@ -26,14 +27,12 @@ abstract mixin class _NodeImpl extends Object {
   int get nodeType => _node.nodeType;
 
   String? get nodeValue => _node.text;
+
+  String? get textContent => _node.text;
 }
 
 Node _newNodeFrom(html5lib.Node node) {
-  if (node is html5lib.Element) {
-    return _Element.impl(node);
-  } else {
-    return _Node.impl(node);
-  }
+  return _html.wrapNode(node);
 }
 
 class _ElementList extends ElementList {
@@ -85,25 +84,30 @@ class _ElementList extends ElementList {
   }
 }
 
-class _Element extends Element with _ElementImpl, _NodeImpl {
+class _Element extends Element with _NodeImpl, _ElementImpl {
   _Element.impl(html5lib.Element element) {
     _element = element;
   }
 }
 
-abstract mixin class _ElementImpl {
+abstract mixin class _ElementImpl implements Element {
   html5lib.Element get _element;
 
+  @override
   ElementList get children => _ElementList(_element.children);
 
+  @override
   String get id => _element.id;
 
+  @override
   set id(String id) {
     _element.id = id;
   }
 
+  @override
   String get tagName => _element.localName!;
 
+  @override
   Element? getElementById(String id) {
     for (final child in children) {
       if (child.id == id) {
@@ -121,22 +125,34 @@ abstract mixin class _ElementImpl {
     return _Element.impl(element);
   }
 
+  @override
   String get outerHtml => _element.outerHtml;
 
+  @override
   String get innerHtml => _element.innerHtml;
 
+  @override
   set innerHtml(String html) {
     _element.innerHtml = html;
   }
 
+  @override
   String get text => _element.text;
 
+  /// Null for element
+  /// https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeValue
+  @override
+  String? get nodeValue => null;
+
+  @override
   set text(String text) => _element.text = text;
 
+  @override
   Element? querySelector(String selector) {
     return from(_element.querySelector(selector));
   }
 
+  @override
   ElementList querySelectorAll(String selector) {
     return _ElementList(_element.querySelectorAll(selector));
   }
@@ -236,15 +252,18 @@ abstract mixin class _ElementImpl {
   }
 
   //@override
+  @override
   Element? queryCriteria(QueryCriteria criteria) {
     return from(_queryChild(_element, criteria));
   }
 
   //@override
+  @override
   ElementList queryCriteriaAll(QueryCriteria criteria) {
     return _ElementList(_queryChildren(_element, criteria));
   }
 
+  @override
   Element? query(
       {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     return queryCriteria(QueryCriteria(
@@ -254,6 +273,7 @@ abstract mixin class _ElementImpl {
         byAttributes: byAttributes));
   }
 
+  @override
   ElementList queryAll(
       {String? byTag, String? byId, String? byClass, String? byAttributes}) {
     return queryCriteriaAll(QueryCriteria(
@@ -278,23 +298,29 @@ abstract mixin class _ElementImpl {
     return false;
   }
 
+  @override
   CssClassSet get classes => CssClassSetImpl(_element.attributes);
 
   //@override
+  @override
   Map<Object, String> get attributes => _element.attributes;
 
   //@override
+  @override
   void remove() {
     _element.remove();
   }
 
   //@override
+  @override
   Element? get parent => from(_element.parent);
 
   //@override
+  @override
   DataSet get dataset => DataSetHtml5lib(_element.attributes);
 
 //@override
+  @override
   List<Node> get childNodes {
     final children = <Node>[];
     for (final node in _element.nodes) {
@@ -304,12 +330,14 @@ abstract mixin class _ElementImpl {
   }
 
 //@override
+  @override
   Node append(Node node) {
     _element.append((node as _NodeImpl)._node);
     return node;
   }
 
   //@override
+  @override
   void insertBefore(Node node, Node refNode) {
     _element.insertBefore(
         (node as _NodeImpl)._node, (refNode as _NodeImpl)._node);
@@ -329,19 +357,19 @@ abstract mixin class _ElementImpl {
   }
 }
 
-class _BodyElement extends BodyElement with _ElementImpl, _NodeImpl {
+class _BodyElement extends BodyElement with _NodeImpl, _ElementImpl {
   _BodyElement(html5lib.Element body) {
     _element = body;
   }
 }
 
-class _HeadElement extends HeadElement with _ElementImpl, _NodeImpl {
+class _HeadElement extends HeadElement with _NodeImpl, _ElementImpl {
   _HeadElement(html5lib.Element head) {
     _element = head;
   }
 }
 
-class _HtmlElement extends HtmlElement with _ElementImpl, _NodeImpl {
+class _HtmlElement extends HtmlElement with _NodeImpl, _ElementImpl {
   _HtmlElement(html5lib.Element html) {
     _element = html;
   }
@@ -455,7 +483,8 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
   HtmlElement get html => _HtmlElement(_document.documentElement!);
 }
 
-class _HtmlProviderHtml5Lib extends HtmlProvider {
+class _HtmlProviderHtml5Lib extends HtmlProvider
+    implements HtmlProviderHtml5Lib {
   @override
   Document createDocument(
       {String html = '',
@@ -476,6 +505,11 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   }
 
   @override
+  Text createTextNode(String text) {
+    return _Text.text(text);
+  }
+
+  @override
   Element createElementTag(String tag) {
     return _ElementImpl.from(html5lib.Element.tag(tag))!;
   }
@@ -491,12 +525,12 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
 
   // return the html element wrapper
   @override
-  Element? wrapElement(/*html5lib.Element*/ htmlElement) =>
-      _ElementImpl.from(htmlElement as html5lib.Element?);
+  Element wrapElement(Object /*html5lib.Element*/ htmlElement) =>
+      _Element.impl(htmlElement as html5lib.Element);
 
   // return the html5lib implementation
   @override
-  html5lib.Element? unwrapElement(Element? element) =>
+  html5lib.Element unwrapElement(Element element) =>
       (element as _Element)._element;
 
   // wrap a native document
@@ -508,6 +542,26 @@ class _HtmlProviderHtml5Lib extends HtmlProvider {
   @override
   html5lib.Document unwrapDocument(Document? document) =>
       (document as _Document)._document;
+
+  @override
+  Object unwrapNode(Node node) {
+    if (node is _Node) {
+      return node._node;
+    }
+    throw UnsupportedError('node: $node');
+  }
+
+  @override
+  Node wrapNode(Object nodeImpl) {
+    if (nodeImpl is html5lib.Element) {
+      return _Element.impl(nodeImpl);
+    } else if (nodeImpl is html5lib.Text) {
+      return _Text.impl(nodeImpl);
+    } else if (nodeImpl is html5lib.Node) {
+      return _Node.impl(nodeImpl);
+    }
+    throw UnsupportedError('node: $nodeImpl');
+  }
 }
 
 _HtmlProviderHtml5Lib get _html =>
@@ -520,3 +574,18 @@ HtmlProvider initHtmlProvider() {
 }
 
 HtmlProvider htmlProviderHtml5Lib = _HtmlProviderHtml5Lib();
+
+/// Internal Text interface
+abstract class _Text implements Text {
+  factory _Text.impl(html5lib.Text node) => _TextImpl(node);
+  factory _Text.text(String value) => _TextImpl.text(value);
+}
+
+class _TextImpl with _NodeImpl implements _Text {
+  _TextImpl(html5lib.Text node) {
+    _node = node;
+  }
+  _TextImpl.text(String value) {
+    _node = html5lib.Text(value);
+  }
+}

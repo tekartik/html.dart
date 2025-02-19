@@ -5,11 +5,14 @@ import 'package:tekartik_html/attr.dart';
 import 'package:tekartik_html/html.dart';
 import 'package:tekartik_html/src/common_utils.dart';
 import 'package:tekartik_html/src/html_base.dart';
+import 'package:tekartik_html/src/html_web.dart';
 import 'package:web/web.dart' as web;
 
 import 'attributes_web.dart';
 import 'css_class_set_web.dart';
 import 'data_set_web.dart';
+
+web.Text? textNode;
 
 abstract class NodeWeb implements Node {
   web.Node get webNode;
@@ -71,6 +74,10 @@ abstract mixin class _ElementImpl implements ElementWeb {
     webElement.setHTMLUnsafe(html.toJS);
   }
 
+  /// Text content (good for text node)
+  @override
+  String? get textContent => webElement.textContent;
+
   @override
   String get text => webElement.textContent ?? '';
 
@@ -93,7 +100,7 @@ abstract mixin class _ElementImpl implements ElementWeb {
   List<Node> get childNodes {
     var childNodes = webElement.childNodes;
     return List<Node>.generate(
-        childNodes.length, (index) => _Node(childNodes.item(index)!));
+        childNodes.length, (index) => _html.wrapNode(childNodes.item(index)!));
   }
 
   @override
@@ -234,7 +241,11 @@ class _ElementList extends ListBase<Element> implements ElementList {
   }
 }
 
-mixin _NodeImpl {}
+mixin _NodeImpl implements Node {
+  /// Text content (good for text node)
+  @override
+  String? get textContent => webNode.textContent;
+}
 
 abstract mixin class _DocumentImpl {}
 
@@ -305,7 +316,7 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
   HtmlElement get html => _HtmlElement(webDoc.documentElement!);
 }
 
-class _HtmlProviderWeb implements HtmlProvider {
+class _HtmlProviderWeb implements HtmlProviderWeb {
   @override
   Document createDocument(
       {String html = '',
@@ -347,8 +358,8 @@ class _HtmlProviderWeb implements HtmlProvider {
   }
 
   @override
-  dynamic unwrapElement(Element? element) {
-    return element?.webNode;
+  Object unwrapElement(Element element) {
+    return element.webNode;
   }
 
   @override
@@ -357,8 +368,30 @@ class _HtmlProviderWeb implements HtmlProvider {
   }
 
   @override
-  Element? wrapElement(elementImpl) {
-    return _wrapWebElementOrNull(elementImpl as web.Element);
+  Element wrapElement(elementImpl) {
+    return _Element(elementImpl as web.Element);
+  }
+
+  @override
+  Text createTextNode(String text) {
+    return _Text.text(text);
+  }
+
+  @override
+  Object unwrapNode(Node node) {
+    return node.webNode;
+  }
+
+  @override
+  Node wrapNode(Object? elementImpl) {
+    var webNode = elementImpl as web.Node;
+    if (webNode.nodeType == web.Node.TEXT_NODE) {
+      return _Text.impl(webNode as web.Text);
+    } else if (webNode.nodeType == web.Node.ELEMENT_NODE) {
+      return _Element(webNode as web.Element);
+    } else {
+      return _Node(webNode);
+    }
   }
 }
 
@@ -366,3 +399,16 @@ class _HtmlProviderWeb implements HtmlProvider {
 HtmlProvider htmlProviderWeb = _HtmlProviderWeb();
 
 final currentHtmlDocumentWeb = htmlProviderWeb.wrapDocument(web.document);
+
+_HtmlProviderWeb get _html => htmlProviderWeb as _HtmlProviderWeb;
+
+/// Internal Text interface
+abstract class _Text implements Text {
+  factory _Text.impl(web.Text value) => _TextImpl(value);
+  factory _Text.text(String value) => _TextImpl.text(value);
+}
+
+class _TextImpl extends _NodeBase with _NodeImpl implements _Text {
+  _TextImpl(super.webNode);
+  _TextImpl.text(String value) : super(web.Text(value));
+}

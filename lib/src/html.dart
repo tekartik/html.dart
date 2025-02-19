@@ -80,6 +80,7 @@ class QueryCriteria {
       this.recursive = true});
 }
 
+/// Base node
 abstract class Node {
   static const int attributeNode = 2;
   static const int cdataSectionNode = 4;
@@ -95,7 +96,13 @@ abstract class Node {
   static const int notationNode = 12;
 
   static const int processInstructionNode = 7;
+
+  /// Compat use textNode
+  @Deprecated('Use textNode')
   static const int testNode = 3;
+
+  /// Compat
+  static const int textNode = 3;
   @deprecated
   // ignore: constant_identifier_names
   static const int ATTRIBUTE_NODE = 2;
@@ -133,9 +140,18 @@ abstract class Node {
   // ignore: constant_identifier_names
   static const int TEXT_NODE = 3;
 
+  /// Node type
   int get nodeType;
+
+  /// Node value, null for Element node, text for text node
   String? get nodeValue;
+
+  /// Text content
+  String? get textContent;
 }
+
+/// Text node
+abstract class Text extends Node {}
 
 abstract class Element extends Node {
   ElementList get children;
@@ -208,16 +224,23 @@ abstract class HtmlProvider {
 
   Element createElementTag(String tag);
   Element createElementHtml(String html, {bool? noValidate});
+  Text createTextNode(String text);
 
   // wrap a native document
-  Document wrapDocument(dynamic documentImpl);
+  Document wrapDocument(Object? documentImpl);
 
   // get the native document
-  dynamic unwrapDocument(Document? document);
+  Object? unwrapDocument(Document? document);
 
   // wrap a native element
-  Element? wrapElement(dynamic elementImpl);
+  Element wrapElement(Object elementImpl);
 
   // get the native element
-  dynamic unwrapElement(Element? element);
+  Object unwrapElement(Element element);
+
+  // wrap a native element
+  Node wrapNode(Object nodeImpl);
+
+  // get the native element
+  Object unwrapNode(Node node);
 }

@@ -20,9 +20,9 @@ void testMain(HtmlProvider html) {
 
     test('wrap', () {
       Element? element = html.createElementTag(tagDiv);
-      dynamic nativeElement = html.unwrapElement(element);
+      var nativeElement = html.unwrapElement(element);
       element = html.wrapElement(nativeElement);
-      expect(element!.tagName, tagDiv);
+      expect(element.tagName, tagDiv);
     });
 
     test('toString', () {
@@ -40,9 +40,9 @@ void testMain(HtmlProvider html) {
     test('equals', () {
       final element1 = html.createElementTag(tagDiv);
       final element2 = html.createElementTag(tagDiv);
-      dynamic nativeElement1 = html.unwrapElement(element1);
-      dynamic nativeElement1bis = html.unwrapElement(element1);
-      dynamic nativeElement2 = html.unwrapElement(element2);
+      var nativeElement1 = html.unwrapElement(element1);
+      var nativeElement1bis = html.unwrapElement(element1);
+      var nativeElement2 = html.unwrapElement(element2);
       final element1bis = html.wrapElement(nativeElement1bis);
       expect(identical(nativeElement1, nativeElement1bis), isTrue);
       expect(nativeElement1, isNot(nativeElement2));

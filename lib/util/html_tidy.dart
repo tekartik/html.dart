@@ -71,7 +71,7 @@ bool _hasSingleTextNodeLine(Element element) {
   final childNodes = element.childNodes;
   if (childNodes.length == 1) {
     final node = childNodes.first;
-    if (node.nodeType == Node.testNode) {
+    if (node.nodeType == Node.textNode) {
       final value = node.nodeValue!;
       if (!(value.codeUnits.contains(_cr) || value.codeUnits.contains(_lf))) {
         return true;
@@ -183,7 +183,7 @@ Iterable<String> _htmlTidyElement(Element element,
     if (node is Element) {
       childElements.add(node);
       childNodes.add(node);
-    } else if (node.nodeType == Node.testNode) {
+    } else if (node.nodeType == Node.textNode) {
       childNodes.add(node);
     }
   }
@@ -206,7 +206,7 @@ Iterable<String> _htmlTidyElement(Element element,
   void addNode(Node node) {
     if (node is Element) {
       _addSubs(out, _htmlTidyElement(node, option, false), option);
-    } else if (node.nodeType == Node.testNode) {
+    } else if (node.nodeType == Node.textNode) {
       if (inlineContent) {
         sb.write(node.nodeValue);
       } else {
