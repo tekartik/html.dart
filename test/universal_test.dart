@@ -24,7 +24,10 @@ void testMain(HtmlProvider html) {
         expect(htmlTidyDocument(doc), [
           '<!DOCTYPE html>',
           '<html>',
-          '<head></head>',
+          '<head>',
+          '\t<meta charset="utf-8">',
+          '\t<title></title>',
+          '</head>',
           '<body></body>',
           '</html>'
         ]);
