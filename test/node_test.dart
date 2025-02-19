@@ -36,5 +36,23 @@ void nodeTestGroup(HtmlProvider html) {
       expect(firstNode, isA<Text>());
       expect((firstNode as Text).text, ' ');
     });
+    test('remove node', () {
+      var element = html.createElementHtml('<div><p>hello</p></div>');
+      expect(element.childNodes.length, 1);
+      element.children.last.remove();
+      expect(element.childNodes.length, 0);
+    });
+    test('not remove node', () {
+      var element = html.createElementHtml('<div><p>hello</p></div>');
+      expect(element.childNodes.length, 1);
+      expect(() => element.childNodes.removeAt(0), throwsUnsupportedError);
+      expect(element.childNodes.length, 1);
+    });
+    test('children node', () {
+      final element = html.createElementHtml('<div><p>child</p></div>');
+      expect(element.children.length, 1);
+      element.children.removeAt(0);
+      expect(element.children.length, 0);
+    });
   });
 }

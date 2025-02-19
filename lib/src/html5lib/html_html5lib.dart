@@ -2,6 +2,8 @@
 
 library;
 
+import 'dart:collection';
+
 import 'package:html/dom.dart' as html5lib;
 import 'package:tekartik_html/attr.dart';
 import 'package:tekartik_html/html_html5lib.dart';
@@ -90,7 +92,8 @@ class _Element extends Element with _NodeImpl, _ElementImpl {
   }
 }
 
-abstract mixin class _ElementImpl implements Element {
+abstract mixin class _ElementImpl implements Element, _Node {
+  @override
   html5lib.Element get _element;
 
   @override
@@ -311,6 +314,15 @@ abstract mixin class _ElementImpl implements Element {
     _element.remove();
   }
 
+  @override
+  Node removeChild(Node node) {
+    var nativeNode = _html.unwrapNode(node);
+    if (_element.nodes.remove(nativeNode)) {
+      return _html.wrapNode(nativeNode);
+    }
+    throw StateError('not found');
+  }
+
   //@override
   @override
   Element? get parent => from(_element.parent);
@@ -326,7 +338,7 @@ abstract mixin class _ElementImpl implements Element {
     for (final node in _element.nodes) {
       children.add(_newNodeFrom(node));
     }
-    return children;
+    return UnmodifiableListView(_element.nodes.map((e) => _html.wrapNode(e)));
   }
 
 //@override

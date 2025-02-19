@@ -175,10 +175,22 @@ abstract class Element extends Node {
       {String? byTag, String? byId, String? byClass, String? byAttributes});
   ElementList queryAll(
       {String? byTag, String? byId, String? byClass, String? byAttributes});
+
+  /// Unmodifiable list of child nodes
   List<Node> get childNodes;
+
+  /// Insert before
   void insertBefore(Node node, Node refNode);
+
+  /// Append a child node
   Node append(Node node);
+
+  /// Remove the element from its parent
   void remove();
+
+  /// Remove a child
+  Node removeChild(Node node);
+
   Element? get parent;
   CssClassSet get classes;
   Map<Object, String> get attributes;

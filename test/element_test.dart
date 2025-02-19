@@ -74,6 +74,19 @@ void testMain(HtmlProvider html) {
       //expect(element.children[0], same(element.firstChild));
     });
 
+    test('children', () {
+      final element = html.createElementTag(tagDiv);
+      final child1 = html.createElementTag(tagDiv);
+      final child2 = html.createElementTag(tagP);
+      final child3 = html.createElementTag(tagA);
+      element.append(child1);
+      element.append(child2);
+      element.insertBefore(child3, child2);
+      expect(element.children.length, 3);
+      expect(element.children, [child1, child3, child2]);
+      expect(element.removeChild(child3), child3);
+      expect(element.children, [child1, child2]);
+    });
     test('weird_tag', () {
       try {
         final element = html.createElementTag('?');

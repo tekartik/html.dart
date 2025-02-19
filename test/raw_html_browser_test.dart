@@ -64,6 +64,13 @@ void main() {
       // print(firstNode.runtimeType);
     });
 
+    test('children node', () {
+      final element = HTMLDivElement()..append(HTMLDivElement());
+      expect(element.children.length, 1);
+      var child = element.children.item(0)!;
+      element.removeChild(child);
+      expect(element.children.length, 0);
+    });
     test('element', () {
       var element = HTMLDivElement();
       expect('DIV', element.tagName);

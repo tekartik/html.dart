@@ -97,10 +97,16 @@ abstract mixin class _ElementImpl implements ElementWeb {
       webElement.ownerDocument ?? web.window.document, webElement.attributes);
 
   @override
+  Node removeChild(Node node) {
+    return _html
+        .wrapNode(webElement.removeChild(_html.unwrapNode(node) as web.Node));
+  }
+
+  @override
   List<Node> get childNodes {
     var childNodes = webElement.childNodes;
-    return List<Node>.generate(
-        childNodes.length, (index) => _html.wrapNode(childNodes.item(index)!));
+    return UnmodifiableListView(List<Node>.generate(
+        childNodes.length, (index) => _html.wrapNode(childNodes.item(index)!)));
   }
 
   @override
@@ -207,6 +213,10 @@ class _ElementList extends ListBase<Element> implements ElementList {
 
   _ElementList(this.parent, this.webCollection);
 
+  Element itemAt(int index) {
+    return _Element(webCollection.item(index)!);
+  }
+
   @override
   Element operator [](int index) {
     return _Element(webCollection.item(index)!);
@@ -233,6 +243,13 @@ class _ElementList extends ListBase<Element> implements ElementList {
     for (var i = 0; i < list.length; i++) {
       list[i].remove();
     }
+  }
+
+  @override
+  Element removeAt(int index) {
+    var item = itemAt(index);
+    item.remove();
+    return item;
   }
 
   @override

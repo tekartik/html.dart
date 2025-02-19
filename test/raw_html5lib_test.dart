@@ -49,6 +49,12 @@ void main() {
       expect(firstNode, isNot(isA<Element>()));
     });
 
+    test('children node', () {
+      final element = Element.html(' <div><p>child</p></div>');
+      expect(element.children.length, 1);
+      element.children.removeAt(0);
+      expect(element.children.length, 0);
+    });
     test('element', () {
       final element = Element.tag('div');
       expect('div', element.localName);
