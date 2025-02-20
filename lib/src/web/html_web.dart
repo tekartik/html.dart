@@ -270,14 +270,6 @@ mixin _NodeWebMixin implements Node {
     });
   }
 
-  T _wrapExceptionSyncAsStateError<T>(T Function() action) {
-    try {
-      return action();
-    } catch (e) {
-      throw StateError(e.toString());
-    }
-  }
-
   @override
   Node replaceChild(Node newChild, Node oldChild) {
     _wrapExceptionSyncAsStateError(() {
@@ -395,9 +387,11 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
 
   @override
   Element createElementHtml(String html, {bool? noValidate}) {
-    var div = createElementTag('div');
-    div.innerHtml = html.trim();
-    return div.children.first;
+    return _wrapExceptionSyncAsArgError(() {
+      var div = createElementTag('div');
+      div.innerHtml = html.trim();
+      return div.children.first;
+    });
   }
 
   @override
@@ -476,4 +470,20 @@ class _TextWeb extends _NodeBase with _NodeWebMixin implements _Text {
 
   @override
   String toString() => 'Text($text)';
+}
+
+T _wrapExceptionSyncAsStateError<T>(T Function() action) {
+  try {
+    return action();
+  } catch (e) {
+    throw StateError(e.toString());
+  }
+}
+
+T _wrapExceptionSyncAsArgError<T>(T Function() action) {
+  try {
+    return action();
+  } catch (e) {
+    throw ArgumentError(e.toString());
+  }
 }

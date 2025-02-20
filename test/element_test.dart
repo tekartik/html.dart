@@ -1,6 +1,6 @@
 library;
 
-import 'package:tekartik_html/html_html5lib.dart';
+import 'package:tekartik_html/html_universal.dart';
 import 'package:tekartik_html/tag.dart';
 import 'package:test/test.dart';
 
@@ -137,7 +137,29 @@ void testMain(HtmlProvider html) {
     //  expect(element.children.length, 2);
     //});
 
-    test('createElementHtml', () {
+    test('createElementHtml(html)', () {
+      expect(() => html.createElementHtml('<html></html>'),
+          throwsA(isA<Object>()));
+    });
+    test('createElementHtml(head)', () {
+      if (html is HtmlProviderWeb) {
+        expect(() => html.createElementHtml('<head></head>'),
+            throwsA(isA<Object>()));
+      } else {
+        var element = html.createElementHtml('<head></head>');
+        expect(element.tagName, 'head');
+      }
+    });
+    test('createElementHtml(body)', () {
+      if (html is HtmlProviderWeb) {
+        expect(() => html.createElementHtml('<body></body>'),
+            throwsA(isA<Object>()));
+      } else {
+        var element = html.createElementHtml('<body></body>');
+        expect(element.tagName, 'body');
+      }
+    });
+    test('createElementHtml(div)', () {
       final element = html.createElementHtml('<Div id="test">inner</div>');
       expect(element.tagName, tagDiv);
       expect(element.id, 'test');
@@ -145,15 +167,15 @@ void testMain(HtmlProvider html) {
       expect(element.outerHtml, '<div id="test">inner</div>');
     });
 
-    /*
-    test('createElementHtmlHtml', () {
-      Element element = html.createElementHtml('<html></html>');
-      expect(element.tagName, HTML);
-      expect(element.id, 'test');
-      expect(element.innerHtml, '');
-      expect(element.outerHtml, '<html></html>');
+    test('bad arg createElementHtml', () {
+      try {
+        html.createElementHtml('&lt;a&gt;&lt;/a&gt;');
+        fail('should fail');
+      } on ArgumentError catch (_) {
+        //print(_);
+        //print(_.runtimeType);
+      }
     });
-    */
 
     test('custom tag attributes bis', () {
       if (!isBrowser) {
