@@ -391,6 +391,7 @@ class _HtmlElement extends HtmlElement with _NodeImpl, _ElementImpl {
 abstract mixin class _DocumentImpl {
   // html5lib.Document get _document;
 
+  HtmlProvider get htmlProvider => htmlProviderHtml5Lib;
   static Document? from(html5lib.Document? documentImpl) {
     if (documentImpl == null) {
       return null;
@@ -403,9 +404,7 @@ abstract mixin class _DocumentImpl {
 class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
   final html5lib.Document _document;
 
-  _Document(this._document) : super(_html) {
-    htmlProvider = htmlProviderHtml5Lib;
-  }
+  _Document(this._document) : super();
 
   Element? get _titleElement {
     for (var i = 0; i < head.children.length; i++) {
@@ -436,8 +435,7 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
     } else {
       // insert at the top
       // we should not get there that often though
-      head.children
-          .insert(0, provider.createElementTag(tagTitle)..text = title);
+      head.children.insert(0, _html.createElementTag(tagTitle)..text = title);
     }
   }
 
@@ -461,8 +459,7 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
       }
       return;
     }
-    head.children
-        .insert(index, provider.createElementTag(tagTitle)..text = title);
+    head.children.insert(index, _html.createElementTag(tagTitle)..text = title);
   }
 
   @override

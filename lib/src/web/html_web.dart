@@ -54,8 +54,7 @@ class _Element extends _NodeBase with _ElementImpl implements Element {
   _Element(web.Element super.element);
 
   @override
-  // TODO: implement htmlProvider
-  HtmlProvider get htmlProvider => throw UnimplementedError();
+  HtmlProvider get htmlProvider => _html;
 }
 
 abstract mixin class _ElementImpl implements ElementWeb {
@@ -271,7 +270,11 @@ mixin _NodeImpl implements Node {
   String? get textContent => webNode.textContent;
 }
 
-abstract mixin class _DocumentImpl {}
+/// Web implementation
+abstract mixin class _DocumentImplMixin {
+  /// Our provider
+  HtmlProvider get htmlProvider => _html;
+}
 
 class _BodyElement extends _Element implements BodyElement {
   _BodyElement(super.element);
@@ -289,10 +292,10 @@ extension DocumentWebExt on Document {
   web.Document get webDoc => (this as _Document).webDoc;
 }
 
-class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
+class _Document extends DocumentBase with DocumentMixin, _DocumentImplMixin {
   final web.Document webDoc;
 
-  _Document(this.webDoc) : super(htmlProviderWeb);
+  _Document(this.webDoc) : super();
 
   @override
   String get title => webDoc.title;
@@ -424,6 +427,7 @@ HtmlProvider htmlProviderWeb = _HtmlProviderWeb();
 
 final currentHtmlDocumentWeb = htmlProviderWeb.wrapDocument(web.document);
 
+/// Local provider
 _HtmlProviderWeb get _html => htmlProviderWeb as _HtmlProviderWeb;
 
 /// Internal Text interface

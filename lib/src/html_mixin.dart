@@ -6,8 +6,6 @@ import 'html_base.dart';
 
 mixin DocumentMixin implements DocumentBase {
   @override
-  late HtmlProvider htmlProvider;
-  @override
   void fixMissing({String title = '', String? charset = attrCharsetUtf8}) {
     var index = 0;
 
@@ -31,7 +29,7 @@ mixin DocumentMixin implements DocumentBase {
       }
       head.children.insert(
           index,
-          provider.createElementTag(tagMeta)
+          htmlProvider.createElementTag(tagMeta)
             ..attributes[attrCharset] = charset);
     }
   }
