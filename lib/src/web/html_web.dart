@@ -35,8 +35,8 @@ extension NodeWebExt on Node {
   web.Node get webNode => (this as NodeWeb).webNode;
 }
 
-class _Node extends _NodeBase with _NodeImpl implements Node {
-  _Node(super.node);
+class _NodeWebBase extends _NodeBase with _NodeWebMixin implements Node {
+  _NodeWebBase(super.node);
 }
 
 _Element? _wrapWebElementOrNull(web.Element? webElement) {
@@ -50,7 +50,9 @@ abstract class ElementWeb implements Element, NodeWeb {
   web.Element get webElement;
 }
 
-class _Element extends _NodeBase with _ElementImpl implements Element {
+class _Element extends _NodeBase
+    with _NodeWebMixin, _ElementImpl
+    implements ElementWeb {
   _Element(web.Element super.element);
 
   @override
@@ -100,12 +102,6 @@ abstract mixin class _ElementImpl implements ElementWeb {
       webElement.ownerDocument ?? web.window.document, webElement.attributes);
 
   @override
-  Node removeChild(Node node) {
-    return _html
-        .wrapNode(webElement.removeChild(_html.unwrapNode(node) as web.Node));
-  }
-
-  @override
   List<Node> get childNodes {
     var childNodes = webElement.childNodes;
     return UnmodifiableListView(List<Node>.generate(
@@ -126,11 +122,6 @@ abstract mixin class _ElementImpl implements ElementWeb {
   @override
   Element? getElementById(String id) {
     return queryCriteria(QueryCriteria(byId: id));
-  }
-
-  @override
-  void insertBefore(Node node, Node refNode) {
-    webElement.insertBefore(node.webNode, refNode.webNode);
   }
 
   @override
@@ -188,17 +179,6 @@ abstract mixin class _ElementImpl implements ElementWeb {
   @override
   String toString() {
     return webElement.toString();
-  }
-
-  @override
-  int get hashCode => webElement.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is _Element) {
-      return webElement == other.webElement;
-    }
-    return super == other;
   }
 }
 
@@ -261,13 +241,61 @@ class _ElementList extends ListBase<Element> implements ElementList {
   }
 }
 
-mixin _NodeImpl implements Node {
+mixin _NodeWebMixin implements Node {
   @override
   HtmlProvider get htmlProvider => htmlProviderWeb;
 
   /// Text content (good for text node)
   @override
   String? get textContent => webNode.textContent;
+
+  @override
+  Node appendChild(Node node) {
+    webNode.appendChild(node.webNode);
+    return node;
+  }
+
+  @override
+  Node insertBefore(Node newNode, Node referenceNode) {
+    return _wrapExceptionSyncAsStateError(() {
+      webNode.insertBefore(newNode.webNode, referenceNode.webNode);
+      return newNode;
+    });
+  }
+
+  @override
+  Node removeChild(Node child) {
+    return _wrapExceptionSyncAsStateError(() {
+      return _html.wrapNode(webNode.removeChild(child.webNode));
+    });
+  }
+
+  T _wrapExceptionSyncAsStateError<T>(T Function() action) {
+    try {
+      return action();
+    } catch (e) {
+      throw StateError(e.toString());
+    }
+  }
+
+  @override
+  Node replaceChild(Node newChild, Node oldChild) {
+    _wrapExceptionSyncAsStateError(() {
+      webNode.replaceChild(newChild.webNode, oldChild.webNode);
+    });
+    return newChild;
+  }
+
+  @override
+  int get hashCode => webNode.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is NodeWeb) {
+      return webNode == other.webNode;
+    }
+    return false;
+  }
 }
 
 /// Web implementation
@@ -417,7 +445,7 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
     } else if (webNode.nodeType == web.Node.ELEMENT_NODE) {
       return _Element(webNode as web.Element);
     } else {
-      return _Node(webNode);
+      return _NodeWebBase(webNode);
     }
   }
 }
@@ -432,14 +460,20 @@ _HtmlProviderWeb get _html => htmlProviderWeb as _HtmlProviderWeb;
 
 /// Internal Text interface
 abstract class _Text implements Text {
-  factory _Text.impl(web.Text value) => _TextImpl(value);
-  factory _Text.text(String value) => _TextImpl.text(value);
+  factory _Text.impl(web.Text value) => _TextWeb(value);
+
+  factory _Text.text(String value) => _TextWeb.text(value);
 }
 
-class _TextImpl extends _NodeBase with _NodeImpl implements _Text {
+class _TextWeb extends _NodeBase with _NodeWebMixin implements _Text {
   /// Non nullable text content
   @override
   String get text => webNode.textContent!;
-  _TextImpl(super.webNode);
-  _TextImpl.text(String value) : super(web.Text(value));
+
+  _TextWeb(super.webNode);
+
+  _TextWeb.text(String value) : super(web.Text(value));
+
+  @override
+  String toString() => 'Text($text)';
 }

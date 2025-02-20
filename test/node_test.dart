@@ -8,11 +8,60 @@ void main() {
   nodeTestGroup(html);
 }
 
-void nodeTestGroup(HtmlProvider html) {
+void nodeTestGroup(final HtmlProvider html) {
   group('node', () {
     test('compat', () {
       // ignore: deprecated_member_use_from_same_package
       expect(Node.testNode, Node.textNode);
+    });
+    test('wrap text', () {
+      var text = html.createTextNode('hello');
+
+      expect(html.wrapNode(html.unwrapNode(text)), text);
+    });
+    test('wrap element', () {
+      var div = html.createElementTag('div');
+
+      expect(html.wrapNode(html.unwrapNode(div)), div);
+    });
+    test('child append/remove', () {
+      var element = html.createElementTag('div');
+      var textNode = html.createTextNode('hello');
+      expect(element.appendChild(textNode), textNode);
+      expect(element.childNodes.length, 1);
+      expect(element.removeChild(textNode), textNode);
+      expect(element.childNodes.length, 0);
+
+      expect(() => element.removeChild(textNode), throwsA(isA<StateError>()));
+    });
+    test('child replace', () {
+      var element = html.createElementTag('div');
+      var textNode = html.createTextNode('hello');
+      var newTextNode = html.createTextNode('bye');
+      expect(element.appendChild(textNode), textNode);
+      expect(element.childNodes.length, 1);
+      expect(element.replaceChild(newTextNode, textNode), newTextNode);
+      expect(element.childNodes.first, newTextNode);
+    });
+    test('child insert before', () {
+      var element = html.createElementTag('div');
+      var textNode = html.createTextNode('hello');
+      var pNode = html.createElementTag('p');
+      element.appendChild(textNode);
+      element.insertBefore(pNode, textNode);
+
+      expect(element.childNodes, [pNode, textNode]);
+    });
+    test('child multi op', () {
+      var element = html.createElementTag('div');
+      var textNode = html.createTextNode('hello');
+      var pNode = html.createElementTag('p');
+      element.appendChild(textNode);
+      element.appendChild(pNode);
+      element.removeChild(textNode);
+      expect(element.childNodes, [pNode]);
+      element.removeChild(pNode);
+      expect(element.childNodes.length, 0);
     });
     test('textNode', () {
       final text = html.createTextNode('hello');

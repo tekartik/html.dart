@@ -12,13 +12,22 @@ import 'package:tekartik_html/src/html5lib/data_set.dart';
 import 'package:tekartik_html/src/html_base.dart';
 import 'package:tekartik_html/tag.dart';
 
-class _Node extends Node with _NodeImpl {
+class _Node with _NodeHtml5libMixin implements Node {
   _Node.impl(html5lib.Node node) {
     _node = node;
   }
 }
 
-abstract mixin class _NodeImpl extends Object {
+/// Private extension
+extension _NodeExtPrv on Node {
+  _NodeHtml5libMixin get _nodeImpl => (this as _NodeHtml5libMixin);
+
+  /// Native node
+  html5lib.Node get html5libNode => _nodeImpl._node;
+}
+
+mixin _NodeHtml5libMixin implements Node {
+  @override
   HtmlProvider get htmlProvider => htmlProviderHtml5Lib;
   late html5lib.Node _node;
 
@@ -27,11 +36,57 @@ abstract mixin class _NodeImpl extends Object {
       _node as html5lib.Element; // only work if element
   set _element(html5lib.Element element) => _node = element;
 
+  @override
   int get nodeType => _node.nodeType;
 
+  @override
   String? get nodeValue => _node.text;
 
+  @override
   String? get textContent => _node.text;
+
+  @override
+  Node removeChild(Node child) {
+    var nativeNode = child.html5libNode;
+    if (_element.nodes.remove(nativeNode)) {
+      return child;
+    }
+    throw StateError('not found');
+  }
+
+  @override
+  Node appendChild(Node child) {
+    var nativeNode = child.html5libNode;
+    _node.nodes.add(nativeNode);
+    return child;
+  }
+
+  @override
+  Node insertBefore(Node newNode, Node referenceNode) {
+    var newNativeNode = newNode.html5libNode;
+    var referenceNativeNode = referenceNode.html5libNode;
+    _node.insertBefore(newNativeNode, referenceNativeNode);
+    return newNode;
+  }
+
+  @override
+  int get hashCode => _node.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is _NodeHtml5libMixin) {
+      return other.html5libNode == html5libNode;
+    }
+    return false;
+  }
+
+  @override
+  Node replaceChild(Node newChild, Node oldChild) {
+    var newNativeChild = newChild.html5libNode;
+    var oldNativeChild = oldChild.html5libNode;
+    oldNativeChild.replaceWith(newNativeChild);
+    return newChild;
+  }
 }
 
 Node _newNodeFrom(html5lib.Node node) {
@@ -87,7 +142,7 @@ class _ElementList extends ElementList {
   }
 }
 
-class _Element extends Element with _NodeImpl, _ElementImpl {
+class _Element extends Element with _NodeHtml5libMixin, _ElementImpl {
   _Element.impl(html5lib.Element element) {
     _element = element;
   }
@@ -287,21 +342,6 @@ abstract mixin class _ElementImpl implements Element, _Node {
         byAttributes: byAttributes));
   }
 
-  // Support for equals
-  @override
-  int get hashCode {
-    return _element.hashCode;
-  }
-
-  // You should generally implement operator== if you override hashCode.
-  @override
-  bool operator ==(other) {
-    if (other is _Element) {
-      return _element == other._element;
-    }
-    return false;
-  }
-
   @override
   CssClassSet get classes => CssClassSetImpl(_element.attributes);
 
@@ -313,15 +353,6 @@ abstract mixin class _ElementImpl implements Element, _Node {
   @override
   void remove() {
     _element.remove();
-  }
-
-  @override
-  Node removeChild(Node node) {
-    var nativeNode = _html.unwrapNode(node);
-    if (_element.nodes.remove(nativeNode)) {
-      return _html.wrapNode(nativeNode);
-    }
-    throw StateError('not found');
   }
 
   //@override
@@ -345,15 +376,8 @@ abstract mixin class _ElementImpl implements Element, _Node {
 //@override
   @override
   Node append(Node node) {
-    _element.append((node as _NodeImpl)._node);
+    _element.append((node as _NodeHtml5libMixin)._node);
     return node;
-  }
-
-  //@override
-  @override
-  void insertBefore(Node node, Node refNode) {
-    _element.insertBefore(
-        (node as _NodeImpl)._node, (refNode as _NodeImpl)._node);
   }
 
   Element? get nextElementSibling => from(_element.nextElementSibling);
@@ -370,19 +394,19 @@ abstract mixin class _ElementImpl implements Element, _Node {
   }
 }
 
-class _BodyElement extends BodyElement with _NodeImpl, _ElementImpl {
+class _BodyElement extends BodyElement with _NodeHtml5libMixin, _ElementImpl {
   _BodyElement(html5lib.Element body) {
     _element = body;
   }
 }
 
-class _HeadElement extends HeadElement with _NodeImpl, _ElementImpl {
+class _HeadElement extends HeadElement with _NodeHtml5libMixin, _ElementImpl {
   _HeadElement(html5lib.Element head) {
     _element = head;
   }
 }
 
-class _HtmlElement extends HtmlElement with _NodeImpl, _ElementImpl {
+class _HtmlElement extends HtmlElement with _NodeHtml5libMixin, _ElementImpl {
   _HtmlElement(html5lib.Element html) {
     _element = html;
   }
@@ -557,8 +581,8 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
 
   @override
   Object unwrapNode(Node node) {
-    if (node is _Node) {
-      return node._node;
+    if (node is _NodeHtml5libMixin) {
+      return node.html5libNode;
     }
     throw UnsupportedError('node: $node');
   }
@@ -589,18 +613,21 @@ HtmlProvider htmlProviderHtml5Lib = _HtmlProviderHtml5Lib();
 
 /// Internal Text interface
 abstract class _Text implements Text {
-  factory _Text.impl(html5lib.Text node) => _TextImpl(node);
-  factory _Text.text(String value) => _TextImpl.text(value);
+  factory _Text.impl(html5lib.Text node) => _TextHtml5lib(node);
+  factory _Text.text(String value) => _TextHtml5lib.text(value);
 }
 
-class _TextImpl with _NodeImpl implements _Text {
+class _TextHtml5lib with _NodeHtml5libMixin implements _Text {
   /// Non nullable text
   @override
   String get text => _node.text!;
-  _TextImpl(html5lib.Text node) {
+  _TextHtml5lib(html5lib.Text node) {
     _node = node;
   }
-  _TextImpl.text(String value) {
+  _TextHtml5lib.text(String value) {
     _node = html5lib.Text(value);
   }
+
+  @override
+  String toString() => 'Text($text)';
 }

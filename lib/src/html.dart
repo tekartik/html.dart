@@ -149,15 +149,28 @@ abstract class Node {
 
   /// Text content
   String? get textContent;
+
+  /// Append child
+  Node appendChild(Node child);
+
+  /// Inserts a Node before the reference node as a child of a specified parent node.
+  /// Insert before
+  Node insertBefore(Node newNode, Node referenceNode);
+
+  /// Removes a child node from the current element, which must be a child of the current node.
+  Node removeChild(Node child);
+
+  /// Replaces one child Node of the current one with the second one given in parameter.
+  Node replaceChild(Node newChild, Node oldChild);
 }
 
 /// Text node
-abstract class Text extends Node {
+abstract class Text implements Node {
   /// Non-null text content
   String get text;
 }
 
-abstract class Element extends Node {
+abstract class Element implements Node {
   ElementList get children;
   Element? getElementById(String id);
   String get id;
@@ -180,17 +193,11 @@ abstract class Element extends Node {
   /// Unmodifiable list of child nodes
   List<Node> get childNodes;
 
-  /// Insert before
-  void insertBefore(Node node, Node refNode);
-
   /// Append a child node
   Node append(Node node);
 
   /// Remove the element from its parent
   void remove();
-
-  /// Remove a child
-  Node removeChild(Node node);
 
   Element? get parent;
   CssClassSet get classes;
