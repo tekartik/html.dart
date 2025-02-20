@@ -44,8 +44,11 @@ void testMain(HtmlProvider html) {
 
       doc = html.createDocument(title: 'test', charset: null);
       expect(doc.head.innerHtml, '<title>test</title>');
-      doc.head.appendChild(htmlProviderHtml5Lib
-          .createElementHtml('<link rel="canonical" href="/index.html">'));
+      doc.head.appendChild(html
+          .createElementHtml(
+              '<div><link rel="canonical" href="/index.html"></div>')
+          .children
+          .first);
     });
 
     test('html', () {

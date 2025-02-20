@@ -261,7 +261,7 @@ class _ElementList extends ListBase<Element> implements ElementList {
   }
 }
 
-mixin _NodeWebMixin implements Node {
+mixin _NodeWebMixin implements NodeWeb {
   @override
   HtmlProvider get htmlProvider => htmlProviderWeb;
 
