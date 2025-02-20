@@ -51,7 +51,7 @@ abstract class ElementWeb implements Element, NodeWeb {
 }
 
 class _Element extends _NodeBase
-    with _NodeWebMixin, _ElementImpl
+    with _NodeWebMixin, _ElementWeb
     implements ElementWeb {
   _Element(web.Element super.element);
 
@@ -59,7 +59,7 @@ class _Element extends _NodeBase
   HtmlProvider get htmlProvider => _html;
 }
 
-abstract mixin class _ElementImpl implements ElementWeb {
+abstract mixin class _ElementWeb implements ElementWeb {
   @override
   web.Element get webElement => webNode as web.Element;
 
@@ -175,6 +175,26 @@ abstract mixin class _ElementImpl implements ElementWeb {
 
   @override
   String get tagName => webElement.tagName.toLowerCase();
+
+  @override
+  void setAttribute(String name, String value) {
+    webElement.setAttribute(name, value);
+  }
+
+  @override
+  String? getAttribute(String name) {
+    return webElement.getAttribute(name);
+  }
+
+  @override
+  bool hasAttribute(String name) {
+    return webElement.hasAttribute(name);
+  }
+
+  @override
+  void removeAttribute(String name) {
+    webElement.removeAttribute(name);
+  }
 
   @override
   String toString() {

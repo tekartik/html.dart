@@ -18,6 +18,17 @@ void testMain(HtmlProvider html) {
       expect(element.id, isEmpty);
       expect(element.htmlProvider, html);
     });
+    test('attributes', () {
+      final element = html.createElementHtml('<div id="div1" flag></div>');
+      expect(element.outerHtml, '<div id="div1" flag=""></div>');
+    });
+    test('setAttribute', () {
+      final element = html.createElementTag(tagDiv);
+      element.setAttribute('id', 'div1');
+      element.setAttribute('flag', '');
+      expect(element.id, 'div1');
+      //expect(element.outerHtml, '<div id="div1"></div>');
+    });
 
     test('wrap', () {
       Element? element = html.createElementTag(tagDiv);

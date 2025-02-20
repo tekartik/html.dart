@@ -113,27 +113,27 @@ class _ElementList extends ElementList {
 
   @override
   void add(Element element) {
-    _list.add((element as _ElementImpl)._element);
+    _list.add((element as _ElementHtml5lib)._element);
   }
 
   @override
   void insert(int index, Element element) {
-    _list.insert(index, (element as _ElementImpl)._element);
+    _list.insert(index, (element as _ElementHtml5lib)._element);
   }
 
   @override
   Element? removeAt(int index) {
-    return _ElementImpl.from(_list.removeAt(index));
+    return _ElementHtml5lib.from(_list.removeAt(index));
   }
 
   @override
   bool remove(Element element) {
-    return _list.remove((element as _ElementImpl)._element);
+    return _list.remove((element as _ElementHtml5lib)._element);
   }
 
   @override
   int indexOf(Element element) {
-    return _list.indexOf((element as _ElementImpl)._element);
+    return _list.indexOf((element as _ElementHtml5lib)._element);
   }
 
   @override
@@ -142,13 +142,13 @@ class _ElementList extends ElementList {
   }
 }
 
-class _Element extends Element with _NodeHtml5libMixin, _ElementImpl {
+class _Element extends Element with _NodeHtml5libMixin, _ElementHtml5lib {
   _Element.impl(html5lib.Element element) {
     _element = element;
   }
 }
 
-abstract mixin class _ElementImpl implements Element, _Node {
+abstract mixin class _ElementHtml5lib implements Element, _Node {
   @override
   html5lib.Element get _element;
 
@@ -392,21 +392,44 @@ abstract mixin class _ElementImpl implements Element, _Node {
   String toString() {
     return _element.toString();
   }
+
+  @override
+  void setAttribute(String name, String value) {
+    _element.attributes[name] = value;
+  }
+
+  @override
+  String? getAttribute(String name) {
+    return _element.attributes[name];
+  }
+
+  @override
+  bool hasAttribute(String name) {
+    return _element.attributes.containsKey(name);
+  }
+
+  @override
+  void removeAttribute(String name) {
+    _element.attributes.remove(name);
+  }
 }
 
-class _BodyElement extends BodyElement with _NodeHtml5libMixin, _ElementImpl {
+class _BodyElement extends BodyElement
+    with _NodeHtml5libMixin, _ElementHtml5lib {
   _BodyElement(html5lib.Element body) {
     _element = body;
   }
 }
 
-class _HeadElement extends HeadElement with _NodeHtml5libMixin, _ElementImpl {
+class _HeadElement extends HeadElement
+    with _NodeHtml5libMixin, _ElementHtml5lib {
   _HeadElement(html5lib.Element head) {
     _element = head;
   }
 }
 
-class _HtmlElement extends HtmlElement with _NodeHtml5libMixin, _ElementImpl {
+class _HtmlElement extends HtmlElement
+    with _NodeHtml5libMixin, _ElementHtml5lib {
   _HtmlElement(html5lib.Element html) {
     _element = html;
   }
@@ -547,13 +570,13 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
 
   @override
   Element createElementTag(String tag) {
-    return _ElementImpl.from(html5lib.Element.tag(tag))!;
+    return _ElementHtml5lib.from(html5lib.Element.tag(tag))!;
   }
 
   @override
   Element createElementHtml(String html, {bool? noValidate}) {
     // noValidate is implicit when using html5 lib
-    return _ElementImpl.from(html5lib.Element.html(html))!;
+    return _ElementHtml5lib.from(html5lib.Element.html(html))!;
   }
 
   @override

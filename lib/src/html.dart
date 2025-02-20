@@ -203,6 +203,17 @@ abstract class Element implements Node {
   CssClassSet get classes;
   Map<Object, String> get attributes;
   DataSet get dataset;
+
+  /// The setAttribute() method of the Element interface sets the value of an attribute on the specified element. If the attribute already exists, the value is updated; otherwise a new attribute is added with the specified name and value.
+  ///
+  /// To get the current value of an attribute, use getAttribute(); to remove an attribute, call removeAttribute().
+  void setAttribute(String name, String value);
+
+  //
+  String? getAttribute(String name);
+  bool hasAttribute(String name);
+
+  void removeAttribute(String name);
   //Element get nextElementSibling;
   //  Element();
   //  Element.tag(String tag);
