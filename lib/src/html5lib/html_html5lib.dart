@@ -580,6 +580,25 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
   }
 
   @override
+  List<Node> createNodesHtml(String html, {bool? noValidate}) {
+    // noValidate is implicit when using html5 lib
+    return _createParentDivElement(html, noValidate: noValidate).childNodes;
+  }
+
+  @override
+  List<Element> createElementsHtml(String html, {bool? noValidate}) {
+    // noValidate is implicit when using html5 lib
+    return _createParentDivElement(html, noValidate: noValidate)
+        .children
+        .toList();
+  }
+
+  Element _createParentDivElement(String html, {bool? noValidate}) {
+    // noValidate is implicit when using html5 lib
+    return createElementHtml('<div>$html</div>', noValidate: noValidate);
+  }
+
+  @override
   String get name => providerHtml5LibName;
 
   // return the html element wrapper

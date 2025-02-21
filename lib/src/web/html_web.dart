@@ -415,6 +415,26 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
   }
 
   @override
+  List<Node> createNodesHtml(String html, {bool? noValidate}) {
+    // noValidate is implicit when using html5 lib
+    var div = _createParentDivHtml(html, noValidate: noValidate);
+    return div.childNodes;
+  }
+
+  Element _createParentDivHtml(String html, {bool? noValidate}) {
+    // noValidate is implicit when using html5 lib
+    var div = createElementHtml('<div>$html</div>', noValidate: noValidate);
+    return div;
+  }
+
+  @override
+  List<Element> createElementsHtml(String html, {bool? noValidate}) {
+    // noValidate is implicit when using html5 lib
+    var div = _createParentDivHtml(html, noValidate: noValidate);
+    return div.children.toList();
+  }
+
+  @override
   Element createElementTag(String tag) =>
       _Element(web.window.document.createElement(tag));
 

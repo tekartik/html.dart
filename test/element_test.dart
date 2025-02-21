@@ -135,6 +135,45 @@ void testMain(HtmlProvider html) {
         expect(element.children.length, 2);
       }
     });
+    test('noscript', () {
+      final element = html.createElementHtml('<noscript></noscript>');
+      expect(element.tagName, 'noscript');
+    });
+    test('meta', () {
+      final element = html.createElementHtml('<meta charset="utf-8">');
+      expect(element.tagName, 'meta');
+    });
+    test('link', () {
+      final element = html.createElementHtml(
+          '<link rel="icon" href="https://via.placeholder.com/70x70">');
+      expect(element.tagName, 'link');
+    });
+    test('multi', () {
+      final nodes = html.createNodesHtml(
+          '\n<link rel="icon" href="https://via.placeholder.com/70x70">\n'
+          '<meta charset="utf-8">'
+          '<noscript></noscript>\n');
+      expect(nodes.length, 6);
+      var elements = html.createElementsHtml(
+          '\n<link rel="icon" href="https://via.placeholder.com/70x70">\n'
+          '<meta charset="utf-8">'
+          '<noscript></noscript>\n');
+      expect(elements.length, 3);
+    });
+    test('extension', () {
+      var ul = html.createElementTag('ul');
+      for (var text in ['monday', 'tuesday', 'wednesday']) {
+        var li = html.createElementTag('li');
+        li.text = text;
+        ul.append(li);
+        ul.appendLf();
+      }
+      expect(ul.outerHtml, '''
+<ul><li>monday</li>
+<li>tuesday</li>
+<li>wednesday</li>
+</ul>''');
+    });
     test('custom_no_validate', () {
       final element = html.createElementHtml(
           '<div><div class="--dtk-include" title="some/path/1"></div><meta property="dtk-include" content="some/path/2" /></div>',

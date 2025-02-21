@@ -259,6 +259,8 @@ abstract class HtmlProvider {
 
   Element createElementTag(String tag);
   Element createElementHtml(String html, {bool? noValidate});
+  List<Node> createNodesHtml(String html, {bool? noValidate});
+  List<Element> createElementsHtml(String html, {bool? noValidate});
   Text createTextNode(String text);
 
   // wrap a native document
@@ -278,4 +280,53 @@ abstract class HtmlProvider {
 
   // get the native element
   Object unwrapNode(Node node);
+}
+
+extension TekartikHtmlNodeExt on Node {
+  /// Append a text node
+  Text appendText(String text) {
+    var textNode = htmlProvider.createTextNode(text);
+    appendChild(textNode);
+    return textNode;
+  }
+
+  /// Apppend a lf
+  void appendLf() {
+    appendText('\n');
+  }
+
+  /// create a new element and append it
+  Element appendElementTag(String tag) {
+    var element = htmlProvider.createElementTag(tag);
+    appendChild(element);
+    return element;
+  }
+
+  Element appendElementHtml(String html, {bool? noValidate}) {
+    var element = htmlProvider.createElementHtml(html, noValidate: noValidate);
+    appendChild(element);
+    return element;
+  }
+
+  /// Trim inner nodes
+  List<Element> appendElementsHtml(String html, {bool? noValidate}) {
+    var elements =
+        htmlProvider.createElementsHtml(html, noValidate: noValidate);
+    appendChildren(elements);
+    return elements;
+  }
+
+  /// Trim inner nodes
+  List<Node> appendChildren(List<Node> children) {
+    for (var element in children) {
+      appendChild(element);
+    }
+    return children;
+  }
+
+  /// Append nodes as is
+  List<Node> appendNodesHtml(String html, {bool? noValidate}) {
+    var nodes = htmlProvider.createNodesHtml(html, noValidate: noValidate);
+    return appendChildren(nodes);
+  }
 }
