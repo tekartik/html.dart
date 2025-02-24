@@ -263,6 +263,12 @@ class _ElementList extends ListBase<Element> implements ElementList {
 
 mixin _NodeWebMixin implements NodeWeb {
   @override
+  Node? get parentNode {
+    var webParentNode = webNode.parentNode;
+    return _html.wrapNodeOrNull(webParentNode);
+  }
+
+  @override
   HtmlProvider get htmlProvider => htmlProviderWeb;
 
   /// Text content (good for text node)
@@ -442,8 +448,8 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
   String get name => providerWebName;
 
   @override
-  dynamic unwrapDocument(Document? document) {
-    return document?.webDoc;
+  Object unwrapDocument(Document document) {
+    return document.webDoc;
   }
 
   @override

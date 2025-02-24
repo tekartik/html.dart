@@ -162,6 +162,9 @@ abstract class Node {
 
   /// Replaces one child Node of the current one with the second one given in parameter.
   Node replaceChild(Node newChild, Node oldChild);
+
+  /// Parent node (or null if not yet attached)
+  Node? get parentNode;
 }
 
 /// Text node
@@ -264,10 +267,10 @@ abstract class HtmlProvider {
   Text createTextNode(String text);
 
   // wrap a native document
-  Document wrapDocument(Object? documentImpl);
+  Document wrapDocument(Object documentImpl);
 
   // get the native document
-  Object? unwrapDocument(Document? document);
+  Object unwrapDocument(Document document);
 
   // wrap a native element
   Element wrapElement(Object elementImpl);
@@ -328,5 +331,27 @@ extension TekartikHtmlNodeExt on Node {
   List<Node> appendNodesHtml(String html, {bool? noValidate}) {
     var nodes = htmlProvider.createNodesHtml(html, noValidate: noValidate);
     return appendChildren(nodes);
+  }
+
+  /// The Element.replaceWith() method replaces this Element in the children list
+  /// of its parent with a set of Node objects or strings.
+  void replaceWith(Node otherNode) {
+    parentNode!.replaceChild(otherNode, this);
+  }
+}
+
+extension TekartikHtmlNodeMixin on HtmlProvider {
+  Object? unwrapNodeOrNull(Node? node) {
+    if (node == null) {
+      return null;
+    }
+    return unwrapNode(node);
+  }
+
+  Node? wrapNodeOrNull(Object? nodeImpl) {
+    if (nodeImpl == null) {
+      return null;
+    }
+    return wrapNode(nodeImpl);
   }
 }

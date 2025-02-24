@@ -32,7 +32,7 @@ void testMain(HtmlProvider html) {
     test('wrap', () {
       var document = html.createDocument(title: 'test');
 
-      dynamic docImpl = html.unwrapDocument(document);
+      final docImpl = html.unwrapDocument(document);
 
       document = html.wrapDocument(docImpl);
       expect(document.title, 'test');

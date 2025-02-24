@@ -27,7 +27,9 @@ void nodeTestGroup(final HtmlProvider html) {
     test('child append/remove', () {
       var element = html.createElementTag('div');
       var textNode = html.createTextNode('hello');
+      expect(textNode.parentNode, isNull);
       expect(element.appendChild(textNode), textNode);
+      expect(textNode.parentNode, element);
       expect(element.childNodes.length, 1);
       expect(element.removeChild(textNode), textNode);
       expect(element.childNodes.length, 0);
@@ -41,6 +43,15 @@ void nodeTestGroup(final HtmlProvider html) {
       expect(element.appendChild(textNode), textNode);
       expect(element.childNodes.length, 1);
       expect(element.replaceChild(newTextNode, textNode), newTextNode);
+      expect(element.childNodes.first, newTextNode);
+    });
+    test('node replaceWith', () {
+      var element = html.createElementTag('div');
+      var textNode = html.createTextNode('hello');
+      var newTextNode = html.createTextNode('bye');
+      expect(element.appendChild(textNode), textNode);
+      textNode.replaceWith(newTextNode);
+
       expect(element.childNodes.first, newTextNode);
     });
     test('child insert before', () {

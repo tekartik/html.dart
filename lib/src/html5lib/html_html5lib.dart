@@ -31,6 +31,12 @@ mixin _NodeHtml5libMixin implements Node {
   HtmlProvider get htmlProvider => htmlProviderHtml5Lib;
   late html5lib.Node _node;
 
+  @override
+  Node? get parentNode {
+    var html5LibParentNode = _node.parentNode;
+    return _html.wrapNodeOrNull(html5LibParentNode);
+  }
+
   // ignore: unused_element
   html5lib.Element get _element =>
       _node as html5lib.Element; // only work if element
