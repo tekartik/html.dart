@@ -36,6 +36,10 @@ void nodeTestGroup(final HtmlProvider html) {
 
       expect(() => element.removeChild(textNode), throwsA(isA<StateError>()));
     });
+    test('appendChildren', () {
+      var element = html.createElementTag('div');
+      element.appendNodesHtml('<p>t1<p><p>t2<p>');
+    });
     test('child replace', () {
       var element = html.createElementTag('div');
       var textNode = html.createTextNode('hello');

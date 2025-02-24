@@ -321,7 +321,7 @@ extension TekartikHtmlNodeExt on Node {
 
   /// Trim inner nodes
   List<Node> appendChildren(List<Node> children) {
-    for (var element in children) {
+    for (var element in List.of(children)) {
       appendChild(element);
     }
     return children;
