@@ -277,7 +277,9 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   }
 
   static html5lib.Element? _queryChild(
-      html5lib.Element parent, QueryCriteria criteria) {
+    html5lib.Element parent,
+    QueryCriteria criteria,
+  ) {
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
         if (_matches(node, criteria)) {
@@ -298,7 +300,9 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   }
 
   static List<html5lib.Element> _queryChildren(
-      html5lib.Element parent, QueryCriteria criteria) {
+    html5lib.Element parent,
+    QueryCriteria criteria,
+  ) {
     final list = <html5lib.Element>[];
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
@@ -329,23 +333,37 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   }
 
   @override
-  Element? query(
-      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
-    return queryCriteria(QueryCriteria(
+  Element? query({
+    String? byTag,
+    String? byId,
+    String? byClass,
+    String? byAttributes,
+  }) {
+    return queryCriteria(
+      QueryCriteria(
         byTag: byTag,
         byId: byId,
         byClass: byClass,
-        byAttributes: byAttributes));
+        byAttributes: byAttributes,
+      ),
+    );
   }
 
   @override
-  ElementList queryAll(
-      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
-    return queryCriteriaAll(QueryCriteria(
+  ElementList queryAll({
+    String? byTag,
+    String? byId,
+    String? byClass,
+    String? byAttributes,
+  }) {
+    return queryCriteriaAll(
+      QueryCriteria(
         byTag: byTag,
         byId: byId,
         byClass: byClass,
-        byAttributes: byAttributes));
+        byAttributes: byAttributes,
+      ),
+    );
   }
 
   @override
@@ -369,7 +387,7 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   @override
   DataSet get dataset => DataSetHtml5lib(_element.attributes);
 
-//@override
+  //@override
   @override
   List<Node> get childNodes {
     final children = <Node>[];
@@ -379,7 +397,7 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
     return UnmodifiableListView(_element.nodes.map((e) => _html.wrapNode(e)));
   }
 
-//@override
+  //@override
   @override
   Node append(Node node) {
     _element.append((node as _NodeHtml5libMixin)._node);
@@ -551,11 +569,12 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImpl {
 class _HtmlProviderHtml5Lib extends HtmlProvider
     implements HtmlProviderHtml5Lib {
   @override
-  Document createDocument(
-      {String html = '',
-      String title = '',
-      String? charset = attrCharsetUtf8,
-      bool noCharsetTitleFix = false}) {
+  Document createDocument({
+    String html = '',
+    String title = '',
+    String? charset = attrCharsetUtf8,
+    bool noCharsetTitleFix = false,
+  }) {
     html5lib.Document doc;
     doc = html5lib.Document.html(html);
 
@@ -594,9 +613,10 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
   @override
   List<Element> createElementsHtml(String html, {bool? noValidate}) {
     // noValidate is implicit when using html5 lib
-    return _createParentDivElement(html, noValidate: noValidate)
-        .children
-        .toList();
+    return _createParentDivElement(
+      html,
+      noValidate: noValidate,
+    ).children.toList();
   }
 
   Element _createParentDivElement(String html, {bool? noValidate}) {

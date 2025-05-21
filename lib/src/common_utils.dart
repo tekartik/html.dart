@@ -1,8 +1,12 @@
 import 'package:tekartik_html/html.dart';
 
 /// Selector from query
-String buildSelector(
-    {String? byTag, String? byId, String? byClass, String? byAttributes}) {
+String buildSelector({
+  String? byTag,
+  String? byId,
+  String? byClass,
+  String? byAttributes,
+}) {
   final sb = StringBuffer();
   if (byTag != null) {
     sb.write(byTag);

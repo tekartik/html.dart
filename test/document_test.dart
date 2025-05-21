@@ -13,8 +13,10 @@ void testMain(HtmlProvider html) {
     test('simple', () {
       final doc = html.createDocument(title: 'test');
       expect(doc.htmlProvider, html);
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>');
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>',
+      );
       //print(doc.head.children);
       //print(doc.body);
       expect(doc.body.children.length, 0);
@@ -44,36 +46,51 @@ void testMain(HtmlProvider html) {
 
       doc = html.createDocument(title: 'test', charset: null);
       expect(doc.head.innerHtml, '<title>test</title>');
-      doc.head.appendChild(html
-          .createElementHtml(
-              '<div><link rel="canonical" href="/index.html"></div>')
-          .children
-          .first);
+      doc.head.appendChild(
+        html
+            .createElementHtml(
+              '<div><link rel="canonical" href="/index.html"></div>',
+            )
+            .children
+            .first,
+      );
     });
 
     test('html', () {
       final doc = html.createDocument(title: 'test');
-      expect(doc.html.innerHtml,
-          '<head><meta charset="utf-8"><title>test</title></head><body></body>');
+      expect(
+        doc.html.innerHtml,
+        '<head><meta charset="utf-8"><title>test</title></head><body></body>',
+      );
     });
 
     test('createDocumentHtml', () {
       var doc = html.createDocument(
-          html: '<head><title>test</title></head><body></body>');
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>');
+        html: '<head><title>test</title></head><body></body>',
+      );
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>',
+      );
       doc = html.createDocument(
-          html: '<html><head><title>test</title></head><body></body></html>');
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>');
+        html: '<html><head><title>test</title></head><body></body></html>',
+      );
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>test</title></head><body></body></html>',
+      );
       doc = html.createDocument(
-          html: '<!DOCTYPE html><html><head></head><body></body></html>');
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
+        html: '<!DOCTYPE html><html><head></head><body></body></html>',
+      );
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>',
+      );
     });
 
     test('custom', () {
-      final doc = html.createDocument(html: '''
+      final doc = html.createDocument(
+        html: '''
       <head>
         <meta charset="utf-8">
         <title>test</title>
@@ -84,7 +101,8 @@ void testMain(HtmlProvider html) {
         <div class="--dtk-include" title="some/path/1"></div>
         <meta property="dtk-include" content="some/path/2" />
       </body>
-      ''');
+      ''',
+      );
       /*print(doc.html.innerHtml);
       for (var child in doc.head.children) {
         print(child.outerHtml);
@@ -96,8 +114,9 @@ void testMain(HtmlProvider html) {
     test('html_attributes', () {
       // html is a special element that we cannot parse without parsing a document
       final doc = html.createDocument(
-          html:
-              '<!DOCTYPE html><html ⚡ lang="en"><head><meta charset="utf-8"><title></title></head><body></body></html>');
+        html:
+            '<!DOCTYPE html><html ⚡ lang="en"><head><meta charset="utf-8"><title></title></head><body></body></html>',
+      );
       expect(doc.html.attributes.length, 2);
       expect(doc.html.attributes['⚡'], '');
       expect(doc.html.attributes['lang'], 'en');
@@ -107,27 +126,36 @@ void testMain(HtmlProvider html) {
 
     test('createDocumentHtml no fix', () {
       final doc = html.createDocument(
-          html: '<!DOCTYPE html><html><head></head><body></body></html>',
-          noCharsetTitleFix: true);
+        html: '<!DOCTYPE html><html><head></head><body></body></html>',
+        noCharsetTitleFix: true,
+      );
 
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head></head><body></body></html>');
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head></head><body></body></html>',
+      );
     });
 
     test('createDocumentHtml empty', () {
       final doc = html.createDocument(html: '', noCharsetTitleFix: true);
       doc.fixMissing();
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>',
+      );
     });
 
     test('fix charset and title', () {
       final doc = html.createDocument(html: '<!DOCTYPE html>');
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>',
+      );
       doc.fixMissing();
-      expect(doc.toString(),
-          '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
+      expect(
+        doc.toString(),
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>',
+      );
     });
   });
 }

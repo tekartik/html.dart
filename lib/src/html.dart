@@ -72,12 +72,13 @@ class QueryCriteria {
   String? byClass;
   String? byAttributes;
   bool recursive;
-  QueryCriteria(
-      {this.byTag,
-      this.byId,
-      this.byClass,
-      this.byAttributes,
-      this.recursive = true});
+  QueryCriteria({
+    this.byTag,
+    this.byId,
+    this.byClass,
+    this.byAttributes,
+    this.recursive = true,
+  });
 }
 
 /// Base node
@@ -188,10 +189,18 @@ abstract class Element implements Node {
   ElementList querySelectorAll(String selector);
   Element? queryCriteria(QueryCriteria criteria);
   ElementList queryCriteriaAll(QueryCriteria criteria);
-  Element? query(
-      {String? byTag, String? byId, String? byClass, String? byAttributes});
-  ElementList queryAll(
-      {String? byTag, String? byId, String? byClass, String? byAttributes});
+  Element? query({
+    String? byTag,
+    String? byId,
+    String? byClass,
+    String? byAttributes,
+  });
+  ElementList queryAll({
+    String? byTag,
+    String? byId,
+    String? byClass,
+    String? byAttributes,
+  });
 
   /// Unmodifiable list of child nodes
   List<Node> get childNodes;
@@ -254,11 +263,12 @@ abstract class HtmlProvider {
   String get name;
 
   /// charset can be set to null
-  Document createDocument(
-      {String html = '',
-      String title = '',
-      String? charset = attrCharsetUtf8,
-      bool noCharsetTitleFix = false});
+  Document createDocument({
+    String html = '',
+    String title = '',
+    String? charset = attrCharsetUtf8,
+    bool noCharsetTitleFix = false,
+  });
 
   Element createElementTag(String tag);
   Element createElementHtml(String html, {bool? noValidate});
@@ -313,8 +323,10 @@ extension TekartikHtmlNodeExt on Node {
 
   /// Trim inner nodes
   List<Element> appendElementsHtml(String html, {bool? noValidate}) {
-    var elements =
-        htmlProvider.createElementsHtml(html, noValidate: noValidate);
+    var elements = htmlProvider.createElementsHtml(
+      html,
+      noValidate: noValidate,
+    );
     appendChildren(elements);
     return elements;
   }

@@ -28,9 +28,10 @@ mixin DocumentMixin implements DocumentBase {
         }
       }
       head.children.insert(
-          index,
-          htmlProvider.createElementTag(tagMeta)
-            ..attributes[attrCharset] = charset);
+        index,
+        htmlProvider.createElementTag(tagMeta)
+          ..attributes[attrCharset] = charset,
+      );
     }
   }
 }

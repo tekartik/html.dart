@@ -90,18 +90,23 @@ void main() {
     test('classes', () {
       var element = HTMLDivElement();
       expect(element.attributes.getNamedItem('class'), isNull);
-      element.attributes
-          .setNamedItem(document.createAttribute('class')..value = 'test');
+      element.attributes.setNamedItem(
+        document.createAttribute('class')..value = 'test',
+      );
       // This fails on firefox: https://github.com/dart-lang/sdk/issues/23604
       expect(
-          (element.outerHTML as JSString).toDart, '<div class="test"></div>');
+        (element.outerHTML as JSString).toDart,
+        '<div class="test"></div>',
+      );
     });
 
     test('document', () {
       //new HtmlHtmlElement();
       final doc = document.implementation.createHTMLDocument('');
-      expect((doc.documentElement!.outerHTML as JSString).toDart,
-          '<html><head><title></title></head><body></body></html>');
+      expect(
+        (doc.documentElement!.outerHTML as JSString).toDart,
+        '<html><head><title></title></head><body></body></html>',
+      );
       expect(doc.querySelector('head'), isNotNull);
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
     });
@@ -109,8 +114,10 @@ void main() {
       //new HtmlHtmlElement();
       final doc = document.implementation.createHTMLDocument('title');
       expect(doc.title, 'title');
-      expect((doc.documentElement!.outerHTML as JSString).toDart,
-          '<html><head><title>title</title></head><body></body></html>');
+      expect(
+        (doc.documentElement!.outerHTML as JSString).toDart,
+        '<html><head><title>title</title></head><body></body></html>',
+      );
       //doc.documentElement.nodes.insert(0, new HtmlDocument)
       expect(1, 1);
     });

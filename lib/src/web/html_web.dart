@@ -99,13 +99,19 @@ abstract mixin class _ElementWeb implements ElementWeb {
 
   @override
   Map<Object, String> get attributes => AttributesWeb(
-      webElement.ownerDocument ?? web.window.document, webElement.attributes);
+    webElement.ownerDocument ?? web.window.document,
+    webElement.attributes,
+  );
 
   @override
   List<Node> get childNodes {
     var childNodes = webElement.childNodes;
-    return UnmodifiableListView(List<Node>.generate(
-        childNodes.length, (index) => _html.wrapNode(childNodes.item(index)!)));
+    return UnmodifiableListView(
+      List<Node>.generate(
+        childNodes.length,
+        (index) => _html.wrapNode(childNodes.item(index)!),
+      ),
+    );
   }
 
   @override
@@ -131,23 +137,37 @@ abstract mixin class _ElementWeb implements ElementWeb {
   Element? get parent => _wrapWebElementOrNull(webElement.parentElement);
 
   @override
-  Element? query(
-      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
-    return querySelector(buildSelector(
+  Element? query({
+    String? byTag,
+    String? byId,
+    String? byClass,
+    String? byAttributes,
+  }) {
+    return querySelector(
+      buildSelector(
         byTag: byTag,
         byId: byId,
         byClass: byClass,
-        byAttributes: byAttributes));
+        byAttributes: byAttributes,
+      ),
+    );
   }
 
   @override
-  ElementList queryAll(
-      {String? byTag, String? byId, String? byClass, String? byAttributes}) {
-    return querySelectorAll(buildSelector(
+  ElementList queryAll({
+    String? byTag,
+    String? byId,
+    String? byClass,
+    String? byAttributes,
+  }) {
+    return querySelectorAll(
+      buildSelector(
         byTag: byTag,
         byId: byId,
         byClass: byClass,
-        byAttributes: byAttributes));
+        byAttributes: byAttributes,
+      ),
+    );
   }
 
   @override
@@ -166,7 +186,9 @@ abstract mixin class _ElementWeb implements ElementWeb {
 
   @override
   ElementList querySelectorAll(String selector) => _ElementList(
-      this, webElement.querySelectorAll(selector) as web.HTMLCollection);
+    this,
+    webElement.querySelectorAll(selector) as web.HTMLCollection,
+  );
 
   @override
   void remove() {
@@ -391,11 +413,12 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImplMixin {
 
 class _HtmlProviderWeb implements HtmlProviderWeb {
   @override
-  Document createDocument(
-      {String html = '',
-      String title = '',
-      String? charset = attrCharsetUtf8,
-      bool noCharsetTitleFix = false}) {
+  Document createDocument({
+    String html = '',
+    String title = '',
+    String? charset = attrCharsetUtf8,
+    bool noCharsetTitleFix = false,
+  }) {
     web.Document webDoc;
     if (html.isNotEmpty) {
       final domParser = web.DOMParser();

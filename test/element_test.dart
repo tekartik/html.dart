@@ -145,19 +145,22 @@ void testMain(HtmlProvider html) {
     });
     test('link', () {
       final element = html.createElementHtml(
-          '<link rel="icon" href="https://via.placeholder.com/70x70">');
+        '<link rel="icon" href="https://via.placeholder.com/70x70">',
+      );
       expect(element.tagName, 'link');
     });
     test('multi', () {
       final nodes = html.createNodesHtml(
-          '\n<link rel="icon" href="https://via.placeholder.com/70x70">\n'
-          '<meta charset="utf-8">'
-          '<noscript></noscript>\n');
+        '\n<link rel="icon" href="https://via.placeholder.com/70x70">\n'
+        '<meta charset="utf-8">'
+        '<noscript></noscript>\n',
+      );
       expect(nodes.length, 6);
       var elements = html.createElementsHtml(
-          '\n<link rel="icon" href="https://via.placeholder.com/70x70">\n'
-          '<meta charset="utf-8">'
-          '<noscript></noscript>\n');
+        '\n<link rel="icon" href="https://via.placeholder.com/70x70">\n'
+        '<meta charset="utf-8">'
+        '<noscript></noscript>\n',
+      );
       expect(elements.length, 3);
     });
     test('extension', () {
@@ -176,8 +179,9 @@ void testMain(HtmlProvider html) {
     });
     test('custom_no_validate', () {
       final element = html.createElementHtml(
-          '<div><div class="--dtk-include" title="some/path/1"></div><meta property="dtk-include" content="some/path/2" /></div>',
-          noValidate: true);
+        '<div><div class="--dtk-include" title="some/path/1"></div><meta property="dtk-include" content="some/path/2" /></div>',
+        noValidate: true,
+      );
       //print(element.outerHtml.toString());
       expect(element.children.length, 2);
     });
@@ -188,13 +192,17 @@ void testMain(HtmlProvider html) {
     //});
 
     test('createElementHtml(html)', () {
-      expect(() => html.createElementHtml('<html></html>'),
-          throwsA(isA<Object>()));
+      expect(
+        () => html.createElementHtml('<html></html>'),
+        throwsA(isA<Object>()),
+      );
     });
     test('createElementHtml(head)', () {
       if (html is HtmlProviderWeb) {
-        expect(() => html.createElementHtml('<head></head>'),
-            throwsA(isA<Object>()));
+        expect(
+          () => html.createElementHtml('<head></head>'),
+          throwsA(isA<Object>()),
+        );
       } else {
         var element = html.createElementHtml('<head></head>');
         expect(element.tagName, 'head');
@@ -202,8 +210,10 @@ void testMain(HtmlProvider html) {
     });
     test('createElementHtml(body)', () {
       if (html is HtmlProviderWeb) {
-        expect(() => html.createElementHtml('<body></body>'),
-            throwsA(isA<Object>()));
+        expect(
+          () => html.createElementHtml('<body></body>'),
+          throwsA(isA<Object>()),
+        );
       } else {
         var element = html.createElementHtml('<body></body>');
         expect(element.tagName, 'body');
@@ -332,10 +342,11 @@ void testMain(HtmlProvider html) {
 
     test('simple query', () {
       final element = html.createElementTag(tagDiv)..id = 'div1';
-      final child = html.createElementTag(tagSpan)
-        ..id = 'span1'
-        ..classes.add('class1')
-        ..attributes['attr1'] = 'attr_value1';
+      final child =
+          html.createElementTag(tagSpan)
+            ..id = 'span1'
+            ..classes.add('class1')
+            ..attributes['attr1'] = 'attr_value1';
       element.children.add(child);
 
       // not supported expect(element.query(), child);
@@ -364,38 +375,50 @@ void testMain(HtmlProvider html) {
       expect(element.query(byClass: 'class1', byId: 'span1'), child);
       expect(element.query(byClass: 'class1', byTag: tagSpan), child);
 
-      expect(element.query(byClass: 'class1', byTag: tagSpan, byId: 'span1'),
-          child);
-      expect(element.query(byClass: 'class1', byTag: tagSpan, byId: 'dummy'),
-          isNull);
-      expect(element.query(byClass: 'class1', byId: 'span1', byTag: 'dummy'),
-          isNull);
+      expect(
+        element.query(byClass: 'class1', byTag: tagSpan, byId: 'span1'),
+        child,
+      );
+      expect(
+        element.query(byClass: 'class1', byTag: tagSpan, byId: 'dummy'),
+        isNull,
+      );
+      expect(
+        element.query(byClass: 'class1', byId: 'span1', byTag: 'dummy'),
+        isNull,
+      );
 
       expect(
-          element.query(
-              byClass: 'class1',
-              byTag: tagSpan,
-              byId: 'span1',
-              byAttributes: 'attr1'),
-          child);
+        element.query(
+          byClass: 'class1',
+          byTag: tagSpan,
+          byId: 'span1',
+          byAttributes: 'attr1',
+        ),
+        child,
+      );
       expect(
-          element.query(
-              byClass: 'class1',
-              byTag: tagSpan,
-              byId: 'span1',
-              byAttributes: 'dummy'),
-          isNull);
+        element.query(
+          byClass: 'class1',
+          byTag: tagSpan,
+          byId: 'span1',
+          byAttributes: 'dummy',
+        ),
+        isNull,
+      );
 
       expect(
-          element.queryAll(byClass: 'class1', byTag: tagSpan, byId: 'span1')[0],
-          child);
+        element.queryAll(byClass: 'class1', byTag: tagSpan, byId: 'span1')[0],
+        child,
+      );
       //expect(element.queryAll()[0], child);
 
       expect(
-          element
-              .queryAll(byClass: 'class1', byTag: tagSpan, byId: 'dummy')
-              .length,
-          0);
+        element
+            .queryAll(byClass: 'class1', byTag: tagSpan, byId: 'dummy')
+            .length,
+        0,
+      );
 
       expect(element.query(byAttributes: 'dummy'), isNull);
       expect(element.query(byAttributes: 'attr1'), child);
@@ -405,19 +428,22 @@ void testMain(HtmlProvider html) {
 
     test('sub query', () {
       final element = html.createElementTag(tagDiv);
-      final child = html.createElementTag(tagDiv)
-        ..id = 'div1'
-        ..classes.add('class1')
-        ..attributes['attr1'] = 'attr_value_child';
-      final child2 = html.createElementTag(tagDiv)
-        ..id = 'div2'
-        ..classes.add('class2')
-        ..attributes['attr2'] = 'attr_value_child2';
+      final child =
+          html.createElementTag(tagDiv)
+            ..id = 'div1'
+            ..classes.add('class1')
+            ..attributes['attr1'] = 'attr_value_child';
+      final child2 =
+          html.createElementTag(tagDiv)
+            ..id = 'div2'
+            ..classes.add('class2')
+            ..attributes['attr2'] = 'attr_value_child2';
 
-      final subchild = html.createElementTag(tagSpan)
-        ..id = 'span1'
-        ..classes.add('class1')
-        ..attributes['attr1'] = 'attr_value_subchild';
+      final subchild =
+          html.createElementTag(tagSpan)
+            ..id = 'span1'
+            ..classes.add('class1')
+            ..attributes['attr1'] = 'attr_value_subchild';
 
       child.children.add(subchild);
       element.children.add(child);
@@ -475,15 +501,17 @@ void testMain(HtmlProvider html) {
           ''';
       final element = html.createElementHtml(img, noValidate: true);
 
-//<a href='https://www.flickr.com/photos/62771079@N04/15282515877' title='keep_on_screenshot_1280x800 by alexroux77, on Flickr'><img src='https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg' width='75' height='75' alt='keep_on_screenshot_1280x800'></a>');
+      //<a href='https://www.flickr.com/photos/62771079@N04/15282515877' title='keep_on_screenshot_1280x800 by alexroux77, on Flickr'><img src='https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg' width='75' height='75' alt='keep_on_screenshot_1280x800'></a>');
 
       //devPrint('${element} ${new Map.from(element.attributes)}');
-      expect(element.attributes['src'],
-          'https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg');
-//         expect(element.tagName, DIV);
-//         expect(element.id, 'test');
-//         expect(element.innerHtml, 'inner');
-//         expect(element.outerHtml, '<div id='test'>inner</div>');
+      expect(
+        element.attributes['src'],
+        'https://farm3.staticflickr.com/2947/15282515877_842648d61d_s.jpg',
+      );
+      //         expect(element.tagName, DIV);
+      //         expect(element.id, 'test');
+      //         expect(element.innerHtml, 'inner');
+      //         expect(element.outerHtml, '<div id='test'>inner</div>');
     });
   });
 }

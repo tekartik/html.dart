@@ -14,7 +14,8 @@ void main() {
     });
 
     test('document', () {
-      /*Document doc = */ Document();
+      /*Document doc = */
+      Document();
     });
 
     test('document.html', () {
@@ -22,8 +23,10 @@ void main() {
       expect(doc.outerHtml, '<html><head></head><body></body></html>');
       Node docType = DocumentType('html', null, null);
       doc.nodes.insert(0, docType);
-      expect(doc.outerHtml,
-          '<!DOCTYPE html><html><head></head><body></body></html>');
+      expect(
+        doc.outerHtml,
+        '<!DOCTYPE html><html><head></head><body></body></html>',
+      );
     });
 
     test('div node', () {
@@ -69,8 +72,8 @@ void main() {
     test('classes', () {
       final element = Element.tag('div');
       expect(element.attributes['class'], isNull);
-//          element.attributes['class'] = 'test';
-//          expect(element.outerHtml, '<div class="test"></div>');
+      //          element.attributes['class'] = 'test';
+      //          expect(element.outerHtml, '<div class="test"></div>');
     });
 
     void dumpNode(Node node) {
@@ -81,8 +84,9 @@ void main() {
     }
 
     test('document.html title', () {
-      final doc =
-          Document.html('<html><head><title>title</title></head></html>');
+      final doc = Document.html(
+        '<html><head><title>title</title></head></html>',
+      );
       expect(doc.querySelector('head'), isNotNull);
       dumpNode(doc);
 

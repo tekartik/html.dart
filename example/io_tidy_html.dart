@@ -8,10 +8,12 @@ import 'package:tekartik_html/util/html_tidy.dart';
 
 void main(List<String> arguments) {
   final parser = ArgParser(allowTrailingOptions: true);
-  parser.addOption('indent',
-      abbr: 'i',
-      valueHelp: 'indent value (default to tab)',
-      defaultsTo: HtmlTidyOption().indent);
+  parser.addOption(
+    'indent',
+    abbr: 'i',
+    valueHelp: 'indent value (default to tab)',
+    defaultsTo: HtmlTidyOption().indent,
+  );
   final results = parser.parse(arguments);
 
   final html = htmlProviderHtml5Lib;

@@ -22,11 +22,12 @@ void testMain(HtmlProvider html) {
         '\t<title>test</title>',
         '</head>',
         '<body></body>',
-        '</html>'
+        '</html>',
       ]);
     });
     test('amp_basic', () {
-      final doc = html.createDocument(html: '''
+      final doc = html.createDocument(
+        html: '''
 <!doctype html>
 <html ⚡ lang="en">
 <head>
@@ -42,7 +43,8 @@ void testMain(HtmlProvider html) {
     <script async src="https://cdn.ampproject.org/v0.js"></script>
 </head>
 <body>Hello World!</body>
-</html>''');
+</html>''',
+      );
       expect(htmlTidyDocument(doc).join('\n'), '''
 <!DOCTYPE html>
 <html ⚡ lang="en">

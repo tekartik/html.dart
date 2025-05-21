@@ -21,8 +21,10 @@ void testMain(HtmlProvider html) {
       expect(findFirstAncestorWithId(subInnerElement, 'div2'), innerElement);
       expect(findFirstAncestorWithId(subInnerElement, 'div1'), element);
       expect(findFirstAncestorWithId(subInnerElement, 'div3'), isNull);
-      expect(findFirstAncestorWithId(subInnerElement, 'div3', true),
-          subInnerElement);
+      expect(
+        findFirstAncestorWithId(subInnerElement, 'div3', true),
+        subInnerElement,
+      );
     });
 
     test('findFirstAncestorWithClass', () {
@@ -33,11 +35,15 @@ void testMain(HtmlProvider html) {
       innerElement.append(subInnerElement);
       element.append(innerElement);
       expect(
-          findFirstAncestorWithClass(subInnerElement, 'class2'), innerElement);
+        findFirstAncestorWithClass(subInnerElement, 'class2'),
+        innerElement,
+      );
       expect(findFirstAncestorWithClass(subInnerElement, 'class1'), element);
       expect(findFirstAncestorWithClass(subInnerElement, 'class3'), isNull);
-      expect(findFirstAncestorWithClass(subInnerElement, 'class3', true),
-          subInnerElement);
+      expect(
+        findFirstAncestorWithClass(subInnerElement, 'class3', true),
+        subInnerElement,
+      );
     });
   });
 }

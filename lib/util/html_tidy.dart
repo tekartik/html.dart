@@ -20,14 +20,14 @@ List<String> _voidTags = [
   'param',
   'source',
   'track',
-  'wbr'
+  'wbr',
 ];
 
 List<String> _rawTags = ['script', 'style'];
 
 List<String> _inlineTags = [
   'meta', 'title', 'link', // for head
-  'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'a'
+  'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'a',
 ];
 
 ///
@@ -40,19 +40,20 @@ List<String> _inlineTags = [
 ///
 /// from quiver
 ///
-bool _isWhitespace(int rune) => ((rune >= 0x0009 && rune <= 0x000D) ||
-    rune == 0x0020 ||
-    rune == 0x0085 ||
-    rune == 0x00A0 ||
-    rune == 0x1680 ||
-    rune == 0x180E ||
-    (rune >= 0x2000 && rune <= 0x200A) ||
-    rune == 0x2028 ||
-    rune == 0x2029 ||
-    rune == 0x202F ||
-    rune == 0x205F ||
-    rune == 0x3000 ||
-    rune == 0xFEFF);
+bool _isWhitespace(int rune) =>
+    ((rune >= 0x0009 && rune <= 0x000D) ||
+        rune == 0x0020 ||
+        rune == 0x0085 ||
+        rune == 0x00A0 ||
+        rune == 0x1680 ||
+        rune == 0x180E ||
+        (rune >= 0x2000 && rune <= 0x200A) ||
+        rune == 0x2028 ||
+        rune == 0x2029 ||
+        rune == 0x202F ||
+        rune == 0x205F ||
+        rune == 0x3000 ||
+        rune == 0xFEFF);
 
 class HtmlTidyOption {
   String? indent = '\t';
@@ -162,8 +163,11 @@ void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption? option) {
 Iterable<String> htmlTidyElement(Element element, [HtmlTidyOption? option]) =>
     _htmlTidyElement(element, option, false);
 
-Iterable<String> _htmlTidyElement(Element element,
-    [HtmlTidyOption? option, bool? inline]) {
+Iterable<String> _htmlTidyElement(
+  Element element, [
+  HtmlTidyOption? option,
+  bool? inline,
+]) {
   final tagName = element.tagName;
   // default option
   option ??= HtmlTidyOption();
@@ -172,7 +176,8 @@ Iterable<String> _htmlTidyElement(Element element,
   element.childNodes;
 
   // do not convert content for inlined and special tags
-  var inlineContent = inline! ||
+  var inlineContent =
+      inline! ||
       _inlineContentForTag(tagName) ||
       _hasSingleTextNodeLine(element);
   // Only so this if there is no child or

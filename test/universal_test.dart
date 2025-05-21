@@ -29,7 +29,7 @@ void testMain(HtmlProvider html) {
           '\t<title></title>',
           '</head>',
           '<body></body>',
-          '</html>'
+          '</html>',
         ]);
       } else if (html is HtmlProviderWeb) {
         expect(htmlTidyDocument(doc), [
@@ -40,7 +40,7 @@ void testMain(HtmlProvider html) {
           '\t<title></title>',
           '</head>',
           '<body></body>',
-          '</html>'
+          '</html>',
         ]);
       } else {
         fail('unsupported html provider');

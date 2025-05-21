@@ -28,8 +28,10 @@ void main() {
       print(e);
     }
     var doc = htmlProvider.createDocument(html: input);
-    outputElement.text =
-        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent).join('\n');
+    outputElement.text = htmlTidyDocument(
+      doc,
+      HtmlTidyOption()..indent = indent,
+    ).join('\n');
   }
 
   // reload last if any

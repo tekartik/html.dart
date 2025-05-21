@@ -2,8 +2,11 @@ import 'html.dart';
 
 // Recursive into the parent to find the first parent matching the give id
 /// [includeElement] if true also check the current element id
-Element? findFirstAncestorWithId(Element element, String id,
-    [bool? includeElement]) {
+Element? findFirstAncestorWithId(
+  Element element,
+  String id, [
+  bool? includeElement,
+]) {
   Element? parent;
   if (includeElement == true) {
     parent = element;
@@ -21,8 +24,11 @@ Element? findFirstAncestorWithId(Element element, String id,
 
 // Recursive into the parent to find the first parent matching the class
 /// [includeElement] if true also check the current element id
-Element? findFirstAncestorWithClass(Element element, String klass,
-    [bool? includeElement]) {
+Element? findFirstAncestorWithClass(
+  Element element,
+  String klass, [
+  bool? includeElement,
+]) {
   Element? parent;
   if (includeElement == true) {
     parent = element;
