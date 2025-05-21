@@ -22,21 +22,21 @@ void main() {
     final indent = indentElement.value;
     final input = inputElement.value;
     try {
-      window.localStorage[inputKey] = input;
-      window.localStorage[indentKey] = indent;
+      window.localStorage.setItem(inputKey, input);
+      window.localStorage.setItem(indentKey, indent);
     } catch (e) {
       print(e);
     }
     var doc = htmlProvider.createDocument(html: input);
-    outputElement.text = htmlTidyDocument(
+    outputElement.textContent = htmlTidyDocument(
       doc,
       HtmlTidyOption()..indent = indent,
     ).join('\n');
   }
 
   // reload last if any
-  final input = window.localStorage[inputKey];
-  var indent = window.localStorage[indentKey];
+  final input = window.localStorage.getItem(inputKey);
+  var indent = window.localStorage.getItem(indentKey);
 
   // get the default indent
   indent ??= HtmlTidyOption().indent;
