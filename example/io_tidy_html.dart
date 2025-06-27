@@ -22,8 +22,10 @@ void main(List<String> arguments) {
     stdout.writeln(inputFile);
     final input = File(inputFile).readAsStringSync();
     var doc = html.createDocument(html: input);
-    final list =
-        htmlTidyDocument(doc, HtmlTidyOption()..indent = indent).toList();
+    final list = htmlTidyDocument(
+      doc,
+      HtmlTidyOption()..indent = indent,
+    ).toList();
     for (final line in list) {
       stdout.writeln(line);
     }

@@ -342,11 +342,10 @@ void testMain(HtmlProvider html) {
 
     test('simple query', () {
       final element = html.createElementTag(tagDiv)..id = 'div1';
-      final child =
-          html.createElementTag(tagSpan)
-            ..id = 'span1'
-            ..classes.add('class1')
-            ..attributes['attr1'] = 'attr_value1';
+      final child = html.createElementTag(tagSpan)
+        ..id = 'span1'
+        ..classes.add('class1')
+        ..attributes['attr1'] = 'attr_value1';
       element.children.add(child);
 
       // not supported expect(element.query(), child);
@@ -428,22 +427,19 @@ void testMain(HtmlProvider html) {
 
     test('sub query', () {
       final element = html.createElementTag(tagDiv);
-      final child =
-          html.createElementTag(tagDiv)
-            ..id = 'div1'
-            ..classes.add('class1')
-            ..attributes['attr1'] = 'attr_value_child';
-      final child2 =
-          html.createElementTag(tagDiv)
-            ..id = 'div2'
-            ..classes.add('class2')
-            ..attributes['attr2'] = 'attr_value_child2';
+      final child = html.createElementTag(tagDiv)
+        ..id = 'div1'
+        ..classes.add('class1')
+        ..attributes['attr1'] = 'attr_value_child';
+      final child2 = html.createElementTag(tagDiv)
+        ..id = 'div2'
+        ..classes.add('class2')
+        ..attributes['attr2'] = 'attr_value_child2';
 
-      final subchild =
-          html.createElementTag(tagSpan)
-            ..id = 'span1'
-            ..classes.add('class1')
-            ..attributes['attr1'] = 'attr_value_subchild';
+      final subchild = html.createElementTag(tagSpan)
+        ..id = 'span1'
+        ..classes.add('class1')
+        ..attributes['attr1'] = 'attr_value_subchild';
 
       child.children.add(subchild);
       element.children.add(child);
