@@ -5,7 +5,7 @@ homepage: https://github.com/tekartik/tekartik_html.dart
 publish_to: none
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.9.0
 dependencies:
   args: ">=2.6.0"
   tekartik_common_utils:
