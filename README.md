@@ -15,7 +15,6 @@ dependencies:
   tekartik_html:
     git:
       url: https://github.com/tekartik/html.dart
-      ref: dart3a
     version: '>=0.2.0'
 ```
 
