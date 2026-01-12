@@ -55,10 +55,12 @@ bool _isWhitespace(int rune) =>
     rune == 0x3000 ||
     rune == 0xFEFF);
 
+/// Options controlling htmlTidy formatting.
 class HtmlTidyOption {
+  /// The string used for one level of indentation (defaults to a tab).
   String? indent = '\t';
 
-  /// Make content fit in 80 chars
+  /// Maximum content length per line (used to wrap text).
   int contentLength = 80;
 }
 
@@ -121,6 +123,8 @@ List<String> _wordSplit(String input) {
   return out;
 }
 
+/// Breaks [input] into words and returns a list of wrapped lines according to
+/// [option.contentLength]. If [option] is null a default is used.
 List<String> convertContent(String input, HtmlTidyOption? option) {
   final words = _wordSplit(input);
   final out = <String>[];
@@ -159,6 +163,8 @@ void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption? option) {
   }
 }
 
+/// Produces a list of strings representing a tidy HTML element for [element].
+/// Optionally pass [option] to control indentation and wrapping.
 // reference: http://www.dirtymarkup.com/
 Iterable<String> htmlTidyElement(Element element, [HtmlTidyOption? option]) =>
     _htmlTidyElement(element, option, false);
@@ -276,6 +282,8 @@ String? _endTag(Element element) {
   }
 }
 
+/// Produces a list of strings representing a tidy HTML document for [document].
+/// Optionally pass [option] to control indentation and wrapping.
 Iterable<String> htmlTidyDocument(Document document, [HtmlTidyOption? option]) {
   final out = <String>[];
   out.add('<!DOCTYPE html>');

@@ -1,6 +1,11 @@
 import 'package:tekartik_html/html.dart';
 
-/// Selector from query
+/// Builds a CSS selector string from optional tag, id, class, and attributes.
+///
+/// - [byTag]: The tag name (e.g., 'div').
+/// - [byId]: The id (e.g., 'myId').
+/// - [byClass]: The class (e.g., 'myClass').
+/// - [byAttributes]: Additional attributes (e.g., 'type="text"').
 String buildSelector({
   String? byTag,
   String? byId,
@@ -25,6 +30,9 @@ String buildSelector({
   return sb.toString();
 }
 
+/// Builds a CSS selector string from a [QueryCriteria] object.
+///
+/// Includes scope handling if not recursive.
 String buildCriteriaSelector(QueryCriteria criteria) {
   final sb = StringBuffer();
   if (!criteria.recursive) {

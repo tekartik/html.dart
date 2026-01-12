@@ -12,12 +12,16 @@ import 'attributes_web.dart';
 import 'css_class_set_web.dart';
 import 'data_set_web.dart';
 
+/// A nullable [web.Text] node.
 web.Text? textNode;
 
+/// Wrapper interface exposing the underlying web DOM node for wrapper types.
 abstract class NodeWeb implements Node {
+  /// Underlying JS/web DOM node.
   web.Node get webNode;
 }
 
+/// Base class for web nodes.
 abstract class _NodeBase implements NodeWeb {
   @override
   final web.Node webNode;
@@ -31,7 +35,9 @@ abstract class _NodeBase implements NodeWeb {
   String? get nodeValue => webNode.nodeValue;
 }
 
+/// Extension to access the underlying web Node from a wrapper [Node].
 extension NodeWebExt on Node {
+  /// Returns the underlying web Node for this wrapper.
   web.Node get webNode => (this as NodeWeb).webNode;
 }
 
@@ -46,10 +52,13 @@ _Element? _wrapWebElementOrNull(web.Element? webElement) {
   return _Element(webElement);
 }
 
+/// Wrapper interface exposing the underlying web Element for wrapper types.
 abstract class ElementWeb implements Element, NodeWeb {
+  /// Underlying JS/web Element.
   web.Element get webElement;
 }
 
+/// Web implementation of [Element].
 class _Element extends _NodeBase
     with _NodeWebMixin, _ElementWeb
     implements ElementWeb {
@@ -238,6 +247,7 @@ class _ElementList extends ListBase<Element> implements ElementList {
 
   _ElementList(this.parent, this.webCollection);
 
+  /// Get element at a given index.
   Element itemAt(int index) {
     return _Element(webCollection.item(index)!);
   }
@@ -283,6 +293,7 @@ class _ElementList extends ListBase<Element> implements ElementList {
   }
 }
 
+/// Web implementation mixin for nodes.
 mixin _NodeWebMixin implements NodeWeb {
   @override
   Node? get parentNode {
@@ -338,28 +349,34 @@ mixin _NodeWebMixin implements NodeWeb {
   }
 }
 
-/// Web implementation
+/// Web implementation mixin for documents.
 abstract mixin class _DocumentImplMixin {
   /// Our provider
   HtmlProvider get htmlProvider => _html;
 }
 
+/// Web implementation of [BodyElement].
 class _BodyElement extends _Element implements BodyElement {
   _BodyElement(super.element);
 }
 
+/// Web implementation of [HeadElement].
 class _HeadElement extends _Element implements HeadElement {
   _HeadElement(super.element);
 }
 
+/// Web implementation of [HtmlElement].
 class _HtmlElement extends _Element implements HtmlElement {
   _HtmlElement(super.element);
 }
 
+/// Web extension for [Document].
 extension DocumentWebExt on Document {
+  /// Access the underlying web document.
   web.Document get webDoc => (this as _Document).webDoc;
 }
 
+/// Web implementation of [Document].
 class _Document extends DocumentBase with DocumentMixin, _DocumentImplMixin {
   final web.Document webDoc;
 
@@ -411,6 +428,7 @@ class _Document extends DocumentBase with DocumentMixin, _DocumentImplMixin {
   HtmlElement get html => _HtmlElement(webDoc.documentElement!);
 }
 
+/// Web implementation of [HtmlProvider].
 class _HtmlProviderWeb implements HtmlProviderWeb {
   @override
   Document createDocument({
@@ -516,6 +534,7 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
 /// Web html provider (js_interop)
 HtmlProvider htmlProviderWeb = _HtmlProviderWeb();
 
+/// The current HTML document wrapped for web usage.
 final currentHtmlDocumentWeb = htmlProviderWeb.wrapDocument(web.document);
 
 /// Local provider
@@ -523,18 +542,23 @@ _HtmlProviderWeb get _html => htmlProviderWeb as _HtmlProviderWeb;
 
 /// Internal Text interface
 abstract class _Text implements Text {
+  /// Creates a [_Text] instance from a [web.Text] object.
   factory _Text.impl(web.Text value) => _TextWeb(value);
 
+  /// Creates a [_Text] instance from a string value.
   factory _Text.text(String value) => _TextWeb.text(value);
 }
 
+/// Web implementation of [_Text].
 class _TextWeb extends _NodeBase with _NodeWebMixin implements _Text {
   /// Non nullable text content
   @override
   String get text => webNode.textContent!;
 
+  /// Creates a [_TextWeb] instance from a [web.Text] object.
   _TextWeb(super.webNode);
 
+  /// Creates a [_TextWeb] instance from a string value.
   _TextWeb.text(String value) : super(web.Text(value));
 
   @override

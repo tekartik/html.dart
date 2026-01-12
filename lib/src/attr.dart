@@ -2,25 +2,15 @@
 
 library;
 
+/// The 'class' attribute for HTML elements.
 const attrClass = 'class';
 
 // In head <meta> tags
+/// The 'charset' attribute for HTML meta tags.
 const attrCharset = 'charset';
+
+/// The UTF-8 charset value for the 'charset' attribute.
 const attrCharsetUtf8 = 'utf-8';
 
+/// Prefix for data attributes in HTML.
 const attrDataPrefix = 'data-';
-
-@deprecated
-// ignore: constant_identifier_names
-const String CLASS = attrClass;
-
-// In head <meta> tags
-@deprecated
-// ignore: constant_identifier_names
-const String CHARSET = attrCharset;
-@deprecated
-// ignore: constant_identifier_names
-const String CHARSET_UTF_8 = attrCharsetUtf8;
-@deprecated
-// ignore: constant_identifier_names
-const String DATA_PREFIX = attrDataPrefix;

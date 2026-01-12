@@ -1,9 +1,11 @@
 import 'package:tekartik_html/attr.dart';
 import 'package:tekartik_html/html.dart';
 
+/// An HTML5lib-based implementation of a data set for HTML data attributes.
 class DataSetHtml5lib extends DataSet {
   final Map<Object, String> _attributes;
 
+  /// Creates a [DataSetHtml5lib] with the given attributes map.
   DataSetHtml5lib(this._attributes);
 
   String _nameToAttrKey(String name) {
@@ -11,16 +13,19 @@ class DataSetHtml5lib extends DataSet {
   }
 
   @override
+  /// Retrieves the value of the data attribute with the given name.
   String? operator [](String name) {
     return _attributes[_nameToAttrKey(name)];
   }
 
   @override
+  /// Sets the value of the data attribute with the given name.
   void operator []=(String name, String value) {
     _attributes['$attrDataPrefix$name'] = value;
   }
 
   @override
+  /// Returns an iterable of all data attribute keys (without the 'data-' prefix).
   Iterable<String> get keys {
     final keys = <String>[];
     for (dynamic key in _attributes.keys) {
@@ -34,6 +39,7 @@ class DataSetHtml5lib extends DataSet {
   }
 
   @override
+  /// Removes the data attribute with the given key and returns true if it existed.
   bool remove(String key) {
     return _attributes.remove(_nameToAttrKey(key)) != null;
   }

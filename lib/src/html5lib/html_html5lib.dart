@@ -671,13 +671,14 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
 _HtmlProviderHtml5Lib get _html =>
     htmlProviderHtml5Lib as _HtmlProviderHtml5Lib;
 
-/// Safe to be called multiple times
+/// Returns the html5lib-based html provider instance.
+HtmlProvider htmlProviderHtml5Lib = _HtmlProviderHtml5Lib();
+
+/// Safe to be called multiple times. Deprecated: kept for compatibility.
 @deprecated
 HtmlProvider initHtmlProvider() {
   return _html;
 }
-
-HtmlProvider htmlProviderHtml5Lib = _HtmlProviderHtml5Lib();
 
 /// Internal Text interface
 abstract class _Text implements Text {

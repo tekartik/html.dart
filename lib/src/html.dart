@@ -5,9 +5,12 @@ library;
 import 'dart:collection';
 import 'attr.dart';
 
+/// Iterator over an [ElementList].
 class ElementListIterator implements Iterator<Element> {
+  /// The list being iterated over.
   ElementList elementList;
 
+  /// Creates an iterator for the given [elementList].
   ElementListIterator(this.elementList);
 
   int _currentIndex = -1;
@@ -21,6 +24,7 @@ class ElementListIterator implements Iterator<Element> {
   }
 }
 
+/// A list-like interface for collections of [Element] objects.
 abstract class ElementList extends Object with IterableMixin<Element> {
   @override
   int get length;
@@ -33,28 +37,49 @@ abstract class ElementList extends Object with IterableMixin<Element> {
   /// or throws a [RangeError] if [index] is out of bounds.
   void operator []=(int index, Element value);
 
+  /// Add an element to the list.
   void add(Element element);
+
+  /// Remove an element at a specific index.
   Element? removeAt(int index);
+
+  /// Remove an element from the list.
   bool remove(Element element);
+
+  /// Insert an element at a specific index.
   void insert(int index, Element element);
+
+  /// Get the index of an element.
   int indexOf(Element element);
 
   @override
   Iterator<Element> get iterator => ElementListIterator(this);
 
-  /// remove all element
+  /// Remove all elements from the list.
   void clear();
 }
 
+/// Represents a set of CSS classes for an element.
 abstract class CssClassSet {
+  /// Add a class name to the set.
   void add(String value);
+
+  /// Remove a class name from the set.
   void remove(String value);
+
+  /// Returns true if the class name is present.
   bool contains(String value);
 }
 
+/// Represents HTML data-* attributes for an element.
 abstract class DataSet {
+  /// Access a data attribute by name (without the 'data-' prefix).
   String? operator [](String name);
+
+  /// Set a data attribute by name (without the 'data-' prefix).
   void operator []=(String name, String value);
+
+  /// Iterates the data attribute keys (without the 'data-' prefix).
   Iterable<String> get keys;
 
   @override
@@ -62,16 +87,31 @@ abstract class DataSet {
     return Map<String, Object?>.fromIterable(keys).toString();
   }
 
+  /// Remove a data attribute by key. Returns true if removed.
   bool remove(String key);
+
+  /// Default prefix used for data attributes.
   static String attributePrefix = 'data-';
 }
 
+/// Criteria used for querying elements (tag, id, class, or attributes).
 class QueryCriteria {
+  /// The tag name to query.
   String? byTag;
+
+  /// The id to query.
   String? byId;
+
+  /// The class name to query.
   String? byClass;
+
+  /// Additional attributes to query.
   String? byAttributes;
+
+  /// Whether the query should be recursive.
   bool recursive;
+
+  /// Creates a [QueryCriteria] object with optional parameters.
   QueryCriteria({
     this.byTag,
     this.byId,
@@ -81,120 +121,129 @@ class QueryCriteria {
   });
 }
 
-/// Base node
+/// Base abstraction for a DOM-like node.
 abstract class Node {
+  /// The HTML provider associated with this node.
   HtmlProvider get htmlProvider;
+
+  /// Node type for attribute nodes.
   static const int attributeNode = 2;
+
+  /// Node type for CDATA section nodes.
   static const int cdataSectionNode = 4;
+
+  /// Node type for comment nodes.
   static const int commentNode = 8;
+
+  /// Node type for document fragment nodes.
   static const int documentFragmentNode = 11;
+
+  /// Node type for document nodes.
   static const int documentNode = 9;
+
+  /// Node type for document type nodes.
   static const int documentTypeNode = 10;
+
+  /// Node type for element nodes.
   static const int elementNode = 1;
+
+  /// Node type for entity nodes.
   static const int entityNode = 6;
 
+  /// Node type for entity reference nodes.
   static const int entityReferenceNode = 5;
 
+  /// Node type for notation nodes.
   static const int notationNode = 12;
 
+  /// Node type for processing instruction nodes.
   static const int processInstructionNode = 7;
 
-  /// Compat use textNode
+  /// Node type for text nodes.
+  static const int textNode = 3;
+
+  /// Deprecated: Use [textNode] instead.
   @Deprecated('Use textNode')
   static const int testNode = 3;
 
-  /// Compat
-  static const int textNode = 3;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int ATTRIBUTE_NODE = 2;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int CDATA_SECTION_NODE = 4;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int COMMENT_NODE = 8;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int DOCUMENT_FRAGMENT_NODE = 11;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int DOCUMENT_NODE = 9;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int DOCUMENT_TYPE_NODE = 10;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int ELEMENT_NODE = 1;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int ENTITY_NODE = 6;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int ENTITY_REFERENCE_NODE = 5;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int NOTATION_NODE = 12;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int PROCESSING_INSTRUCTION_NODE = 7;
-  @deprecated
-  // ignore: constant_identifier_names
-  static const int TEXT_NODE = 3;
-
-  /// Node type
+  /// Node type.
   int get nodeType;
 
-  /// Node value, null for Element node, text for text node
+  /// Node value, null for element nodes, text for text nodes.
   String? get nodeValue;
 
-  /// Text content
+  /// Text content of the node.
   String? get textContent;
 
-  /// Append child
+  /// Appends a child node.
   Node appendChild(Node child);
 
-  /// Inserts a Node before the reference node as a child of a specified parent node.
-  /// Insert before
+  /// Inserts a node before the reference node as a child of the current node.
   Node insertBefore(Node newNode, Node referenceNode);
 
-  /// Removes a child node from the current element, which must be a child of the current node.
+  /// Removes a child node from the current node.
   Node removeChild(Node child);
 
-  /// Replaces one child Node of the current one with the second one given in parameter.
+  /// Replaces one child node with another.
   Node replaceChild(Node newChild, Node oldChild);
 
-  /// Parent node (or null if not yet attached)
+  /// The parent node, or null if not attached.
   Node? get parentNode;
 }
 
-/// Text node
+/// Text node (non-nullable content).
 abstract class Text implements Node {
-  /// Non-null text content
+  /// Non-null text content.
   String get text;
 }
 
+/// Represents an HTML element.
 abstract class Element implements Node {
+  /// The list of child elements.
   ElementList get children;
+
+  /// Finds an element by its id.
   Element? getElementById(String id);
+
+  /// The id of the element.
   String get id;
   set id(String id);
+
+  /// The tag name of the element.
   String get tagName;
+
+  /// The outer HTML of the element.
   String get outerHtml;
+
+  /// The inner HTML of the element.
   String get innerHtml;
+  set innerHtml(String html);
+
+  /// The text content of the element.
   String get text;
   set text(String text);
-  set innerHtml(String html);
+
+  /// Finds the first element matching the given CSS selector.
   Element? querySelector(String selector);
+
+  /// Finds all elements matching the given CSS selector.
   ElementList querySelectorAll(String selector);
+
+  /// Finds the first element matching the given [QueryCriteria].
   Element? queryCriteria(QueryCriteria criteria);
+
+  /// Finds all elements matching the given [QueryCriteria].
   ElementList queryCriteriaAll(QueryCriteria criteria);
+
+  /// Finds the first element matching the given query parameters.
   Element? query({
     String? byTag,
     String? byId,
     String? byClass,
     String? byAttributes,
   });
+
+  /// Finds all elements matching the given query parameters.
   ElementList queryAll({
     String? byTag,
     String? byId,
@@ -202,67 +251,93 @@ abstract class Element implements Node {
     String? byAttributes,
   });
 
-  /// Unmodifiable list of child nodes
+  /// The list of child nodes.
   List<Node> get childNodes;
 
-  /// Append a child node
+  /// Appends a child node.
   Node append(Node node);
 
-  /// Remove the element from its parent
+  /// Removes the element from its parent.
   void remove();
 
+  /// The parent element, or null if not attached.
   Element? get parent;
+
+  /// The set of CSS classes for the element.
   CssClassSet get classes;
+
+  /// The attributes of the element.
   Map<Object, String> get attributes;
+
+  /// The data-* attributes of the element.
   DataSet get dataset;
 
-  /// The setAttribute() method of the Element interface sets the value of an attribute on the specified element. If the attribute already exists, the value is updated; otherwise a new attribute is added with the specified name and value.
-  ///
-  /// To get the current value of an attribute, use getAttribute(); to remove an attribute, call removeAttribute().
+  /// Sets an attribute on the element.
   void setAttribute(String name, String value);
 
-  //
+  /// Gets the value of an attribute.
   String? getAttribute(String name);
+
+  /// Checks if the element has the specified attribute.
   bool hasAttribute(String name);
 
+  /// Removes the specified attribute from the element.
   void removeAttribute(String name);
-  //Element get nextElementSibling;
-  //  Element();
-  //  Element.tag(String tag);
-  //  Element.html(String html);
 }
 
+/// Represents the body element of a document.
 abstract class BodyElement extends Element {}
 
-abstract class HeadElement extends Element {
-  //String title;
-}
+/// Represents the head element of a document.
+abstract class HeadElement extends Element {}
 
+/// Represents the root HTML element of a document.
 abstract class HtmlElement extends Element {}
 
+/// Represents an HTML document.
 abstract class Document {
+  /// The HTML provider associated with this document.
   HtmlProvider get htmlProvider;
+
+  /// The body element of the document.
   BodyElement get body;
+
+  /// The head element of the document.
   HeadElement get head;
+
+  /// The root HTML element of the document.
   HtmlElement get html;
 
-  /// get the document title
+  /// The title of the document.
   String get title;
-
-  /// set the document title
   set title(String title);
 
+  /// Ensures common missing document pieces are present (e.g., head/meta/title).
+  ///
+  /// [title] will be used as the document title if none exists.
+  /// [charset] can be null to indicate no charset meta tag should be added.
   void fixMissing({String title = '', String? charset = attrCharsetUtf8});
 }
 
+/// Name used for the browser provider.
 const String providerBrowserName = 'browser'; // Legacy dart:html
+
+/// Name used for the web/js-interop provider.
 const String providerWebName = 'web'; // web and js_interop
+
+/// Name used for the html5lib provider.
 const String providerHtml5LibName = 'html5lib'; // html multiplatform lib
 
+/// Provider abstraction for creating and wrapping DOM objects.
+///
+/// Implementations should create/wrapping native DOM types for the platform and
+/// expose factory/wrapper methods used by the package.
 abstract class HtmlProvider {
+  /// The provider name identifying the implementation.
   String get name;
 
-  /// charset can be set to null
+  /// Create a new document from [html] string. Optionally set [title] and
+  /// [charset]. If [charset] is null no charset meta will be set.
   Document createDocument({
     String html = '',
     String title = '',
@@ -270,58 +345,69 @@ abstract class HtmlProvider {
     bool noCharsetTitleFix = false,
   });
 
+  /// Create a new element by tag name.
   Element createElementTag(String tag);
+
+  /// Create element(s) by parsing [html] and returning the first element.
   Element createElementHtml(String html, {bool? noValidate});
+
+  /// Create nodes by parsing [html] and returning the resulting Node list.
   List<Node> createNodesHtml(String html, {bool? noValidate});
+
+  /// Create elements by parsing [html] and returning the resulting Element list.
   List<Element> createElementsHtml(String html, {bool? noValidate});
+
+  /// Create a text node with given [text] content.
   Text createTextNode(String text);
 
-  // wrap a native document
+  /// Wrap a native platform document instance into the package [Document].
   Document wrapDocument(Object documentImpl);
 
-  // get the native document
+  /// Unwrap a package [Document] into the underlying native document.
   Object unwrapDocument(Document document);
 
-  // wrap a native element
+  /// Wrap a native platform element into the package [Element].
   Element wrapElement(Object elementImpl);
 
-  // get the native element
+  /// Unwrap a package [Element] into the underlying native element.
   Object unwrapElement(Element element);
 
-  // wrap a native element
+  /// Wrap a native platform node into the package [Node].
   Node wrapNode(Object nodeImpl);
 
-  // get the native element
+  /// Unwrap a package [Node] into the underlying native node.
   Object unwrapNode(Node node);
 }
 
+/// Extension helpers on [Node] provided by the package.
 extension TekartikHtmlNodeExt on Node {
-  /// Append a text node
+  /// Append a text node.
   Text appendText(String text) {
     var textNode = htmlProvider.createTextNode(text);
     appendChild(textNode);
     return textNode;
   }
 
-  /// Apppend a lf
+  /// Apppend a line feed.
   void appendLf() {
     appendText('\n');
   }
 
-  /// create a new element and append it
+  /// Create a new element and append it.
   Element appendElementTag(String tag) {
     var element = htmlProvider.createElementTag(tag);
     appendChild(element);
     return element;
   }
 
+  /// Append an element from an html string.
   Element appendElementHtml(String html, {bool? noValidate}) {
     var element = htmlProvider.createElementHtml(html, noValidate: noValidate);
     appendChild(element);
     return element;
   }
 
-  /// Trim inner nodes
+  /// Append a list of elements from an html string.
   List<Element> appendElementsHtml(String html, {bool? noValidate}) {
     var elements = htmlProvider.createElementsHtml(
       html,
@@ -331,7 +417,7 @@ extension TekartikHtmlNodeExt on Node {
     return elements;
   }
 
-  /// Trim inner nodes
+  /// Append a list of children.
   List<Node> appendChildren(List<Node> children) {
     for (var element in List.of(children)) {
       appendChild(element);
@@ -339,7 +425,7 @@ extension TekartikHtmlNodeExt on Node {
     return children;
   }
 
-  /// Append nodes as is
+  /// Append nodes as is.
   List<Node> appendNodesHtml(String html, {bool? noValidate}) {
     var nodes = htmlProvider.createNodesHtml(html, noValidate: noValidate);
     return appendChildren(nodes);
@@ -352,7 +438,9 @@ extension TekartikHtmlNodeExt on Node {
   }
 }
 
+/// Helper extension methods on [HtmlProvider] used internally.
 extension TekartikHtmlNodeMixin on HtmlProvider {
+  /// Unwrap a node or return null.
   Object? unwrapNodeOrNull(Node? node) {
     if (node == null) {
       return null;
@@ -360,6 +448,7 @@ extension TekartikHtmlNodeMixin on HtmlProvider {
     return unwrapNode(node);
   }
 
+  /// Wrap a node or return null.
   Node? wrapNodeOrNull(Object? nodeImpl) {
     if (nodeImpl == null) {
       return null;
