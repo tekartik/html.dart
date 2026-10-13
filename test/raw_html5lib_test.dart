@@ -13,11 +13,6 @@ void main() {
       expect(doc.outerHtml, '<!DOCTYPE html>');
     });
 
-    test('document', () {
-      /*Document doc = */
-      Document();
-    });
-
     test('document.html', () {
       final doc = Document.html('');
       expect(doc.outerHtml, '<html><head></head><body></body></html>');

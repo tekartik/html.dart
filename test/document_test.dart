@@ -31,6 +31,16 @@ void testMain(HtmlProvider html) {
       expect(doc.title, 'update');
     });
 
+    test('wrap body head html', () {
+      final doc = html.createDocument(title: 'test');
+      for (var element in [doc.body, doc.head, doc.html]) {
+        expect(
+          html.wrapElement(html.unwrapElement(element)).tagName,
+          element.tagName,
+        );
+      }
+    });
+
     test('wrap', () {
       var document = html.createDocument(title: 'test');
 

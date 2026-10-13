@@ -13,17 +13,14 @@ Element? findFirstAncestorWithId(
   } else {
     parent = element.parent;
   }
-  while (parent!.id != id) {
+  while (parent != null && parent.id != id) {
     parent = parent.parent;
-    if (parent == null) {
-      return null;
-    }
   }
   return parent;
 }
 
 // Recursive into the parent to find the first parent matching the class
-/// [includeElement] if true also check the current element id
+/// [includeElement] if true also check the current element class
 Element? findFirstAncestorWithClass(
   Element element,
   String klass, [
@@ -35,11 +32,8 @@ Element? findFirstAncestorWithClass(
   } else {
     parent = element.parent;
   }
-  while (!parent!.classes.contains(klass)) {
+  while (parent != null && !parent.classes.contains(klass)) {
     parent = parent.parent;
-    if (parent == null) {
-      return null;
-    }
   }
   return parent;
 }

@@ -10,7 +10,7 @@ void main() {
 }
 
 void testMain(HtmlProvider html) {
-  final isBrowser = html.name == providerBrowserName;
+  final isBrowser = html is HtmlProviderWeb;
   group('element', () {
     test('createElementTag', () {
       final element = html.createElementTag(tagDiv);
@@ -69,9 +69,18 @@ void testMain(HtmlProvider html) {
       expect(element.id, 'div1');
     });
 
-    test('attributes', () {
+    test('attributes id', () {
       final element = html.createElementTag(tagDiv)..id = 'div1';
       expect(element.attributes['id'], 'div1');
+    });
+
+    test('attributes clear', () {
+      final element = html.createElementHtml(
+        '<div a="1" b="2" c="3" d="4"></div>',
+      );
+      element.attributes.clear();
+      expect(element.attributes, isEmpty);
+      expect(element.outerHtml, '<div></div>');
     });
 
     test('text', () {
@@ -86,7 +95,7 @@ void testMain(HtmlProvider html) {
       //expect(element.children[0], same(element.firstChild));
     });
 
-    test('children', () {
+    test('children insertBefore/removeChild', () {
       final element = html.createElementTag(tagDiv);
       final child1 = html.createElementTag(tagDiv);
       final child2 = html.createElementTag(tagP);
@@ -100,25 +109,18 @@ void testMain(HtmlProvider html) {
       expect(element.children, [child1, child2]);
     });
     test('weird_tag', () {
-      try {
-        final element = html.createElementTag('?');
-        expect(element.tagName, '?');
-      } catch (_) {
-        // fail in dom
+      if (isBrowser) {
+        // Invalid tag name in the dom
+        expect(() => html.createElementTag('?'), throwsA(isA<Object>()));
+      } else {
+        expect(html.createElementTag('?').tagName, '?');
       }
-
-      //expect(element.children[0], same(element.firstChild));
     });
     test('html_weird_tag', () {
-      try {
-        html.createElementHtml('<? id="test"></?>');
-        fail('should fail');
-      } catch (_) {
-        //print(_.runtimeType);
-        //print(_);
-      }
-      //expect(element.tagName, '?');
-      //expect(element.children[0], same(element.firstChild));
+      expect(
+        () => html.createElementHtml('<? id="test"></?>'),
+        throwsArgumentError,
+      );
     });
 
     test('custom', () {
@@ -129,11 +131,7 @@ void testMain(HtmlProvider html) {
       </div>
       ''');
       //print(element);
-      if (isBrowser) {
-        expect(element.children.length, 1);
-      } else {
-        expect(element.children.length, 2);
-      }
+      expect(element.children.length, 2);
     });
     test('noscript', () {
       final element = html.createElementHtml('<noscript></noscript>');
@@ -238,25 +236,23 @@ void testMain(HtmlProvider html) {
     });
 
     test('custom tag attributes bis', () {
-      if (!isBrowser) {
-        var element = html.createElementHtml('<include src="test"></include>');
-        expect(element.tagName, 'include');
-        expect(element.attributes['src'], 'test');
-        expect(element.innerHtml, '');
-        expect(element.outerHtml, '<include src="test"></include>');
+      var element = html.createElementHtml('<include src="test"></include>');
+      expect(element.tagName, 'include');
+      expect(element.attributes['src'], 'test');
+      expect(element.innerHtml, '');
+      expect(element.outerHtml, '<include src="test"></include>');
 
-        element = html.createElementHtml('<include src="test"/>');
-        expect(element.tagName, 'include');
-        expect(element.attributes['src'], 'test');
-        expect(element.innerHtml, '');
-        expect(element.outerHtml, '<include src="test"></include>');
-      }
+      element = html.createElementHtml('<include src="test"/>');
+      expect(element.tagName, 'include');
+      expect(element.attributes['src'], 'test');
+      expect(element.innerHtml, '');
+      expect(element.outerHtml, '<include src="test"></include>');
     });
 
     test('attributes_no_content', () {
       var element = html.createElementHtml('<div ⚡></div>');
       // ok on standalone not browser
-      if (element.outerHtml != '<div ⚡=" "></div>') {
+      if (element.outerHtml != '<div ⚡=""></div>') {
         element = html.createElementHtml('<div ⚡></div>', noValidate: true);
         //
       }
@@ -266,15 +262,13 @@ void testMain(HtmlProvider html) {
     });
 
     test('dataset', () {
-      if (html.name != providerBrowserName) {
-        final element = html.createElementHtml('<div data-src="test"></div>');
-        final dataset = element.dataset;
-        //print(dataset.keys);
-        expect(dataset.keys.first, 'src');
+      final element = html.createElementHtml('<div data-src="test"></div>');
+      final dataset = element.dataset;
+      //print(dataset.keys);
+      expect(dataset.keys.first, 'src');
 
-        expect(dataset.remove('src'), isTrue);
-        expect(dataset.keys.length, 0);
-      }
+      expect(dataset.remove('src'), isTrue);
+      expect(dataset.keys.length, 0);
     });
     // });
 
@@ -459,10 +453,80 @@ void testMain(HtmlProvider html) {
       expect(list[0], child);
       expect(list[1], subchild);
 
-      expect(child.query(byAttributes: 'attr1'), subchild);
+      expect(child2.query(byAttributes: 'attr1'), isNull);
 
-      // important test
+      // important test: the element itself is not matched
       expect(child.query(byAttributes: 'attr1'), subchild);
+    });
+
+    test('query css attributes', () {
+      final element = html.createElementHtml(
+        '<div><input type="text"><input type="checkbox"><p>'
+        '<input type="text" id="sub"></p></div>',
+      );
+      expect(
+        element.query(byAttributes: 'type="text"')!.outerHtml,
+        '<input type="text">',
+      );
+      expect(element.queryAll(byAttributes: 'type="text"').length, 2);
+      expect(
+        element.query(byAttributes: "type='checkbox'")!.outerHtml,
+        '<input type="checkbox">',
+      );
+      expect(element.query(byAttributes: 'type="radio"'), isNull);
+      expect(
+        element
+            .queryCriteriaAll(
+              QueryCriteria(byAttributes: 'type="text"', recursive: false),
+            )
+            .length,
+        1,
+      );
+    });
+
+    test('query class whitespaces', () {
+      final element = html.createElementHtml(
+        '<div><p class="a\tb"></p><span class=" c  d "></span></div>',
+      );
+      expect(element.query(byClass: 'b')!.tagName, tagP);
+      expect(element.query(byClass: 'd')!.tagName, tagSpan);
+      expect(element.children[0].classes.contains('b'), isTrue);
+      expect(element.children[1].classes.contains('c'), isTrue);
+      expect(element.children[1].classes.contains(''), isFalse);
+    });
+
+    test('getElementById', () {
+      final element = html.createElementHtml(
+        '<div><p><span id="nested"></span></p><a id="1a"></a></div>',
+      );
+      expect(element.getElementById('nested')!.tagName, tagSpan);
+      // Not a valid css id
+      expect(element.getElementById('1a')!.tagName, tagA);
+      expect(element.getElementById('dummy'), isNull);
+    });
+
+    test('children remove', () {
+      final element = html.createElementHtml(
+        '<div><p></p><span></span><a></a></div>',
+      );
+      expect(element.children.remove(element.children[1]), isTrue);
+      expect(element.outerHtml, '<div><p></p><a></a></div>');
+      expect(element.children.remove(element.children[1]), isTrue);
+      expect(element.outerHtml, '<div><p></p></div>');
+      expect(element.children.remove(html.createElementTag(tagA)), isFalse);
+      expect(element.outerHtml, '<div><p></p></div>');
+    });
+
+    test('children set', () {
+      final element = html.createElementHtml('<div><p></p><a></a></div>');
+      element.children[0] = html.createElementTag(tagSpan);
+      expect(element.outerHtml, '<div><span></span><a></a></div>');
+    });
+
+    test('createElementHtml parent', () {
+      final element = html.createElementHtml('<p>text</p>');
+      expect(element.parent, isNull);
+      expect(element.parentNode, isNull);
     });
 
     test('class', () {

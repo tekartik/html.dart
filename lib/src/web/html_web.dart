@@ -136,7 +136,8 @@ abstract mixin class _ElementWeb implements ElementWeb {
 
   @override
   Element? getElementById(String id) {
-    return queryCriteria(QueryCriteria(byId: id));
+    // Escaped as any id is not a valid css identifier (i.e. '1a')
+    return querySelector('#${web.CSS.escape(id)}');
   }
 
   @override
@@ -288,8 +289,19 @@ class _ElementList extends ListBase<Element> implements ElementList {
   }
 
   @override
+  bool remove(Object? element) {
+    var index = indexOf(element);
+    if (index < 0) {
+      return false;
+    }
+    removeAt(index);
+    return true;
+  }
+
+  @override
   void operator []=(int index, Element value) {
-    throw UnsupportedError('read only');
+    var oldElement = this[index];
+    oldElement.parentNode!.replaceChild(value, oldElement);
   }
 }
 
@@ -457,7 +469,7 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
     return _wrapExceptionSyncAsArgError(() {
       var div = createElementTag('div');
       div.innerHtml = html.trim();
-      return div.children.first;
+      return div.children.first..remove();
     });
   }
 

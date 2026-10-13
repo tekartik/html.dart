@@ -55,6 +55,7 @@ mixin _NodeHtml5libMixin implements Node {
   Node removeChild(Node child) {
     var nativeNode = child.html5libNode;
     if (_element.nodes.remove(nativeNode)) {
+      _clearStaleParent(nativeNode);
       return child;
     }
     throw StateError('not found');
@@ -71,8 +72,16 @@ mixin _NodeHtml5libMixin implements Node {
   Node insertBefore(Node newNode, Node referenceNode) {
     var newNativeNode = newNode.html5libNode;
     var referenceNativeNode = referenceNode.html5libNode;
+    _checkIsChild(referenceNativeNode);
     _node.insertBefore(newNativeNode, referenceNativeNode);
     return newNode;
+  }
+
+  /// Throws a [StateError] (like the web) if [node] is not a child.
+  void _checkIsChild(html5lib.Node node) {
+    if (node.parentNode != _node) {
+      throw StateError('not a child');
+    }
   }
 
   @override
@@ -90,10 +99,24 @@ mixin _NodeHtml5libMixin implements Node {
   Node replaceChild(Node newChild, Node oldChild) {
     var newNativeChild = newChild.html5libNode;
     var oldNativeChild = oldChild.html5libNode;
+    _checkIsChild(oldNativeChild);
     oldNativeChild.replaceWith(newNativeChild);
     return newChild;
   }
 }
+
+/// html5lib `Node.remove()` and the element lists `remove` keep the parent of
+/// the removed node, clear it (as in the dom) once it is no longer a child.
+T _clearStaleParent<T extends html5lib.Node>(T node) {
+  final parentNode = node.parentNode;
+  if (parentNode != null && !parentNode.nodes.contains(node)) {
+    node.parentNode = null;
+  }
+  return node;
+}
+
+/// Class separators, as in the dom.
+final _whitespaces = RegExp(r'\s+');
 
 Node _newNodeFrom(html5lib.Node node) {
   return _html.wrapNode(node);
@@ -111,7 +134,7 @@ class _ElementList extends ElementList {
 
   @override
   void operator []=(int index, Element value) {
-    _list[index] = (value as _Element)._element;
+    _list[index] = (value as _ElementHtml5lib)._element;
   }
 
   @override
@@ -129,12 +152,17 @@ class _ElementList extends ElementList {
 
   @override
   Element? removeAt(int index) {
-    return _ElementHtml5lib.from(_list.removeAt(index));
+    return _ElementHtml5lib.from(_clearStaleParent(_list.removeAt(index)));
   }
 
   @override
   bool remove(Element element) {
-    return _list.remove((element as _ElementHtml5lib)._element);
+    var nativeElement = (element as _ElementHtml5lib)._element;
+    if (_list.remove(nativeElement)) {
+      _clearStaleParent(nativeElement);
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -174,12 +202,7 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
 
   @override
   Element? getElementById(String id) {
-    for (final child in children) {
-      if (child.id == id) {
-        return child;
-      }
-    }
-    return null;
+    return queryCriteria(QueryCriteria(byId: id));
   }
 
   static Element? from(html5lib.Element? element) {
@@ -233,7 +256,13 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
     }
   }
 
-  static bool _matches(html5lib.Element element, QueryCriteria criteria) {
+  /// [attributesMatches] are the elements matching the byAttributes css
+  /// selector (i.e. `type` or `type="text"`), if any.
+  static bool _matches(
+    html5lib.Element element,
+    QueryCriteria criteria,
+    Set<html5lib.Element>? attributesMatches,
+  ) {
     if (criteria.byTag != null) {
       if (!tagsEquals(element.localName, criteria.byTag)) {
         return false;
@@ -253,22 +282,13 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
         return false;
       }
 
-      if (!classes.trim().split(' ').contains(criteria.byClass)) {
+      if (!classes.trim().split(_whitespaces).contains(criteria.byClass)) {
         return false;
       }
     }
 
-    if (criteria.byAttributes != null) {
-      var found = false;
-      for (var key in element.attributes.keys) {
-        if (key is String) {
-          if (key == criteria.byAttributes) {
-            found = true;
-            break;
-          }
-        }
-      }
-      if (!found) {
+    if (attributesMatches != null) {
+      if (!attributesMatches.contains(element)) {
         return false;
       }
     }
@@ -276,19 +296,33 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
     return true;
   }
 
-  static html5lib.Element? _queryChild(
+  /// Elements below [parent] matching the byAttributes css selector of
+  /// [criteria], null if none is set (same as the web).
+  static Set<html5lib.Element>? _attributesMatches(
     html5lib.Element parent,
     QueryCriteria criteria,
   ) {
+    var byAttributes = criteria.byAttributes;
+    if (byAttributes == null) {
+      return null;
+    }
+    return parent.querySelectorAll('[$byAttributes]').toSet();
+  }
+
+  static html5lib.Element? _queryChild(
+    html5lib.Element parent,
+    QueryCriteria criteria,
+    Set<html5lib.Element>? attributesMatches,
+  ) {
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
-        if (_matches(node, criteria)) {
+        if (_matches(node, criteria, attributesMatches)) {
           return node;
         }
 
         // Go deeper
         if (criteria.recursive) {
-          final found = _queryChild(node, criteria);
+          final found = _queryChild(node, criteria, attributesMatches);
           if (found != null) {
             return found;
           }
@@ -302,17 +336,18 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   static List<html5lib.Element> _queryChildren(
     html5lib.Element parent,
     QueryCriteria criteria,
+    Set<html5lib.Element>? attributesMatches,
   ) {
     final list = <html5lib.Element>[];
     for (var node in parent.nodes) {
       if (node is html5lib.Element) {
-        if (_matches(node, criteria)) {
+        if (_matches(node, criteria, attributesMatches)) {
           list.add(node);
         }
 
         // Go deeper
         if (criteria.recursive) {
-          list.addAll(_queryChildren(node, criteria));
+          list.addAll(_queryChildren(node, criteria, attributesMatches));
         }
       }
     }
@@ -323,13 +358,21 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   //@override
   @override
   Element? queryCriteria(QueryCriteria criteria) {
-    return from(_queryChild(_element, criteria));
+    return from(
+      _queryChild(_element, criteria, _attributesMatches(_element, criteria)),
+    );
   }
 
   //@override
   @override
   ElementList queryCriteriaAll(QueryCriteria criteria) {
-    return _ElementList(_queryChildren(_element, criteria));
+    return _ElementList(
+      _queryChildren(
+        _element,
+        criteria,
+        _attributesMatches(_element, criteria),
+      ),
+    );
   }
 
   @override
@@ -376,7 +419,7 @@ abstract mixin class _ElementHtml5lib implements Element, _Node {
   //@override
   @override
   void remove() {
-    _element.remove();
+    _clearStaleParent(_element.remove());
   }
 
   //@override
@@ -601,7 +644,10 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
   @override
   Element createElementHtml(String html, {bool? noValidate}) {
     // noValidate is implicit when using html5 lib
-    return _ElementHtml5lib.from(html5lib.Element.html(html))!;
+    // Detached from the parsing fragment.
+    return _ElementHtml5lib.from(
+      _clearStaleParent(html5lib.Element.html(html)..remove()),
+    )!;
   }
 
   @override
@@ -635,7 +681,7 @@ class _HtmlProviderHtml5Lib extends HtmlProvider
   // return the html5lib implementation
   @override
   html5lib.Element unwrapElement(Element element) =>
-      (element as _Element)._element;
+      (element as _ElementHtml5lib)._element;
 
   // wrap a native document
   @override

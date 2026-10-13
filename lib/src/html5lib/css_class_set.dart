@@ -11,9 +11,10 @@ class CssClassSetImpl extends CssClassSet {
 
   /// Creates a [CssClassSetImpl] with the given attributes map.
   CssClassSetImpl(this._attributes) {
-    final classesStr = _attributes[attrClass]?.toString();
+    final classesStr = _attributes[attrClass]?.toString().trim();
     if ((classesStr != null) && (classesStr.isNotEmpty)) {
-      _classSet.addAll(classesStr.split(' '));
+      // Any whitespace separates classes, as in the dom.
+      _classSet.addAll(classesStr.split(RegExp(r'\s+')));
     }
   }
 

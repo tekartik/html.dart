@@ -10,6 +10,13 @@ void main() {
 }
 
 void testMain(HtmlProvider html) {
+  test('convertContent', () {
+    expect(convertContent('a  b', null), ['a b']);
+    expect(convertContent('a b', HtmlTidyOption()..contentLength = 1), [
+      'a',
+      'b',
+    ]);
+  });
   group('tidy_element', () {
     group('indent', () {
       test('sub_div_element', () {
@@ -38,8 +45,10 @@ void testMain(HtmlProvider html) {
           '\t}',
           '</style>',
         ]);
-        html.createElementHtml('<style>body {\r\tmargin: 0;\r}</style>');
-        expect(htmlTidyElement(element), [
+        final crElement = html.createElementHtml(
+          '<style>body {\r\tmargin: 0;\r}</style>',
+        );
+        expect(htmlTidyElement(crElement), [
           '<style>',
           '\tbody {',
           '\t\tmargin: 0;',
@@ -134,6 +143,40 @@ void testMain(HtmlProvider html) {
         final element = html.createElementHtml('<a><img/></a>');
         //print(element.outerHtml);
         expect(htmlTidyElement(element), ['<a>', '\t<img>', '</a>']);
+      });
+
+      test('text_escaping', () {
+        var element = html.createElementHtml('<p>1 &lt; 2 &amp; &lt;b&gt;</p>');
+        expect(htmlTidyElement(element), ['<p>1 &lt; 2 &amp; &lt;b&gt;</p>']);
+        element = html.createElementHtml('<div>&lt;script&gt;\nx</div>');
+        expect(htmlTidyElement(element), [
+          '<div>',
+          '\t&lt;script&gt; x',
+          '</div>',
+        ]);
+        element = html.createElementHtml('<pre>a &lt; b\nc</pre>');
+        expect(htmlTidyElement(element), ['<pre>', 'a &lt; b\nc', '</pre>']);
+        // Not in script and style
+        element = html.createElementHtml('<style>a > b {}</style>');
+        expect(htmlTidyElement(element), ['<style>a > b {}</style>']);
+      });
+
+      test('attribute_escaping', () {
+        final element = html.createElementHtml(
+          '<div title="a&quot;b &amp; c"></div>',
+        );
+        expect(htmlTidyElement(element), [
+          '<div title="a&quot;b &amp; c"></div>',
+        ]);
+      });
+
+      test('indent_null', () {
+        final element = html.createElementHtml('<div><p></p></div>');
+        expect(htmlTidyElement(element, HtmlTidyOption()..indent = null), [
+          '<div>',
+          '<p></p>',
+          '</div>',
+        ]);
       });
     });
   });

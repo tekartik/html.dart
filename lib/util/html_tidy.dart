@@ -25,6 +25,20 @@ List<String> _voidTags = [
 
 List<String> _rawTags = ['script', 'style'];
 
+/// Tags whose text is not escaped (html serialization).
+List<String> _rawTextTags = [
+  ..._rawTags,
+  'xmp',
+  'iframe',
+  'noembed',
+  'noframes',
+  'plaintext',
+  'noscript',
+];
+
+const _textEscape = HtmlEscape(HtmlEscapeMode.element);
+const _attributeEscape = HtmlEscape(HtmlEscapeMode.attribute);
+
 List<String> _inlineTags = [
   'meta', 'title', 'link', // for head
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'a',
@@ -124,6 +138,7 @@ List<String> _wordSplit(String input) {
 /// Breaks [input] into words and returns a list of wrapped lines according to
 /// [option.contentLength]. If [option] is null a default is used.
 List<String> convertContent(String input, HtmlTidyOption? option) {
+  option ??= HtmlTidyOption();
   final words = _wordSplit(input);
   final out = <String>[];
 
@@ -140,7 +155,7 @@ List<String> convertContent(String input, HtmlTidyOption? option) {
     final word = words[i];
     if (sb.length == 0) {
       // if empty never create a new line
-    } else if (sb.length + word.length + 1 > option!.contentLength) {
+    } else if (sb.length + word.length + 1 > option.contentLength) {
       addCurrent();
     } else {
       // add a space
@@ -156,7 +171,7 @@ void _addSubs(List<String> out, Iterable<String> subs, HtmlTidyOption? option) {
   for (final sub in subs) {
     // remove empty lines
     if (sub.trim().isNotEmpty) {
-      out.add('${option!.indent}$sub');
+      out.add('${option?.indent ?? ''}$sub');
     }
   }
 }
@@ -212,21 +227,29 @@ Iterable<String> _htmlTidyElement(
 
   final sb = StringBuffer();
 
+  // Text is escaped, except in script, style...
+  final isRawTag = _rawTags.contains(tagName);
+  final isRawTextTag = _rawTextTags.contains(tagName);
+  String nodeText(Node node) {
+    final value = node.nodeValue!;
+    return isRawTextTag ? value : _textEscape.convert(value);
+  }
+
   void addNode(Node node) {
     if (node is Element) {
       _addSubs(out, _htmlTidyElement(node, option, false), option);
     } else if (node.nodeType == Node.textNode) {
       if (inlineContent) {
-        sb.write(node.nodeValue);
+        sb.write(nodeText(node));
       } else {
         if (doNotConvertContent) {
-          out.add(node.nodeValue!);
+          out.add(nodeText(node));
         } else {
           // for style/script split & join to prevent \r \n
-          if (_rawTags.contains(tagName)) {
+          if (isRawTag) {
             _addSubs(out, LineSplitter.split(node.nodeValue!), option);
           } else {
-            final subs = convertContent(node.nodeValue!, option);
+            final subs = convertContent(nodeText(node), option);
             if (subs.isNotEmpty) {
               _addSubs(out, subs, option);
             }
@@ -265,7 +288,7 @@ String _beginTag(Element element) {
   element.attributes.forEach((key, value) {
     sb.write(' $key');
     if (value.isNotEmpty) {
-      sb.write('="$value"');
+      sb.write('="${_attributeEscape.convert(value)}"');
     }
   });
   sb.write('>');

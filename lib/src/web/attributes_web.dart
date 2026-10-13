@@ -26,8 +26,9 @@ class AttributesWeb extends MapBase<String, String> {
   @override
   /// Removes all attributes from the map.
   void clear() {
-    for (var i = 0; i < webNamedNodeMap.length; i++) {
-      webNamedNodeMap.removeNamedItem(webNamedNodeMap.item(i)!.name);
+    // The map shrinks on each removal.
+    while (webNamedNodeMap.length > 0) {
+      webNamedNodeMap.removeNamedItem(webNamedNodeMap.item(0)!.name);
     }
   }
 

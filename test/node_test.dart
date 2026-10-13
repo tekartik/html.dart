@@ -38,7 +38,44 @@ void nodeTestGroup(final HtmlProvider html) {
     });
     test('appendChildren', () {
       var element = html.createElementTag('div');
-      element.appendNodesHtml('<p>t1<p><p>t2<p>');
+      element.appendNodesHtml('<p>t1</p><p>t2</p>');
+      expect(element.outerHtml, '<div><p>t1</p><p>t2</p></div>');
+      expect(element.children.length, 2);
+    });
+    test('removed parent', () {
+      Element div() =>
+          html.createElementHtml('<div><p></p><a></a><b></b></div>');
+      var element = div();
+      var child = element.children[0];
+      element.removeChild(child);
+      expect(child.parentNode, isNull);
+      expect(child.parent, isNull);
+      element = div();
+      child = element.children[0]..remove();
+      expect(child.parentNode, isNull);
+      element = div();
+      child = element.children[0];
+      expect(element.children.remove(child), isTrue);
+      expect(child.parentNode, isNull);
+      element = div();
+      child = element.children.removeAt(0)!;
+      expect(child.parentNode, isNull);
+      expect(element.outerHtml, '<div><a></a><b></b></div>');
+    });
+    test('child not a child', () {
+      var element = html.createElementTag('div');
+      var other = html.createElementHtml('<section><a></a></section>');
+      var otherChild = other.children[0];
+      expect(
+        () => element.insertBefore(html.createElementTag('p'), otherChild),
+        throwsStateError,
+      );
+      expect(
+        () => element.replaceChild(html.createElementTag('p'), otherChild),
+        throwsStateError,
+      );
+      expect(element.outerHtml, '<div></div>');
+      expect(other.outerHtml, '<section><a></a></section>');
     });
     test('child replace', () {
       var element = html.createElementTag('div');

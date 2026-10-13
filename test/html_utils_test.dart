@@ -12,6 +12,18 @@ void main() {
 
 void testMain(HtmlProvider html) {
   group('html_utils', () {
+    test('findFirstAncestor no parent', () {
+      final element = html.createElementTag(tagDiv)
+        ..id = 'div1'
+        ..classes.add('class1');
+      expect(findFirstAncestorWithId(element, 'div1'), isNull);
+      expect(findFirstAncestorWithId(element, 'div1', true), element);
+      expect(findFirstAncestorWithId(element, 'dummy', true), isNull);
+      expect(findFirstAncestorWithClass(element, 'class1'), isNull);
+      expect(findFirstAncestorWithClass(element, 'class1', true), element);
+      expect(findFirstAncestorWithClass(element, 'dummy', true), isNull);
+    });
+
     test('findFirstAncestorWithId', () {
       final element = html.createElementTag(tagDiv)..id = 'div1';
       final innerElement = html.createElementTag(tagDiv)..id = 'div2';
