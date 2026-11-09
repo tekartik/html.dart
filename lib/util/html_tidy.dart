@@ -36,6 +36,9 @@ List<String> _rawTextTags = [
   'noscript',
 ];
 
+/// Tags whose content whitespace matters: written as is on one item.
+List<String> _preformattedTags = ['pre', 'textarea'];
+
 const _textEscape = HtmlEscape(HtmlEscapeMode.element);
 const _attributeEscape = HtmlEscape(HtmlEscapeMode.attribute);
 
@@ -188,11 +191,16 @@ Iterable<String> _htmlTidyElement(
   bool? inline,
 ]) {
   final tagName = element.tagName;
+  if (_preformattedTags.contains(tagName)) {
+    // Neither indented nor wrapped, only the item is indented by the caller.
+    final sb = StringBuffer();
+    _writeAsIs(sb, element);
+    return [sb.toString()];
+  }
   // default option
   option ??= HtmlTidyOption();
 
   final out = <String>[];
-  element.childNodes;
 
   // do not convert content for inlined and special tags
   var inlineContent =
@@ -280,6 +288,33 @@ Iterable<String> _htmlTidyElement(
     out.add(sb.toString());
   }
   return out;
+}
+
+/// Write [element] and its content without changing any whitespace.
+void _writeAsIs(StringBuffer sb, Element element) {
+  sb.write(_beginTag(element));
+  final tagName = element.tagName;
+  final childNodes = element.childNodes;
+  // The html parser drops a line feed right after <pre> or <textarea>.
+  if (_preformattedTags.contains(tagName) &&
+      childNodes.isNotEmpty &&
+      childNodes.first.nodeType == Node.textNode &&
+      childNodes.first.nodeValue!.startsWith('\n')) {
+    sb.write('\n');
+  }
+  final isRawTextTag = _rawTextTags.contains(tagName);
+  for (final node in childNodes) {
+    if (node is Element) {
+      _writeAsIs(sb, node);
+    } else if (node.nodeType == Node.textNode) {
+      final value = node.nodeValue!;
+      sb.write(isRawTextTag ? value : _textEscape.convert(value));
+    }
+  }
+  final endTag = _endTag(element);
+  if (endTag != null) {
+    sb.write(endTag);
+  }
 }
 
 String _beginTag(Element element) {

@@ -110,6 +110,7 @@ abstract mixin class _ElementWeb implements ElementWeb {
   Map<Object, String> get attributes => AttributesWeb(
     webElement.ownerDocument ?? web.window.document,
     webElement.attributes,
+    webElement: webElement,
   );
 
   @override
@@ -156,8 +157,8 @@ abstract mixin class _ElementWeb implements ElementWeb {
     return querySelector(
       buildSelector(
         byTag: byTag,
-        byId: byId,
-        byClass: byClass,
+        byId: _cssEscapeOrNull(byId),
+        byClass: _cssEscapeOrNull(byClass),
         byAttributes: byAttributes,
       ),
     );
@@ -173,8 +174,8 @@ abstract mixin class _ElementWeb implements ElementWeb {
     return querySelectorAll(
       buildSelector(
         byTag: byTag,
-        byId: byId,
-        byClass: byClass,
+        byId: _cssEscapeOrNull(byId),
+        byClass: _cssEscapeOrNull(byClass),
         byAttributes: byAttributes,
       ),
     );
@@ -182,12 +183,14 @@ abstract mixin class _ElementWeb implements ElementWeb {
 
   @override
   Element? queryCriteria(QueryCriteria criteria) {
-    return querySelector(buildCriteriaSelector(criteria));
+    return querySelector(buildCriteriaSelector(_cssEscapedCriteria(criteria)));
   }
 
   @override
   ElementList queryCriteriaAll(QueryCriteria criteria) {
-    return querySelectorAll(buildCriteriaSelector(criteria));
+    return querySelectorAll(
+      buildCriteriaSelector(_cssEscapedCriteria(criteria)),
+    );
   }
 
   @override
@@ -467,9 +470,11 @@ class _HtmlProviderWeb implements HtmlProviderWeb {
   @override
   Element createElementHtml(String html, {bool? noValidate}) {
     return _wrapExceptionSyncAsArgError(() {
-      var div = createElementTag('div');
-      div.innerHtml = html.trim();
-      return div.children.first..remove();
+      html = html.trim();
+      // Table parts are dropped by the parser in a div.
+      var parent = createElementTag(htmlFragmentParentTag(html) ?? 'div');
+      parent.innerHtml = html;
+      return parent.children.first..remove();
     });
   }
 
@@ -576,6 +581,18 @@ class _TextWeb extends _NodeBase with _NodeWebMixin implements _Text {
   @override
   String toString() => 'Text($text)';
 }
+
+/// Ids and class names are matched as is (as on html5lib), not read as css.
+String? _cssEscapeOrNull(String? value) =>
+    value == null ? null : web.CSS.escape(value);
+
+QueryCriteria _cssEscapedCriteria(QueryCriteria criteria) => QueryCriteria(
+  byTag: criteria.byTag,
+  byId: _cssEscapeOrNull(criteria.byId),
+  byClass: _cssEscapeOrNull(criteria.byClass),
+  byAttributes: criteria.byAttributes,
+  recursive: criteria.recursive,
+);
 
 T _wrapExceptionSyncAsStateError<T>(T Function() action) {
   try {

@@ -84,7 +84,7 @@ abstract class DataSet {
 
   @override
   String toString() {
-    return Map<String, Object?>.fromIterable(keys).toString();
+    return <String, Object?>{for (var key in keys) key: this[key]}.toString();
   }
 
   /// Remove a data attribute by key. Returns true if removed.
@@ -95,6 +95,11 @@ abstract class DataSet {
 }
 
 /// Criteria used for querying elements (tag, id, class, or attributes).
+///
+/// [byId] and [byClass] are matched as is (any character, not css),
+/// [byAttributes] is the inside of a css attribute selector
+/// (`type` or `type="text"`). The search starts at the children of the
+/// element (not the element itself), [recursive] goes down the tree.
 class QueryCriteria {
   /// The tag name to query.
   String? byTag;
@@ -235,7 +240,8 @@ abstract class Element implements Node {
   /// Finds all elements matching the given [QueryCriteria].
   ElementList queryCriteriaAll(QueryCriteria criteria);
 
-  /// Finds the first element matching the given query parameters.
+  /// Finds the first descendant matching the given query parameters, see
+  /// [QueryCriteria].
   Element? query({
     String? byTag,
     String? byId,
@@ -243,7 +249,8 @@ abstract class Element implements Node {
     String? byAttributes,
   });
 
-  /// Finds all elements matching the given query parameters.
+  /// Finds all descendants matching the given query parameters, see
+  /// [QueryCriteria].
   ElementList queryAll({
     String? byTag,
     String? byId,
@@ -336,8 +343,9 @@ abstract class HtmlProvider {
   /// The provider name identifying the implementation.
   String get name;
 
-  /// Create a new document from [html] string. Optionally set [title] and
-  /// [charset]. If [charset] is null no charset meta will be set.
+  /// Create a new document from [html] string (a whole page). Optionally set
+  /// [title] and [charset]. If [charset] is null no charset meta will be set.
+  /// With [noCharsetTitleFix] no missing charset meta or title is added.
   Document createDocument({
     String html = '',
     String title = '',
@@ -349,6 +357,11 @@ abstract class HtmlProvider {
   Element createElementTag(String tag);
 
   /// Create element(s) by parsing [html] and returning the first element.
+  ///
+  /// Table parts (`<tr>`, `<td>`...) are parsed in their table context.
+  /// Throws an [ArgumentError] when [html] has no element (html5lib also
+  /// throws when it has several top level elements). Use [createDocument]
+  /// for a whole page. [noValidate] is ignored (nothing is sanitized).
   Element createElementHtml(String html, {bool? noValidate});
 
   /// Create nodes by parsing [html] and returning the resulting Node list.

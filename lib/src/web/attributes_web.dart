@@ -9,8 +9,11 @@ class AttributesWeb extends MapBase<String, String> {
   /// The underlying named node map from the web DOM.
   final web.NamedNodeMap webNamedNodeMap;
 
+  /// The element owning the attributes, if known.
+  final web.Element? webElement;
+
   /// Creates an [AttributesWeb] instance with the given document and named node map.
-  AttributesWeb(this.webDoc, this.webNamedNodeMap);
+  AttributesWeb(this.webDoc, this.webNamedNodeMap, {this.webElement});
   @override
   /// Retrieves the value of the attribute with the given key.
   String? operator [](Object? key) {
@@ -20,7 +23,14 @@ class AttributesWeb extends MapBase<String, String> {
   @override
   /// Sets the value of the attribute with the given key.
   void operator []=(String key, String value) {
-    webNamedNodeMap.setNamedItem(webDoc.createAttribute(key)..value = value);
+    var webElement = this.webElement;
+    if (webElement != null) {
+      // Keeps the case of the name on an svg element (`createAttribute`
+      // lower cases it in an html document).
+      webElement.setAttribute(key, value);
+    } else {
+      webNamedNodeMap.setNamedItem(webDoc.createAttribute(key)..value = value);
+    }
   }
 
   @override

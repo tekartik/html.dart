@@ -72,11 +72,14 @@ covered by [tekartik-html-dom](../tekartik-html-dom/SKILL.md).
   native object as `Object`, so cast it. Unwrapping twice gives the *identical*
   native object, but wrapping twice gives two `==` (not identical) wrappers.
   A wrapper only accepts objects of its own backend.
-* Parsing differences are real: the web backend goes through the browser parser
-  (it sanitizes and can drop unknown elements such as a `<meta>` inside a
-  `<div>`), html5lib keeps them. Pass `noValidate: true` to
-  `createElementHtml`/`createElementsHtml`/`createNodesHtml` to keep custom
-  markup, and test both providers when the markup is unusual.
+* Both backends parse like a browser and sanitize nothing (`noValidate` is
+  ignored by both, kept for compatibility): custom elements, `<meta>` in a
+  `<div>`, `onclick` and `<script>` are kept. They differ on a few edge cases:
+  `createElementHtml` with several top level elements (html5lib throws, the
+  web returns the first), `'<body>...'` markup (the body on html5lib, its first
+  child on the web), a `<th>` alone (web only), `children.clear()` (html5lib
+  also removes the text nodes) and `document.title` (trimmed on the web only).
+  Test both providers when the markup is unusual.
 * Tests: write the body as `void testMain(HtmlProvider html)` in a shared file,
   then one entry per provider — a VM test on `htmlProviderHtml5Lib` and a
   `@TestOn('browser')` test on `htmlProviderWeb` (and on

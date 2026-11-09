@@ -31,9 +31,12 @@ covered by [tekartik-html-providers](../tekartik-html-providers/SKILL.md).
 * `createDocument()` produces a full `<html><head><meta charset="utf-8">
   <title>...</title></head><body></body></html>`; pass `charset: null` for no
   meta charset, `noCharsetTitleFix: true` to keep the parsed html as is, and
-  `html:` to parse an existing page. `createElementHtml('<html>...')` throws on
-  every backend, and `'<head>...'` / `'<body>...'` throw on the web backend
-  (html5lib accepts them) — parse whole pages with `createDocument(html: ...)`.
+  `html:` to parse an existing page. `createElementHtml` is for fragments:
+  `'<html>...'` gives the first element of its body (`ArgumentError` when there
+  is none), `'<body>...'` / `'<head>...'` give the body/head element on
+  html5lib but their first child on the web — parse whole pages with
+  `createDocument(html: ...)`. Table parts (`'<tr>...'`, `'<td>...'`) are
+  parsed in their table context (a `<th>` alone only on the web).
 * `Document` is not an `Element`: it exposes `body`, `head`, `html` (the root
   element), `title`, `fixMissing({title, charset})` and `htmlProvider`. Query
   and append through `doc.body` / `doc.head` / `doc.html`. `doc.toString()`
@@ -50,7 +53,9 @@ covered by [tekartik-html-providers](../tekartik-html-providers/SKILL.md).
     `queryAll(...)`, or `queryCriteria(QueryCriteria(byTag: 'div', byClass:
     'x', recursive: false))` / `queryCriteriaAll(...)`. `recursive` defaults to
     `true`; use the criteria form when the selector would have to be built by
-    string concatenation.
+    string concatenation. `byId` and `byClass` are matched as is (any
+    character: `'1a'`, `'md:flex'`), `byAttributes` is the inside of a CSS
+    attribute selector (`'type="text"'`).
   Both search descendants only, never the element itself.
 * Collections are small abstractions, not Dart collections: `ElementList` is an
   `Iterable<Element>` with `[]`, `[]=`, `add`, `insert`, `removeAt`, `remove`,
@@ -79,7 +84,9 @@ covered by [tekartik-html-providers](../tekartik-html-providers/SKILL.md).
   `package:tekartik_html/util/html_tidy.dart` return an `Iterable<String>` of
   lines — `join('\n')` them. `HtmlTidyOption()..indent = '  '` (default is a
   tab) and `..contentLength = 80` (text wrapping) control the output. The
-  result is a formatted copy, the document is not modified.
+  result is a formatted copy, the document is not modified. Comments are
+  dropped; `pre` and `textarea` are written as is on one item (their
+  whitespace is kept), the other text is re-wrapped.
 * `DocumentMixin` (from `html.dart`) is only for implementing a new backend; it
   provides the shared `fixMissing` logic.
 
@@ -216,8 +223,8 @@ void insertBanner(HtmlProvider html, Element parent, Element before) {
   `classes` as a `Set` (only `add`/`remove`/`contains`).
 * Mutating `children`/`childNodes` while iterating them: copy with
   `List.of(...)` or `.toList()` first.
-* Parsing a whole page with `createElementHtml`: `'<html>...'` throws (and
-  `'<head>'`/`'<body>'` throw in the browser); use `createDocument(html: ...)`.
+* Parsing a whole page with `createElementHtml`: it keeps one element (the
+  first of the body); use `createDocument(html: ...)`.
 * Expecting `query(byClass: 'a b')` to behave like a CSS selector list; the
   criteria are matched one by one, use `querySelector` for real selectors.
 * Assuming `htmlTidyDocument` formats the document in place: it returns lines.

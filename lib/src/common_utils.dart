@@ -30,6 +30,32 @@ String buildSelector({
   return sb.toString();
 }
 
+final _startTagRegExp = RegExp(r'<(\w+)');
+
+/// Parents of the table parts, which the html parser drops in a div (same
+/// map as html5lib `Element.html`, plus `th`).
+const _tablePartParentTags = <String, String>{
+  'caption': 'table',
+  'colgroup': 'table',
+  'col': 'colgroup',
+  'thead': 'table',
+  'tbody': 'table',
+  'tfoot': 'table',
+  'tr': 'tbody',
+  'td': 'tr',
+  'th': 'tr',
+};
+
+/// The tag of the element to parse [html] in when its first element is a
+/// table part (`tr`, `td`...), null otherwise.
+String? htmlFragmentParentTag(String html) {
+  final match = _startTagRegExp.firstMatch(html);
+  if (match == null) {
+    return null;
+  }
+  return _tablePartParentTags[match.group(1)!.toLowerCase()];
+}
+
 /// Builds a CSS selector string from a [QueryCriteria] object.
 ///
 /// Includes scope handling if not recursive.

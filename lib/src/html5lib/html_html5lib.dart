@@ -54,7 +54,8 @@ mixin _NodeHtml5libMixin implements Node {
   @override
   Node removeChild(Node child) {
     var nativeNode = child.html5libNode;
-    if (_element.nodes.remove(nativeNode)) {
+    // The parent can be a document (not an element).
+    if (_node.nodes.remove(nativeNode)) {
       _clearStaleParent(nativeNode);
       return child;
     }

@@ -155,7 +155,8 @@ void testMain(HtmlProvider html) {
           '</div>',
         ]);
         element = html.createElementHtml('<pre>a &lt; b\nc</pre>');
-        expect(htmlTidyElement(element), ['<pre>', 'a &lt; b\nc', '</pre>']);
+        // pre content as is on one item (one line per item adds a line feed)
+        expect(htmlTidyElement(element), ['<pre>a &lt; b\nc</pre>']);
         // Not in script and style
         element = html.createElementHtml('<style>a > b {}</style>');
         expect(htmlTidyElement(element), ['<style>a > b {}</style>']);

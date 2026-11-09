@@ -8,6 +8,7 @@ import 'element_test.dart' as element_test;
 import 'html_tidy_test.dart' as html_tidy_test;
 import 'html_utils_test.dart' as html_utils_test;
 import 'node_test.dart' as node_test;
+import 'review_regression_test.dart' as review_regression_test;
 
 void testMain(HtmlProvider provider) {
   document_test.testMain(provider);
@@ -15,4 +16,5 @@ void testMain(HtmlProvider provider) {
   node_test.nodeTestGroup(provider);
   html_utils_test.testMain(provider);
   html_tidy_test.testMain(provider);
+  review_regression_test.testMain(provider);
 }
